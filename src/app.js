@@ -42,6 +42,15 @@ app.get('/ubisoft', async (req, res) => {
   })
 });
 
+app.get('/steam', async (req, res) => {
+
+  const games = await query('SELECT * FROM [Steam Games]');
+
+  res.send({
+    games: games
+  })
+});
+
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);
 });
