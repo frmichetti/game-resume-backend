@@ -1,30 +1,14 @@
 import express from 'express';
 import getMessage from './getMessage';
-import ADODB from 'node-adodb';
+import query from './queries';
+
 
 var app = express();
 
 var port = 4000;
 
 
-// Connect to the MS Access DB
-const connection = ADODB.open('Provider=Microsoft.ACE.OLEDB.12.0;Data Source=D:\\DATABASE\\steam_games.accdb;Persist Security Info=False;');
 
-
-
-
-async function query() {
-  try {
-    const users = await connection.query('SELECT * FROM [Origin Games]');
- 
-    console.log(JSON.stringify(users, null, 2));
-  } catch (error) {
-    console.error(error);
-  }
-}
- 
-query();
- 
 
 app.get('/', async (req, res) => {
   await new Promise((resolve, reject) => {
@@ -36,6 +20,25 @@ app.get('/', async (req, res) => {
 
   res.send({
     message: getMessage(),
+  })
+});
+
+app.get('/origin', async (req, res) => {
+
+  const games = await query('SELECT * FROM [Origin Games]');
+
+  res.send({
+    games: games
+  })
+});
+
+
+app.get('/ubisoft', async (req, res) => {
+
+  const games = await query('SELECT * FROM [Ubisoft Games]');
+
+  res.send({
+    games: games
   })
 });
 
