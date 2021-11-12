@@ -44,7 +44,7 @@ app.get('/ubisoft', async (req, res) => {
 
 app.get('/steam', async (req, res) => {
 
-  const games = await query('SELECT * FROM [Steam Games]');
+  const games = await query('SELECT * FROM [Steam Finished Games]');
 
   res.send({
     games: games
@@ -61,6 +61,23 @@ app.get('/all', async (req, res) => {
   })
 });
 
+app.get('/wii', async (req, res) => {
+
+  const games = await query('SELECT * FROM [Wii GC Games]');
+
+  res.send({
+    games: games
+  })
+});
+
+app.get('/wiiu', async (req, res) => {
+
+  const games = await query('SELECT * FROM [WiiU Games]');
+
+  res.send({
+    games: games
+  })
+});
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);
 });
