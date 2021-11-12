@@ -1,10 +1,10 @@
 import express from 'express';
 import getMessage from './getMessage';
 import query from './queries';
-
+import cors from 'cors';
 
 var app = express();
-
+app.use(cors());
 var port = 4000;
 
 
@@ -45,6 +45,16 @@ app.get('/ubisoft', async (req, res) => {
 app.get('/steam', async (req, res) => {
 
   const games = await query('SELECT * FROM [Steam Games]');
+
+  res.send({
+    games: games
+  })
+});
+
+
+app.get('/all', async (req, res) => {
+
+  const games = await query('SELECT * FROM [All Games List]');
 
   res.send({
     games: games
