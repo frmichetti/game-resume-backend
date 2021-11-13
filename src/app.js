@@ -93,8 +93,13 @@ app.get('/pc', async (req, res) => {
 
   const games = await query('SELECT * FROM [All PC Games]');
 
+  
+  const mapped = lodash.map(games, (item) => {
+    return {finished: item.finished == 0 ? false : true, name: item.name, platform: item.platform }  
+  })
+
   res.send({
-    games: games
+    games: mapped
   })
 });
 
