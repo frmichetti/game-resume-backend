@@ -2,6 +2,8 @@ import express from 'express';
 import getMessage from './getMessage';
 import query from './queries';
 import cors from 'cors';
+import lodash from 'lodash';
+
 
 var app = express();
 app.use(cors());
@@ -46,8 +48,12 @@ app.get('/steam', async (req, res) => {
 
   const games = await query('SELECT * FROM [All Steam Games]');
 
+  const mapped = lodash.map(games, (item) => {
+    return {finished: item.finished == 0 ? false : true, name: item.name, appid: item.appid }  
+  })
+
   res.send({
-    games: games
+    games: mapped
   })
 });
 
@@ -56,8 +62,12 @@ app.get('/all', async (req, res) => {
 
   const games = await query('SELECT * FROM [All Games List]');
 
+  const mapped = lodash.map(games, (item) => {
+    return {finished: item.finished == 0 ? false : true, name: item.name, system: item.system }  
+  })
+
   res.send({
-    games: games
+    games: mapped
   })
 });
 
