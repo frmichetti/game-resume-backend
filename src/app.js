@@ -1,6 +1,6 @@
 import express from 'express';
 import getMessage from './getMessage';
-import query from './queries';
+import {query,execute} from './queries';
 import cors from 'cors';
 import lodash from 'lodash';
 import bodyParser from "body-parser";
@@ -117,10 +117,59 @@ app.get('/console', async (req, res) => {
 
 app.post('/finished', async (req, res) => {
   console.log(req.body)
-  /*res.json(req.body)*/
-  res.send({
-    ok: "ok"
-  })
+  
+  const tableName = req.body.table;
+  let table, title, finished;
+
+  switch (tableName) {
+    case "wiiu":
+        table = "WiiU Games"
+      break;
+    case "wii":
+        table = "Wii GC Games"
+      break;
+    case "origin":
+        table = "Origin Games"
+      break;
+    case "ubisoft":
+        table = "Ubisoft Games"
+      break;
+    case "steam":  
+        table = "Steam Games"
+      break;
+    default:
+        table = null;
+      break;
+  }
+    if (table == null){
+      const errorMessage ="Table does not match"; 
+      res.statusMessage = errorMessage;
+      res.status(400).send({msg: errorMessage}).end();
+    }
+
+    title = req.body.title;
+    if (title == null || title == '' || title == undefined) {
+      const errorMessage ="Game Title is Empty"; 
+      res.statusMessage = errorMessage;
+      res.status(400).send({msg: errorMessage}).end();
+    }
+
+    finished = req.body.finished;
+
+    if (finished == null) {
+      const errorMessage ="Finished is not Defined"; 
+      res.statusMessage = errorMessage;
+      res.status(400).send({msg: errorMessage}).end();
+    }
+
+
+  let q = "";
+  q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [NAME] = '${title}';`;
+  console.log(q);
+
+  const result = await execute(q);
+
+  res.send({ result });
 });
 
 app.listen(port, () => {

@@ -13,4 +13,15 @@ export default async function query(sql) {
     } catch (error) {
       console.error(error);
     }
-  } 
+  }
+  export async function execute(sql) {
+    try {
+      const result = await connection.execute(sql);
+   
+     // console.log(JSON.stringify(result, null, 2));
+   
+      return result;
+    } catch (error) {
+      console.error(error);
+    }
+  }
