@@ -163,7 +163,7 @@ app.post('/create', async (req,res) => {
 
   let q = "";
   q = `INSERT INTO [${table}] (ID,NAME,FINISHED) VALUES ('${id}','${title}',${finished});`;
-  console.log(q);
+  // console.log(q);
 
   const result = await execute(q);
 
@@ -227,6 +227,51 @@ app.post('/finished', async (req, res) => {
   
 
   res.send({ result });
+});
+
+app.delete('/remove', async (req, res) => {
+  console.log(req.body)
+
+  const tableName = req.body.table;
+  let table, title;
+
+  switch (tableName) {
+    case "wiiu":
+        table = "WiiU Games"
+      break;
+    case "wii":
+        table = "Wii GC Games"
+      break;
+    case "origin":
+        table = "Origin Games"
+      break;
+    case "ubisoft":
+        table = "Ubisoft Games"
+      break;    
+    default:
+        table = null;
+      break;
+  }
+    if (table == null){
+      const errorMessage ="Table does not match"; 
+      res.statusMessage = errorMessage;
+      res.status(400).send({msg: errorMessage}).end();
+    }
+
+    title = req.body.title;
+    if (title == null || title == '' || title == undefined) {
+      const errorMessage ="Game Title is Empty"; 
+      res.statusMessage = errorMessage;
+      res.status(400).send({msg: errorMessage}).end();
+    }
+
+    let q = "";
+    q = `DELETE FROM [${table}] WHERE [NAME] = '${title}';`;
+    // console.log(q);
+  
+    const result = await execute(q);
+
+  res.send({ok:"ok"})
 });
 
 app.listen(port, () => {
