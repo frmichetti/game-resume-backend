@@ -1,6 +1,6 @@
 import express from 'express';
 import getMessage from './getMessage';
-import {query,execute} from './queries';
+import {query, execute} from './queries';
 import cors from 'cors';
 import lodash from 'lodash';
 import bodyParser from "body-parser";
@@ -164,10 +164,11 @@ app.post('/finished', async (req, res) => {
 
 
   let q = "";
-  q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [NAME] = '${title}';`;
-  console.log(q);
+  q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [name] = '${title}';`;
+  // console.log(q);
 
   const result = await execute(q);
+  
 
   res.send({ result });
 });
