@@ -1,6 +1,6 @@
 import express from 'express';
-import getMessage from './getMessage';
-import {query, execute} from './queries';
+import getMessage from './getMessage.js';
+import {query, execute} from './queries.js';
 import cors from 'cors';
 import lodash from 'lodash';
 import bodyParser from "body-parser";
