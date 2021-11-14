@@ -115,6 +115,65 @@ app.get('/console', async (req, res) => {
   })
 });
 
+app.post('/create', async (req,res) => {
+  console.log(req.body)
+  
+  const tableName = req.body.table;
+  let table, title, finished, id;
+
+  switch (tableName) {
+    case "wiiu":
+        table = "WiiU Games"
+      break;
+    case "wii":
+        table = "Wii GC Games"
+      break;
+    case "origin":
+        table = "Origin Games"
+      break;
+    case "ubisoft":
+        table = "Ubisoft Games"
+      break;    
+    default:
+        table = null;
+      break;
+  }
+    if (table == null){
+      const errorMessage ="Table does not match"; 
+      res.statusMessage = errorMessage;
+      res.status(400).send({msg: errorMessage}).end();
+    }
+
+    title = req.body.title;
+    if (title == null || title == '' || title == undefined) {
+      const errorMessage ="Game Title is Empty"; 
+      res.statusMessage = errorMessage;
+      res.status(400).send({msg: errorMessage}).end();
+    }
+
+    finished = req.body.finished;
+    id =req.body.id;
+
+    if (finished == null) {
+      const errorMessage ="Finished is not Defined"; 
+      res.statusMessage = errorMessage;
+      res.status(400).send({msg: errorMessage}).end();
+    }
+
+
+  let q = "";
+  q = `INSERT INTO [${table}] (ID,NAME,FINISHED) VALUES ('${id}','${title}',${finished});`;
+  console.log(q);
+
+  const result = await execute(q);
+
+  console.log(result);
+
+  res.send({
+    ok: "ok"    
+  })
+});
+
 app.post('/finished', async (req, res) => {
   console.log(req.body)
   
@@ -133,10 +192,7 @@ app.post('/finished', async (req, res) => {
       break;
     case "ubisoft":
         table = "Ubisoft Games"
-      break;
-    case "steam":  
-        table = "Steam Games"
-      break;
+      break;    
     default:
         table = null;
       break;
