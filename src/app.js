@@ -3,10 +3,13 @@ import getMessage from './getMessage';
 import query from './queries';
 import cors from 'cors';
 import lodash from 'lodash';
-
+import bodyParser from "body-parser";
 
 var app = express();
 app.use(cors());
+//Here we are configuring express to use body-parser as middle-ware.
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 var port = 4000;
 
 
@@ -109,6 +112,14 @@ app.get('/console', async (req, res) => {
 
   res.send({
     games: games
+  })
+});
+
+app.post('/finished', async (req, res) => {
+  console.log(req.body)
+  /*res.json(req.body)*/
+  res.send({
+    ok: "ok"
   })
 });
 
