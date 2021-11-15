@@ -145,33 +145,30 @@ app.post('/create', async (req,res) => {
     }
 
     title = req.body.title;
+    finished = req.body.finished ? req.body.finished : false;
+    id = req.body.id;
+
     if (title == null || title == '' || title == undefined) {
       const errorMessage ="Game Title is Empty"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
-    }
-
-    finished = req.body.finished;
-    id =req.body.id;
-
-    if (finished == null) {
+    } else if (finished == null) {
       const errorMessage ="Finished is not Defined"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
-    }
-
-
-  let q = "";
-  q = `INSERT INTO [${table}] (ID,NAME,FINISHED) VALUES ('${id}','${title}',${finished});`;
-  // console.log(q);
-
-  const result = await execute(q);
-
-  console.log(result);
-
-  res.send({
-    ok: "ok"    
-  })
+    } else {
+      let q = "";
+      q = `INSERT INTO [${table}] (ID,NAME,FINISHED) VALUES ('${id}','${title}',${finished});`;
+      // console.log(q);
+    
+      const result = await execute(q);
+    
+      console.log(result);
+    
+      res.send({
+        ok: "ok"    
+      })
+    }  
 });
 
 app.post('/finished', async (req, res) => {
@@ -230,10 +227,12 @@ app.post('/finished', async (req, res) => {
 });
 
 app.delete('/remove', async (req, res) => {
-  console.log(req.body)
+  console.log('req body: ' + req.body)
 
   const tableName = req.body.table;
-  let table, title;
+  const title = req.body.title;
+
+  let table;
 
   switch (tableName) {
     case "wiiu":
@@ -256,22 +255,19 @@ app.delete('/remove', async (req, res) => {
       const errorMessage ="Table does not match"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
-    }
-
-    title = req.body.title;
-    if (title == null || title == '' || title == undefined) {
+    } else if (title == null || title == '' || title == undefined) {
       const errorMessage ="Game Title is Empty"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
-    }
-
-    let q = "";
-    q = `DELETE FROM [${table}] WHERE [NAME] = '${title}';`;
-    // console.log(q);
+    } else{
+      let q = "";
+      q = `DELETE FROM [${table}] WHERE [NAME] = '${title}';`;
+      console.log(q);
+    
+      const result = await execute(q);
   
-    const result = await execute(q);
-
-  res.send({ok:"ok"})
+    res.send({ok:"ok"})
+    }
 });
 
 app.listen(port, () => {
