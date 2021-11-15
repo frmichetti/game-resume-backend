@@ -13,8 +13,6 @@ app.use(bodyParser.json());
 var port = 4000;
 
 
-
-
 app.get('/', async (req, res) => {
   await new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -23,18 +21,14 @@ app.get('/', async (req, res) => {
     }, 1000);
   });
 
-  res.send({
-    message: getMessage(),
-  })
+  res.send({ message: getMessage() })
 });
 
 app.get('/origin', async (req, res) => {
 
   const games = await query('SELECT * FROM [Origin Games]');
 
-  res.send({
-    games: games
-  })
+  res.send({ games })
 });
 
 
@@ -42,9 +36,7 @@ app.get('/ubisoft', async (req, res) => {
 
   const games = await query('SELECT * FROM [Ubisoft Games]');
 
-  res.send({
-    games: games
-  })
+  res.send({ games })
 });
 
 app.get('/steam', async (req, res) => {
@@ -52,12 +44,10 @@ app.get('/steam', async (req, res) => {
   const games = await query('SELECT * FROM [All Steam Games]');
 
   const mapped = lodash.map(games, (item) => {
-    return {finished: item.finished == 0 ? false : true, name: item.name, appid: item.appid }  
+    return {finished: item.finished == 0 ? false : true, name: item.name, appid: item.appid, idx: item.idx }  
   })
 
-  res.send({
-    games: mapped
-  })
+  res.send({ games: mapped })
 });
 
 
@@ -69,50 +59,39 @@ app.get('/all', async (req, res) => {
     return {finished: item.finished == 0 ? false : true, name: item.name, system: item.system }  
   })
 
-  res.send({
-    games: mapped
-  })
+  res.send({ games: mapped })
 });
 
 app.get('/wii', async (req, res) => {
 
   const games = await query('SELECT * FROM [Wii GC Games]');
 
-  res.send({
-    games: games
-  })
+  res.send({ games })
 });
 
 app.get('/wiiu', async (req, res) => {
 
   const games = await query('SELECT * FROM [WiiU Games]');
 
-  res.send({
-    games: games
-  })
+  res.send({ games })
 });
 
 app.get('/pc', async (req, res) => {
 
   const games = await query('SELECT * FROM [All PC Games]');
-
   
   const mapped = lodash.map(games, (item) => {
     return {finished: item.finished == 0 ? false : true, name: item.name, platform: item.platform }  
   })
 
-  res.send({
-    games: mapped
-  })
+  res.send({ games: mapped })
 });
 
 app.get('/console', async (req, res) => {
 
   const games = await query('SELECT * FROM [All Console Games]');
 
-  res.send({
-    games: games
-  })
+  res.send({ games })
 });
 
 app.post('/create', async (req,res) => {
@@ -138,17 +117,16 @@ app.post('/create', async (req,res) => {
         table = null;
       break;
   }
-    if (table == null){
-      const errorMessage ="Table does not match"; 
-      res.statusMessage = errorMessage;
-      res.status(400).send({msg: errorMessage}).end();
-    }
 
     title = req.body.title;
     finished = req.body.finished ? req.body.finished : false;
     id = req.body.id;
 
-    if (title == null || title == '' || title == undefined) {
+    if (table == null){
+      const errorMessage ="Table does not match"; 
+      res.statusMessage = errorMessage;
+      res.status(400).send({msg: errorMessage}).end();
+    } else if (title == null || title == '' || title == undefined) {
       const errorMessage ="Game Title is Empty"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
@@ -177,6 +155,9 @@ app.post('/finished', async (req, res) => {
   const tableName = req.body.table;
   let table, title, finished;
 
+  title = req.body.title;
+  finished = req.body.finished;
+
   switch (tableName) {
     case "wiiu":
         table = "WiiU Games"
@@ -198,18 +179,11 @@ app.post('/finished', async (req, res) => {
       const errorMessage ="Table does not match"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
-    }
-
-    title = req.body.title;
-    if (title == null || title == '' || title == undefined) {
+    } else if (title == null || title == '' || title == undefined) {
       const errorMessage ="Game Title is Empty"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
-    }
-
-    finished = req.body.finished;
-
-    if (finished == null) {
+    } else if (finished == null) {
       const errorMessage ="Finished is not Defined"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
@@ -268,6 +242,71 @@ app.delete('/remove', async (req, res) => {
   
     res.send({ok:"ok"})
     }
+});
+
+app.put('/update', async (req, res) => {
+
+  console.log(req.body)
+
+  const tableName = req.body.table;
+  let table, id, idx, title, finished, fisical_disc;
+
+  id = req.body.id;
+  idx = req.body.idx;
+  title = req.body.title;
+  finished = req.body.finished;
+  fisical_disc = req.body.fisical_disc;
+
+
+  switch (tableName) {
+    case "wiiu":
+        table = "WiiU Games"
+      break;
+    case "wii":
+        table = "Wii GC Games"
+      break;
+    case "origin":
+        table = "Origin Games"
+      break;
+    case "ubisoft":
+        table = "Ubisoft Games"
+      break;    
+    default:
+        table = null;
+      break;
+  }
+
+  if (table == null){
+    const errorMessage ="Table does not match"; 
+    res.statusMessage = errorMessage;
+    res.status(400).send({msg: errorMessage}).end();
+  } else if (title == null || title == '' || title == undefined) {
+    const errorMessage ="Game Title is Empty"; 
+    res.statusMessage = errorMessage;
+    res.status(400).send({msg: errorMessage}).end();
+  } else if (finished == null) {
+    const errorMessage ="Finished is not Defined"; 
+    res.statusMessage = errorMessage;
+    res.status(400).send({msg: errorMessage}).end();
+  } else if (idx == null) {
+    const errorMessage ="IDX is required"; 
+    res.statusMessage = errorMessage;
+    res.status(400).send({msg: errorMessage}).end();
+  } else {
+    let q = "";
+    if(table === 'WiiU Games' || table === 'Wii GC Games') {
+      q = `UPDATE [${table}] SET [id] = '${id}',[name] = '${title}', [finished] = ${finished}, [${table === 'WiiU Games'? 'fisical_disc' : 'fisical disc'}] = ${fisical_disc} WHERE [idx] = ${idx};`;  
+    }else {
+      q = `UPDATE [${table}] SET [id] = '${id}',[name] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`;  
+    }
+    console.log(q);
+  
+    const result = await execute(q);  
+  
+    res.send({ result });
+  
+    // res.send({ok:"ok"})
+  }  
 });
 
 app.listen(port, () => {
