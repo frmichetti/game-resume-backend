@@ -153,9 +153,10 @@ app.post('/finished', async (req, res) => {
   console.log(req.body)
   
   const tableName = req.body.table;
-  let table, title, finished;
+  let table, title, finished, appid;
 
   title = req.body.title;
+  appid = req.body.appid;
   finished = req.body.finished;
 
   switch (tableName) {
@@ -170,7 +171,10 @@ app.post('/finished', async (req, res) => {
       break;
     case "ubisoft":
         table = "Ubisoft Games"
-      break;    
+      break; 
+    case 'steam':
+        table = 'Steam Finished'    
+      break; 
     default:
         table = null;
       break;
@@ -187,17 +191,22 @@ app.post('/finished', async (req, res) => {
       const errorMessage ="Finished is not Defined"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
-    }
+    } else {
 
+      let q = "";
 
-  let q = "";
-  q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [name] = '${title}';`;
-  // console.log(q);
-
-  const result = await execute(q);
-  
-
-  res.send({ result });
+      if(tableName === 'steam'){
+        q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [appid] = ${appid};`;
+      } else {        
+        q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [name] = '${title}';`;        
+      } 
+      console.log(q);     
+    
+      const result = await execute(q);
+      
+    
+      res.send({ result });
+    }  
 });
 
 app.delete('/remove', async (req, res) => {
