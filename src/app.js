@@ -17,6 +17,25 @@ app.get('/', async (req, res) => {
   res.send({ message: getMessage()})
 });
 
+app.get('/statistics', async (req,res) => {
+  console.log("from", req.query.from);
+  let q = ""
+
+  switch (req.query.from) {
+    case 'finished':
+      q = 'SELECT * FROM [Total Finished Games for Dashboard];'  
+      break;
+    case 'totals':
+      q = `SELECT * FROM [Total Games for Dashboard];`
+      break;  
+    default:
+      q = 'SELECT 1'
+      break;
+  }  
+  const result = await query(q);
+  res.send({result})
+});
+
 app.get('/origin', async (req, res) => {
 
   const games = await query('SELECT * FROM [Origin Games]');
