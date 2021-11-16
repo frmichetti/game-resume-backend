@@ -318,6 +318,16 @@ app.put('/update', async (req, res) => {
   }  
 });
 
+app.post('/search', async (req, res) => {
+    const q = req.body.query;
+
+    console.log(req.body)
+    
+    const games = await query(`SELECT * FROM [All Games List] WHERE [title] Like "*${q}*";`);
+
+    res.send({ games })    
+})
+
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);
 });
