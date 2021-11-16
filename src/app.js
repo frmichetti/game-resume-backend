@@ -14,14 +14,7 @@ var port = 4000;
 
 
 app.get('/', async (req, res) => {
-  await new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log('waiting - ');
-      resolve(true);
-    }, 1000);
-  });
-
-  res.send({ message: getMessage() })
+  res.send({ message: getMessage()})
 });
 
 app.get('/origin', async (req, res) => {
@@ -94,11 +87,10 @@ app.get('/console', async (req, res) => {
   res.send({ games })
 });
 
-app.post('/create', async (req,res) => {
-  console.log(req.body)
+app.post('/create', async (req,res) => {  
   
   const tableName = req.body.table;
-  let table, title, finished, id;
+  let table, title, finished,fisical_disc, id;
 
   switch (tableName) {
     case "wiiu":
@@ -120,6 +112,7 @@ app.post('/create', async (req,res) => {
 
     title = req.body.title;
     finished = req.body.finished ? req.body.finished : false;
+    fisical_disc = req.body.fisical_disc ? req.body.fisical_disc : false;
     id = req.body.id;
 
     if (table == null){
@@ -136,21 +129,22 @@ app.post('/create', async (req,res) => {
       res.status(400).send({msg: errorMessage}).end();
     } else {
       let q = "";
-      q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}','${title}',${finished});`;
-      console.log(q);
-    
+
+      if(tableName === 'wii' || tableName === 'wiiu') {
+        q = `INSERT INTO [${table}] (id,title,finished,fisical_disc) VALUES ('${id}','${title}',${finished},${fisical_disc});`;
+      }else {
+        q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}','${title}',${finished});`;
+      }
+                
       const result = await execute(q);
-    
-      console.log(result);
-    
+        
       res.send({
         ok: "ok"    
       })
     }  
 });
 
-app.post('/finished', async (req, res) => {
-  console.log(req.body)
+app.post('/finished', async (req, res) => {  
   
   const tableName = req.body.table;
   let table, title, finished, appid;
@@ -199,18 +193,15 @@ app.post('/finished', async (req, res) => {
         q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [appid] = ${appid};`;
       } else {        
         q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [title] = '${title}';`;        
-      } 
-      console.log(q);     
+      }      
     
-      const result = await execute(q);
-      
+      const result = await execute(q);      
     
       res.send({ result });
     }  
 });
 
-app.delete('/remove', async (req, res) => {
-  console.log('req body: ' + req.body)
+app.delete('/remove', async (req, res) => { 
 
   const tableName = req.body.table;
   const title = req.body.title;
@@ -244,8 +235,7 @@ app.delete('/remove', async (req, res) => {
       res.status(400).send({msg: errorMessage}).end();
     } else{
       let q = "";
-      q = `DELETE FROM [${table}] WHERE [title] = '${title}';`;
-      console.log(q);
+      q = `DELETE FROM [${table}] WHERE [title] = '${title}';`;      
     
       const result = await execute(q);
   
@@ -254,8 +244,6 @@ app.delete('/remove', async (req, res) => {
 });
 
 app.put('/update', async (req, res) => {
-
-  console.log(req.body)
 
   const tableName = req.body.table;
   let table, id, idx, title, finished, fisical_disc;
@@ -307,21 +295,17 @@ app.put('/update', async (req, res) => {
       q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;  
     }else {
       q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`;  
-    }
-    console.log(q);
+    }    
   
     const result = await execute(q);  
   
-    res.send({ result });
-  
-    // res.send({ok:"ok"})
+    res.send({ result }); 
+   
   }  
 });
 
 app.post('/search', async (req, res) => {
-    const q = req.body.query;
-
-    console.log(req.body)
+    const q = req.body.query;    
     
     const games = await query(`SELECT * FROM [All Games List] WHERE [title] Like "*${q}*";`);
 

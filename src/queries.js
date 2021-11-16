@@ -5,23 +5,23 @@ const connection = ADODB.open('Provider=Microsoft.ACE.OLEDB.12.0;Data Source=D:\
 
 export async function query(sql) {
     try {
-      const result = await connection.query(sql);
-   
-     // console.log(JSON.stringify(result, null, 2));
+      const result = await connection.query(sql);   
+      
+      console.log(JSON.stringify(result, null, 2));
    
       return result;
     } catch (error) {
-      console.error(error);
+      console.error(error);      
     }
   }
   export async function execute(sql) {
     try {
       const result = await connection.execute(sql);
    
-     // console.log(JSON.stringify(result, null, 2));
+      console.log(JSON.stringify(result, null, 2));
    
       return result;
     } catch (error) {
-      console.error(error);
+      console.error(error);      
     }
   }
