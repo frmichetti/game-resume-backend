@@ -307,7 +307,7 @@ app.put('/update', async (req, res) => {
 app.post('/search', async (req, res) => {
     const q = req.body.query;    
     
-    const games = await query(`SELECT * FROM [All Games List] WHERE [title] Like "*${q}*";`);
+    const games = await query(`SELECT * FROM [All Games List API] WHERE title Like "*${q}*";`);
 
     res.send({ games })    
 })
