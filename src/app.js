@@ -44,7 +44,7 @@ app.get('/steam', async (req, res) => {
   const games = await query('SELECT * FROM [All Steam Games]');
 
   const mapped = lodash.map(games, (item) => {
-    return {finished: item.finished == 0 ? false : true, name: item.name, appid: item.appid, idx: item.idx }  
+    return {finished: item.finished == 0 ? false : true, title: item.title, appid: item.appid, idx: item.idx }  
   })
 
   res.send({ games: mapped })
@@ -56,7 +56,7 @@ app.get('/all', async (req, res) => {
   const games = await query('SELECT * FROM [All Games List]');
 
   const mapped = lodash.map(games, (item) => {
-    return {finished: item.finished == 0 ? false : true, name: item.name, system: item.system }  
+    return {finished: item.finished == 0 ? false : true, title: item.title, system: item.system }  
   })
 
   res.send({ games: mapped })
@@ -81,7 +81,7 @@ app.get('/pc', async (req, res) => {
   const games = await query('SELECT * FROM [All PC Games]');
   
   const mapped = lodash.map(games, (item) => {
-    return {finished: item.finished == 0 ? false : true, name: item.name, platform: item.platform }  
+    return {finished: item.finished == 0 ? false : true, title: item.title, platform: item.platform }  
   })
 
   res.send({ games: mapped })
@@ -136,8 +136,8 @@ app.post('/create', async (req,res) => {
       res.status(400).send({msg: errorMessage}).end();
     } else {
       let q = "";
-      q = `INSERT INTO [${table}] (ID,NAME,FINISHED) VALUES ('${id}','${title}',${finished});`;
-      // console.log(q);
+      q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}','${title}',${finished});`;
+      console.log(q);
     
       const result = await execute(q);
     
@@ -198,7 +198,7 @@ app.post('/finished', async (req, res) => {
       if(tableName === 'steam'){
         q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [appid] = ${appid};`;
       } else {        
-        q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [name] = '${title}';`;        
+        q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [title] = '${title}';`;        
       } 
       console.log(q);     
     
@@ -244,7 +244,7 @@ app.delete('/remove', async (req, res) => {
       res.status(400).send({msg: errorMessage}).end();
     } else{
       let q = "";
-      q = `DELETE FROM [${table}] WHERE [NAME] = '${title}';`;
+      q = `DELETE FROM [${table}] WHERE [title] = '${title}';`;
       console.log(q);
     
       const result = await execute(q);
@@ -304,9 +304,9 @@ app.put('/update', async (req, res) => {
   } else {
     let q = "";
     if(table === 'WiiU Games' || table === 'Wii GC Games') {
-      q = `UPDATE [${table}] SET [id] = '${id}',[name] = '${title}', [finished] = ${finished}, [${table === 'WiiU Games'? 'fisical_disc' : 'fisical disc'}] = ${fisical_disc} WHERE [idx] = ${idx};`;  
+      q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;  
     }else {
-      q = `UPDATE [${table}] SET [id] = '${id}',[name] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`;  
+      q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`;  
     }
     console.log(q);
   
