@@ -17,117 +17,163 @@ app.get('/', async (req, res) => {
   res.send({ message: getMessage()})
 });
 
+app.get('/test', async (req, res)=> {  
+  try {
+    let result =await query('SELECT * FROM [origins_games]')
+    res.status(200).send({result})
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  } 
+});
+
 app.get('/statistics', async (req,res) => {
   console.log("from", req.query.from);
   let q = ""
 
   switch (req.query.from) {
     case 'finished':
-      q = 'SELECT * FROM [Total Finished Games for Dashboard];'  
+      q = 'SELECT * FROM [total_finished_games_for_dashboard];'  
       break;
     case 'totals':
-      q = `SELECT * FROM [Total Games for Dashboard];`
+      q = `SELECT * FROM [total_games_for_dashboard];`
       break;  
     default:
       q = 'SELECT 1'
       break;
   }  
-  const result = await query(q);
-  res.send({result})
+  
+  try {
+    const result = await query(q);
+    res.send({result})
+    res.status(200).send({result})
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }  
 });
 
 app.get('/origin', async (req, res) => {
-
-  const games = await query('SELECT * FROM [Origin Games]');
-
-  res.send({ games })
+  try {
+    const games = await query('SELECT * FROM [origin_games]');
+    res.send({ games })
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }   
 });
 
 
 app.get('/ubisoft', async (req, res) => {
-
-  const games = await query('SELECT * FROM [Ubisoft Games]');
-
-  res.send({ games })
+  try {
+    const games = await query('SELECT * FROM [ubisoft_games]');
+    res.send({ games })
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }   
 });
 
 app.get('/steam', async (req, res) => {
+  try {
+    const games = await query('SELECT * FROM [all_steam_games]');
 
-  const games = await query('SELECT * FROM [All Steam Games]');
-
-  const mapped = lodash.map(games, (item) => {
-    return {finished: item.finished == 0 ? false : true, title: item.title, appid: item.appid, idx: item.idx }  
-  })
-
-  res.send({ games: mapped })
+    const mapped = lodash.map(games, (item) => {
+      return {finished: item.finished == 0 ? false : true, title: item.title, appid: item.appid, idx: item.idx }  
+    })
+  
+    res.send({ games: mapped })
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }   
 });
 
 
 app.get('/all', async (req, res) => {
+  try {
+    const games = await query('SELECT * FROM [all_games_list]');
 
-  const games = await query('SELECT * FROM [All Games List]');
-
-  const mapped = lodash.map(games, (item) => {
-    return {finished: item.finished == 0 ? false : true, title: item.title, system: item.system }  
-  })
-
-  res.send({ games: mapped })
+    const mapped = lodash.map(games, (item) => {
+      return {finished: item.finished == 0 ? false : true, title: item.title, system: item.system }  
+    })
+  
+    res.send({ games: mapped })
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }   
 });
 
 app.get('/wii', async (req, res) => {
+  try {
+    const games = await query('SELECT * FROM [wii_gc_games]');
 
-  const games = await query('SELECT * FROM [Wii GC Games]');
-
-  res.send({ games })
+    res.send({ games })
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }   
 });
 
 app.get('/wiiu', async (req, res) => {
+  try {
+    const games = await query('SELECT * FROM [wiiu_games]');
 
-  const games = await query('SELECT * FROM [WiiU Games]');
-
-  res.send({ games })
+    res.send({ games })
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }   
 });
 
 app.get('/pc', async (req, res) => {
-
-  const games = await query('SELECT * FROM [All PC Games]');
+  try {
+    const games = await query('SELECT * FROM [all_pc_games]');
   
-  const mapped = lodash.map(games, (item) => {
-    return {finished: item.finished == 0 ? false : true, title: item.title, platform: item.platform }  
-  })
-
-  res.send({ games: mapped })
+    const mapped = lodash.map(games, (item) => {
+      return {finished: item.finished == 0 ? false : true, title: item.title, platform: item.platform }  
+    })
+  
+    res.send({ games: mapped })
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }   
 });
 
 app.get('/console', async (req, res) => {
+  try {
+    const games = await query('SELECT * FROM [all_console_games]');
 
-  const games = await query('SELECT * FROM [All Console Games]');
-
-  res.send({ games })
+    res.send({ games })
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }   
 });
+
+const selectTable = (tableName) =>{
+  switch (tableName) {
+    case "wiiu":
+        return "wiiu_games"      
+    case "wii":
+      return "wii_gc_games"      
+    case "origin":
+      return "origin_games"      
+    case "ubisoft":
+      return "ubisoft_games"      
+    default:
+      return null;      
+  }
+}
 
 app.post('/create', async (req,res) => {  
   
   const tableName = req.body.table;
   let table, title, finished,fisical_disc, id;
 
-  switch (tableName) {
-    case "wiiu":
-        table = "WiiU Games"
-      break;
-    case "wii":
-        table = "Wii GC Games"
-      break;
-    case "origin":
-        table = "Origin Games"
-      break;
-    case "ubisoft":
-        table = "Ubisoft Games"
-      break;    
-    default:
-        table = null;
-      break;
-  }
+  table = selectTable(tableName)
 
     title = req.body.title;
     finished = req.body.finished ? req.body.finished : false;
@@ -154,12 +200,15 @@ app.post('/create', async (req,res) => {
       }else {
         q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}','${title}',${finished});`;
       }
-                
-      const result = await execute(q);
+
+      try {
+        const result = await execute(q);
         
-      res.send({
-        ok: "ok"    
-      })
+        res.send({ ok: "ok" })
+      } catch (error) {
+        console.error(error)
+        res.status(400).send({msg: error.process.message}).end();
+      }      
     }  
 });
 
@@ -172,27 +221,9 @@ app.post('/finished', async (req, res) => {
   appid = req.body.appid;
   finished = req.body.finished;
 
-  switch (tableName) {
-    case "wiiu":
-        table = "WiiU Games"
-      break;
-    case "wii":
-        table = "Wii GC Games"
-      break;
-    case "origin":
-        table = "Origin Games"
-      break;
-    case "ubisoft":
-        table = "Ubisoft Games"
-      break; 
-    case 'steam':
-        table = 'Steam Finished'    
-      break; 
-    default:
-        table = null;
-      break;
-  }
-    if (table == null){
+  table = selectTable(tableName)
+    
+  if (table == null){
       const errorMessage ="Table does not match"; 
       res.statusMessage = errorMessage;
       res.status(400).send({msg: errorMessage}).end();
@@ -213,10 +244,15 @@ app.post('/finished', async (req, res) => {
       } else {        
         q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [title] = '${title}';`;        
       }      
+
+      try {
+        const result = await execute(q);      
     
-      const result = await execute(q);      
-    
-      res.send({ result });
+        res.send({ result });
+      } catch (error) {
+        console.error(error)
+        res.status(400).send({msg: error.process.message}).end();
+      }       
     }  
 });
 
@@ -227,23 +263,8 @@ app.delete('/remove', async (req, res) => {
 
   let table;
 
-  switch (tableName) {
-    case "wiiu":
-        table = "WiiU Games"
-      break;
-    case "wii":
-        table = "Wii GC Games"
-      break;
-    case "origin":
-        table = "Origin Games"
-      break;
-    case "ubisoft":
-        table = "Ubisoft Games"
-      break;    
-    default:
-        table = null;
-      break;
-  }
+  table = selectTable(tableName)
+
     if (table == null){
       const errorMessage ="Table does not match"; 
       res.statusMessage = errorMessage;
@@ -256,9 +277,14 @@ app.delete('/remove', async (req, res) => {
       let q = "";
       q = `DELETE FROM [${table}] WHERE [title] = '${title}';`;      
     
-      const result = await execute(q);
+      try {
+        const result = await execute(q);
   
-    res.send({ok:"ok"})
+        res.send({ok:"ok"})
+      } catch (error) {
+        console.error(error)
+        res.status(400).send({msg: error.process.message}).end();
+      }       
     }
 });
 
@@ -274,23 +300,7 @@ app.put('/update', async (req, res) => {
   fisical_disc = req.body.fisical_disc;
 
 
-  switch (tableName) {
-    case "wiiu":
-        table = "WiiU Games"
-      break;
-    case "wii":
-        table = "Wii GC Games"
-      break;
-    case "origin":
-        table = "Origin Games"
-      break;
-    case "ubisoft":
-        table = "Ubisoft Games"
-      break;    
-    default:
-        table = null;
-      break;
-  }
+  table = selectTable(tableName)
 
   if (table == null){
     const errorMessage ="Table does not match"; 
@@ -310,25 +320,38 @@ app.put('/update', async (req, res) => {
     res.status(400).send({msg: errorMessage}).end();
   } else {
     let q = "";
-    if(table === 'WiiU Games' || table === 'Wii GC Games') {
+    
+    if(table === 'wiiu_games' || table === 'wii_gc_games') {
       q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;  
     }else {
       q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`;  
     }    
+
+    try {
+      const result = await execute(q);  
   
-    const result = await execute(q);  
+      res.send({ result }); 
+     
+    } catch (error) {
+      console.error(error)
+      res.status(400).send({msg: error.process.message}).end();
+    } 
   
-    res.send({ result }); 
-   
+    
   }  
 });
 
 app.post('/search', async (req, res) => {
-    const q = req.body.query;    
-    
-    const games = await query(`SELECT * FROM [All Games List API] WHERE title Like "*${q}*";`);
+  const q = req.body.query;     
+    try {
+       
+      const games = await query(`SELECT * FROM [all_games_list_api] WHERE title Like "*${q}*";`);
 
-    res.send({ games })    
+      res.send({ games })    
+    } catch (error) {
+      console.error(error)
+      res.status(400).send({msg: error.process.message}).end();
+    }     
 })
 
 app.listen(port, () => {
