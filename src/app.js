@@ -44,8 +44,7 @@ app.get('/statistics', async (req,res) => {
   }  
   
   try {
-    const result = await query(q);
-    res.send({result})
+    const result = await query(q);    
     res.status(200).send({result})
   } catch (error) {
     console.error(error)
