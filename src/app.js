@@ -5,12 +5,47 @@ import cors from 'cors';
 import lodash from 'lodash';
 import bodyParser from "body-parser";
 
+import {graphqlHTTP} from 'express-graphql';
+
+var { buildSchema } = require('graphql');
+
+// Construct a schema, using GraphQL schema language
+var schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`);
+
+// The root provides a resolver function for each API endpoint
+var root = {
+  hello: () => {
+    return 'Hello world!';
+  },
+};
+
+
 var app = express();
+
+app.use('/graphql', graphqlHTTP({
+  schema,
+  rootValue: root,
+  graphiql: true,
+}));
+
 app.use(cors());
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var port = 4000;
+
+app.use('/graphql', graphqlHTTP(req => ({
+  schema,
+  context: {
+    db: { },
+    auth: { }
+  },
+  graphiql: true
+})));
 
 
 app.get('/', async (req, res) => {
