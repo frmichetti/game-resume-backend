@@ -75,6 +75,12 @@ const typeDefs = `
     idx: ID
     ${inputUbisoftGame}
   }
+  type SteamGame {
+    appid: String
+    title: String
+    playtime_forever: Int
+    playtime_hours: Float 
+  }
   type DLC {
     idx: ID
     id: String
@@ -88,6 +94,7 @@ const typeDefs = `
     allOriginGames: [OriginGame!]!
     allUbisoftGames: [UbisoftGame!]!
     allDLCs: [DLC!]!
+    allSteamGames: [SteamGame!]!
     getWiiUGame(id: String!): WiiUGame
     getWiiGCGame(id: String!): WiiGCGame
     getOriginGame(idx: ID!): OriginGame
@@ -132,6 +139,10 @@ const resolvers = {
     },
     allDLCs: async (parent, args, ctx, info) => {
       const games = await ctx.db.query('SELECT * FROM [dlcs]')
+      return games;
+    },
+    allSteamGames: async (parent, args, ctx, info) => {
+      const games = await ctx.db.query('SELECT * FROM [all_steam_games]')
       return games;
     },
     getWiiUGame: async (parent, { id }, ctx, info) => {
