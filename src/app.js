@@ -1,27 +1,16 @@
 import express from 'express';
 import getMessage from './getMessage';
-import {query, execute} from './queries';
+import { query, execute, connection } from './queries';
 import cors from 'cors';
 import lodash from 'lodash';
 import bodyParser from "body-parser";
 
-import {graphqlHTTP} from 'express-graphql';
+import { graphqlHTTP } from 'express-graphql';
 
-var { buildSchema } = require('graphql');
 
-// Construct a schema, using GraphQL schema language
-var schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
+import { schema } from './schema';
+import { root } from './resolvers'
 
-// The root provides a resolver function for each API endpoint
-var root = {
-  hello: () => {
-    return 'Hello world!';
-  },
-};
 
 
 var app = express();
@@ -30,6 +19,9 @@ app.use('/graphql', graphqlHTTP({
   schema,
   rootValue: root,
   graphiql: true,
+  context: {
+    db: connection
+  }
 }));
 
 app.use(cors());
@@ -37,16 +29,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var port = 4000;
-
-app.use('/graphql', graphqlHTTP(req => ({
-  schema,
-  context: {
-    db: { },
-    auth: { }
-  },
-  graphiql: true
-})));
-
 
 app.get('/', async (req, res) => {
   res.send({ message: getMessage()})
