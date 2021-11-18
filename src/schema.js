@@ -61,6 +61,7 @@ export const schema = buildSchema(`
   type WiiUGame {
     idx: ID
     ${inputsWiiU}  
+    dlcs: [DLC!]!
   }
   type WiiGCGame {
     idx: ID
@@ -74,11 +75,18 @@ export const schema = buildSchema(`
     idx: ID
     ${inputUbisoftGame}
   }
+  type DLC {
+    idx: ID
+    id: String
+    title: String
+    finished: Boolean
+  }
   type Query {    
     allWiiUGames: [WiiUGame!]!
     allWiiGCGames: [WiiGCGame!]!
     allOriginGames: [OriginGame!]!
     allUbisoftGames: [UbisoftGame!]!
+    allDLCs: [DLC!]!
     getWiiUGame(id: String!): WiiUGame
     getWiiGCGame(id: String!): WiiGCGame
     getOriginGame(idx: ID!): OriginGame

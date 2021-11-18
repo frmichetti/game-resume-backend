@@ -1,4 +1,9 @@
 // The root provides a resolver function for each API endpoint
+
+/**
+      
+ */
+
 export const root = {    
     allWiiUGames: async (_,ctx) => {        
         const games = await ctx.db.query('SELECT * FROM [wiiu_games]')
@@ -14,6 +19,10 @@ export const root = {
     },
     allUbisoftGames: async (_,ctx) => {        
       const games = await ctx.db.query('SELECT * FROM [ubisoft_games]')
+      return games;
+    },
+    allDLCs: async (_,ctx) => {        
+      const games = await ctx.db.query('SELECT * FROM [dlcs]')
       return games;
     },
     getWiiUGame: async ({id}, ctx) => {      
@@ -123,5 +132,11 @@ export const root = {
         resp = false
       }      
       return resp;
-    }
+    },
+    WiiUGame:{
+      dlcs: (parent,params,context,info) => {
+        console.log(parent)
+        return [{idx: 1, id: "123", title: "Teste Node", finished: true}]
+      }
+    },   
   };  
