@@ -7,28 +7,28 @@ import bodyParser from "body-parser";
 
 import { graphqlHTTP } from 'express-graphql';
 
-
-import { schema } from './schema';
-import { root } from './resolvers'
+import schema from './schema';
 
 
+let app = express();
 
-var app = express();
-
-app.use('/graphql', graphqlHTTP({
-  schema,
-  rootValue: root,
-  graphiql: true,
-  context: {
-    db: connection
+app.use('/graphql',
+  (req,res,next) => {
+    req["context"] = {}
+    req["context"].db = connection;
+    next();
   }
-}));
+ ,graphqlHTTP((req)=> ({  
+    schema,  
+    graphiql: true,
+    context: req['context']    
+ })));
 
 app.use(cors());
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-var port = 4000;
+const port = 4000;
 
 app.get('/', async (req, res) => {
   res.send({ message: getMessage()})
