@@ -87,14 +87,27 @@ const typeDefs = `
     title: String
     finished: Boolean
   }
+  type ConsoleGame {
+    title: String
+    finished: Boolean
+    fisical_disc:Boolean
+    system: String
+  }
+  type PCGame {
+    title: String
+    platform: String
+    finished: Boolean
+  }
   type Query {    
     hello: String
     allWiiUGames: [WiiUGame!]!
     allWiiGCGames: [WiiGCGame!]!
     allOriginGames: [OriginGame!]!
     allUbisoftGames: [UbisoftGame!]!
-    allDLCs: [DLC!]!
     allSteamGames: [SteamGame!]!
+    allDLCs: [DLC!]!
+    allConsoleGames: [ConsoleGame!]!   
+    allPCGames: [PCGame!]!
     getWiiUGame(id: String!): WiiUGame
     getWiiGCGame(id: String!): WiiGCGame
     getOriginGame(idx: ID!): OriginGame
@@ -143,6 +156,14 @@ const resolvers = {
     },
     allSteamGames: async (parent, args, ctx, info) => {
       const games = await ctx.db.query('SELECT * FROM [all_steam_games]')
+      return games;
+    },
+    allConsoleGames: async (parent, args, ctx, info) => {
+      const games = await ctx.db.query('SELECT * FROM [all_console_games]')
+      return games;
+    },
+    allPCGames: async (parent, args, ctx, info) => {
+      const games = await ctx.db.query('SELECT * FROM [all_pc_games]')
       return games;
     },
     getWiiUGame: async (parent, { id }, ctx, info) => {
