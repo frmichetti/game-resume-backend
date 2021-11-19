@@ -78,6 +78,7 @@ const typeDefs = `
   type SteamGame {
     appid: String
     title: String
+    finished: Boolean
     playtime_forever: Int
     playtime_hours: Float 
   }
@@ -85,7 +86,7 @@ const typeDefs = `
     idx: ID
     id: String
     title: String
-    finished: Boolean
+    finished: Boolean   
   }
   type ConsoleGame {
     title: String
@@ -98,6 +99,27 @@ const typeDefs = `
     platform: String
     finished: Boolean
   }
+  type Game {
+    title: String
+    system: String
+    finished: Boolean
+  }
+  type TotalFinishedInfo {
+    description: String
+    total_games_finished: Int
+  }
+  type TotalGameInfo {
+    description: String
+    total_games: Int
+  }
+  type AppendGameDLC {
+    dlc_id: String
+    dlc_title: String
+    dlc_finished: Boolean
+    appid: String
+    game_title: String
+    game_finished: Boolean
+  }  
   type Query {    
     hello: String
     allWiiUGames: [WiiUGame!]!
@@ -108,10 +130,16 @@ const typeDefs = `
     allDLCs: [DLC!]!
     allConsoleGames: [ConsoleGame!]!   
     allPCGames: [PCGame!]!
+    allGames: [Game!]!
+    allGamesWithDLCs: [AppendGameDLC!]!
     getWiiUGame(id: String!): WiiUGame
     getWiiGCGame(id: String!): WiiGCGame
     getOriginGame(idx: ID!): OriginGame
     getUbisoftGame(idx: ID!): UbisoftGame
+    getConsoleFinishedGames(finished: Boolean!): [ConsoleGame!]!
+    getPCFinishedGames(finished: Boolean!): [PCGame!]!
+    getStatisticsOfTotalGames: [TotalGameInfo!]!
+    getStatisticsOfTotalFinishedGames: [TotalFinishedInfo!]!
   }
   type Mutation {
     createWiiUGame(input: WiiUGameInput): WiiUGame
@@ -155,7 +183,7 @@ const resolvers = {
       return games;
     },
     allSteamGames: async (parent, args, ctx, info) => {
-      const games = await ctx.db.query('SELECT * FROM [all_steam_games]')
+      const games = await ctx.db.query('SELECT * FROM [append_list_steam_finished_games]')
       return games;
     },
     allConsoleGames: async (parent, args, ctx, info) => {
@@ -166,6 +194,14 @@ const resolvers = {
       const games = await ctx.db.query('SELECT * FROM [all_pc_games]')
       return games;
     },
+    allGames: async (parent, args, ctx, info) => {
+      const games = await ctx.db.query('SELECT * FROM [all_games_list]')
+      return games;
+    },
+    allGamesWithDLCs: async (parent, args, ctx, info) => {
+      const games = await ctx.db.query('SELECT * FROM [append_dlcs_with_games]')
+      return games;
+    },    
     getWiiUGame: async (parent, { id }, ctx, info) => {
       const game = await ctx.db.query(`SELECT * FROM [wiiu_games] WHERE [id] = '${id}'`)
       return game[0];
@@ -181,7 +217,42 @@ const resolvers = {
     getUbisoftGame: async (parent, { idx }, ctx, info) => {
       const game = await ctx.db.query(`SELECT * FROM [ubisoft_games] WHERE [idx] = ${idx}`)
       return game[0];
-    }
+    },
+    getConsoleFinishedGames: async (parent, { finished }, ctx, info) => {
+      const sql = `SELECT *
+      FROM (SELECT [wii_gc_games].title AS title, [wii_gc_games].finished AS finished, [wii_gc_games].[fisical_disc] AS fisical_disc, [wii_gc_games].[iso_type] as system
+      FROM [wii_gc_games]
+      UNION
+      SELECT [wiiu_games].title AS title, [wiiu_games].finished AS finished, [wiiu_games].fisical_disc AS fisical_disc, "WiiU" as system
+      FROM [wiiu_games] 
+      )  AS all_fisical_and_finished
+      WHERE (((all_fisical_and_finished.[finished])=${finished}));
+      `
+      const games = await ctx.db.query(sql)
+      return games;
+    },
+    getPCFinishedGames: async (parent, { finished }, ctx, info) => {
+      const sql = `SELECT *
+      FROM (SELECT [origin_games].title AS title, "Origin" AS platform, CBOOL([origin_games].finished) as finished 
+      FROM [origin_games]
+       UNION
+      SELECT [ubisoft_games].title AS title, "Ubisoft" AS platform, CBOOL([ubisoft_games].finished) as finished
+      FROM [ubisoft_games]
+       UNION SELECT [steam_games].[title] AS title, "Steam" AS platform, CBOOL([steam_finished].[finished]) as finished
+      FROM  [steam_finished] INNER JOIN [steam_games] ON [steam_finished].[appid] = [steam_games].[appid] )  AS pc_finished_games
+      WHERE finished = ${finished};
+      `
+      const games = await ctx.db.query(sql)
+      return games;
+    },
+    getStatisticsOfTotalGames: async (parent, { idx }, ctx, info) => {
+      const stats = await ctx.db.query(`SELECT * FROM [total_games_for_dashboard]`)
+      return stats;
+    },
+    getStatisticsOfTotalFinishedGames: async (parent, { idx }, ctx, info) => {
+      const stats = await ctx.db.query(`SELECT * FROM [total_finished_games_for_dashboard]`)
+      return stats;
+    },
   },
   Mutation: {
     createWiiUGame: async (parent, args, ctx, info)  => {
@@ -287,7 +358,7 @@ const resolvers = {
         console.error(error)
       }         
     }
-  },
+  }  
 };
 
 export default makeExecutableSchema({ typeDefs, resolvers });
