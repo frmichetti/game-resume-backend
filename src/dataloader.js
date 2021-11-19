@@ -1,30 +1,29 @@
 import DataLoader from "dataloader"
-import _ from "lodash";
-class DLCLoader {    
+
+
+class DLCLoader {
     static async batchDlcs(connection, ids) {
         let idsString = ids.map(v => `"${v}"`).toString();
         let sql = `SELECT * FROM [dlcs] WHERE id IN (${idsString}) ORDER BY id ASC;`;
         console.log("data loader sql: ", sql)
         const dlcs = await connection.query(sql);
 
-        const arr = []
 
-        // cria um objeto js onde cada chave é um id de dlc
-        // e o valor, o dlc em si
-        const dlcsMap = dlcs.reduce((prev, dlc) => {            
-            return { ...prev, [dlc.id]: [prev, dlc] }
-        }
-        );
-        
-        let ordened;
+        const ordened = new Map()
 
-        // garante que os dlcs serão retornados na mesma ordem
-        // do array de ids
-        ordened = ids.map(id => dlcsMap[id])
-        
-        ordened = ordened.map(o => o == undefined ? [] : o)
+        dlcs.forEach(dlc=>{
+            ordened.set(dlc.id, [])
+        })
 
-        return Promise.resolve(ordened);
+        let id;
+        dlcs.forEach(dlc => {
+            id = dlc.id
+            ordened.get(id).push(dlc)
+        })
+
+        let response = ids.map(id => ordened.get(id))
+        response = response.map(i => i == undefined ? [] : i)
+        return Promise.resolve(response);
     }
 }
 

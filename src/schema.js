@@ -95,6 +95,7 @@ const typeDefs = `
     system: String
   }
   type PCGame {
+    id: String
     title: String
     platform: String
     finished: Boolean
@@ -363,11 +364,13 @@ const resolvers = {
     }
   },
   PCGame: {
-    dlcs: async (parent, args, ctx, info) => {   
+    dlcs: async (parent, args, {db, dataloaders}, info) => {   
       let dlcs;
       try {
-        dlcs = await ctx.db.query(`SELECT * FROM [dlcs] WHERE [id] = '${parent.id}'`)  
-        return dlcs
+        /*dlcs = await ctx.db.query(`SELECT * FROM [dlcs] WHERE [id] = '${parent.id}'`)  
+        return dlcs*/
+        dlcs = dataloaders.dlcLoader.load(parent.id);
+        return dlcs;
       } catch (error) {
         console.error(error)
       }         
