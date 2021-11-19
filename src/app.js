@@ -8,14 +8,17 @@ import bodyParser from "body-parser";
 import { graphqlHTTP } from 'express-graphql';
 
 import schema from './schema';
+import { DataLoaderFactory } from './dataloader';
 
 
-let app = express();
+const app = express();
+const dataLoaderFactory = new DataLoaderFactory(connection);
 
 app.use('/graphql',
-  (req,res,next) => {
+  (req, res, next) => {
     req["context"] = {}
     req["context"].db = connection;
+    req["context"].dataloaders = dataLoaderFactory.getLoaders();
     next();
   }
  ,graphqlHTTP((req)=> ({  

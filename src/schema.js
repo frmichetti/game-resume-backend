@@ -98,6 +98,7 @@ const typeDefs = `
     title: String
     platform: String
     finished: Boolean
+    dlcs: [DLC!]!
   }
   type Game {
     title: String
@@ -349,6 +350,19 @@ const resolvers = {
     }
   },
   WiiUGame: {
+    dlcs: async (parent, args, {db, dataloaders}, info) => {   
+      let dlcs;            
+      try {
+        /*dlcs = await db.query(`SELECT * FROM [dlcs] WHERE [id] = '${parent.id}'`)          
+        return dlcs*/
+        dlcs = dataloaders.dlcLoader.load(parent.id);
+        return dlcs;
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  },
+  PCGame: {
     dlcs: async (parent, args, ctx, info) => {   
       let dlcs;
       try {
@@ -358,7 +372,7 @@ const resolvers = {
         console.error(error)
       }         
     }
-  }  
+  }   
 };
 
 export default makeExecutableSchema({ typeDefs, resolvers });
