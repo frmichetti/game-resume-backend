@@ -9,16 +9,19 @@ import { graphqlHTTP } from 'express-graphql';
 
 import schema from './schema';
 import { DataLoaderFactory } from './dataloader';
+import { RequestedFiels } from './RequestedFields';
 
 
 const app = express();
 const dataLoaderFactory = new DataLoaderFactory(connection);
+const requestedFields = new RequestedFiels();
 
 app.use('/graphql',
   (req, res, next) => {
     req["context"] = {}
     req["context"].db = connection;
     req["context"].dataloaders = dataLoaderFactory.getLoaders();
+    req["context"].requestedFields = requestedFields;
     next();
   }
  ,graphqlHTTP((req)=> ({  
