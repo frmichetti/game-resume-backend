@@ -1,5 +1,4 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-const graphqlFields = require('graphql-fields');
 
 const inputsWiiU = `
   id: String
@@ -402,9 +401,7 @@ const resolvers = {
   WiiUGame: {
     dlcs: async (parent, args, { db, dataloaders }, info) => {
       let dlcs;
-      try {
-        /*dlcs = await db.query(`SELECT * FROM [dlcs] WHERE [id] = '${parent.id}'`)          
-        return dlcs*/
+      try {        
         dlcs = dataloaders.dlcLoader.load(parent.id);
         return dlcs;
       } catch (error) {
@@ -415,9 +412,7 @@ const resolvers = {
   PCGame: {
     dlcs: async (parent, args, { db, dataloaders }, info) => {
       let dlcs;
-      try {
-        /*dlcs = await ctx.db.query(`SELECT * FROM [dlcs] WHERE [id] = '${parent.id}'`)  
-        return dlcs*/
+      try {        
         dlcs = dataloaders.dlcLoader.load(parent.id);
         return dlcs;
       } catch (error) {

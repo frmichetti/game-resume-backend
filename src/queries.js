@@ -5,14 +5,11 @@ export const connection = ADODB.open(`Provider=Microsoft.ACE.OLEDB.12.0;Data Sou
 
 export async function query(sql) {
       const result = await connection.query(sql);   
-      console.log(sql)
-      // console.log(JSON.stringify(result, null, 2));   
+      console.log(sql)      
       return result;
   }
   export async function execute(sql) {    
       const result = await connection.execute(sql);
-      console.log(sql)
-      // console.log(JSON.stringify(result, null, 2));
-   
+      console.log(sql)         
       return result;    
   }
