@@ -237,6 +237,23 @@ app.post('/create', async (req,res) => {
     }  
 });
 
+app.post('/dlc_finished', async (req, res) => {
+  const {idx, id, finished} = req.body
+  let q = `UPDATE [dlcs] SET [finished] = ${finished} WHERE [idx] = ${idx} AND [id] = '${id}';`;
+  try {
+    let result = await execute(q);      
+
+    q = `SELECT * FROM [dlcs] WHERE [id] = '${id}';`
+    
+    result = await query(q);
+
+    res.send({ dlcs: result });
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }       
+});
+
 app.post('/finished', async (req, res) => {  
   
   const tableName = req.body.table;
