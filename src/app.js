@@ -1,8 +1,7 @@
 import express from 'express';
 import * as requests from './requests';
-import { query, execute, connection } from './queries';
+import { connection } from './queries';
 import cors from 'cors';
-import lodash from 'lodash';
 import bodyParser from "body-parser";
 
 import { graphqlHTTP } from 'express-graphql';
