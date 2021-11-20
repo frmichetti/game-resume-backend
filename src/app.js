@@ -376,6 +376,18 @@ app.post('/search', async (req, res) => {
     }     
 })
 
+app.get('/dlcs', async (req, res) => {
+  const id = req.query.id;
+  console.log(id)
+  try {       
+    const dlcs = await query(`SELECT * FROM [dlcs] WHERE id = '${id}';`);
+    res.send({ dlcs })    
+  } catch (error) {
+    console.error(error)
+    res.status(400).send({msg: error.process.message}).end();
+  }    
+})
+
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);
 });

@@ -140,6 +140,7 @@ const typeDefs = `
     getUbisoftGame(idx: ID!): UbisoftGame
     getConsoleFinishedGames(finished: Boolean!): [ConsoleGame!]!
     getPCFinishedGames(finished: Boolean!): [PCGame!]!
+    getDLC(id: String!) : [DLC!]!
     getStatisticsOfTotalGames: [TotalGameInfo!]!
     getStatisticsOfTotalFinishedGames: [TotalFinishedInfo!]!
   }
@@ -261,6 +262,13 @@ const resolvers = {
       console.log(sql)
       const game = await ctx.db.query(sql)
       return game[0];
+    },
+    getDLC: async (parent, { id }, ctx, info) => {
+      const fields = ctx.requestedFields.getFields(info, {})      
+      const sql = `SELECT ${fields.toString()} FROM [dlcs] WHERE [id] = '${id}'`
+      console.log(sql)
+      const dlcs = await ctx.db.query(sql)
+      return dlcs;
     },
     getConsoleFinishedGames: async (parent, { finished }, ctx, info) => {
       const sql = `SELECT *
