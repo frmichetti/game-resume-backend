@@ -16,6 +16,10 @@ const app = express();
 const dataLoaderFactory = new DataLoaderFactory(connection);
 const requestedFields = new RequestedFiels();
 
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 app.use('/graphql',
   (req, res, next) => {
     req["context"] = {}
@@ -30,10 +34,9 @@ app.use('/graphql',
     context: req['context']    
  })));
 
-app.use(cors());
+
 //Here we are configuring express to use body-parser as middle-ware.
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+
 const port = 4000;
 
 app.get('/', async (req, res) => {
