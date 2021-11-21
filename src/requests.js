@@ -6,6 +6,8 @@ const selectTable = (tableName) => {
     switch (tableName) {
         case "wiiu":
             return "wiiu_games"
+        case "gamecube":
+            return "gamecube_games"
         case "wii":
             return "wii_games"
         case "origin":
@@ -49,6 +51,16 @@ const showStatistics = async (req, res) => {
 
     try {
         const result = await query(q);
+        res.status(200).send({ result })
+    } catch (error) {
+        console.error(error)
+        res.status(400).send({ msg: error.process.message }).end();
+    }
+}
+
+const showCategories = async (req, res) => {
+    try {
+        let result = await query('SELECT * FROM [categories]')
         res.status(200).send({ result })
     } catch (error) {
         console.error(error)
@@ -120,6 +132,28 @@ const showWiiGames = async (req, res) => {
 const showWiiUGames = async (req, res) => {
     try {
         const games = await query('SELECT * FROM [wiiu_games]');
+
+        res.send({ games })
+    } catch (error) {
+        console.error(error)
+        res.status(400).send({ msg: error.process.message }).end();
+    }
+}
+
+const showGameCubeGames = async (req, res) => {
+    try {
+        const games = await query('SELECT * FROM [gamecube_games]');
+
+        res.send({ games })
+    } catch (error) {
+        console.error(error)
+        res.status(400).send({ msg: error.process.message }).end();
+    }
+}
+
+const showVirtualConsoleGames = async (req, res) => {
+    try {
+        const games = await query('SELECT * FROM [virtual_console_games]');
 
         res.send({ games })
     } catch (error) {
@@ -315,7 +349,7 @@ const updateGame = async (req, res) => {
     } else {
         let q = "";
 
-        if (table === 'wiiu_games' || table === 'wii_games') {
+        if (table === 'wiiu_games' || table === 'wii_games' || table === 'gamecube_games') {
             q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;
         } else {
             q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`;
@@ -366,8 +400,8 @@ const deleteGame = async (req, res) => {
 }
 
 export {
-    showWelcome, showTest, showStatistics, showOriginGames, showUbisoftGames,
-    showSteamGames, showAllGames, showWiiGames, showWiiUGames, showPCGames,
-    showConsoleGames, showDLCs, createGames, finishDLC, finishGame, searchGame,
-    updateGame, deleteGame
+    showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
+    showSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
+    showWiiUGames, showPCGames, showConsoleGames, showDLCs, createGames, finishDLC, finishGame,
+    searchGame, updateGame, deleteGame
 }
