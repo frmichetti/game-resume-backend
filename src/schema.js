@@ -31,6 +31,12 @@ const inputVirtualConsoleGame = `
   system: String  
 `;
 
+const inputToBuyGame = `    
+  title: String  
+  finished: Boolean  
+  system: String  
+`;
+
 const inputOriginGame = `
   id: String
   title: String
@@ -56,6 +62,9 @@ const typeDefs = `
   input VirtualConsoleGameInput {
     ${inputVirtualConsoleGame}
   }
+  input ToBuyGameInput {
+    ${inputToBuyGame}
+  }
   input OriginGameInput{
     ${inputOriginGame}
   }
@@ -73,6 +82,10 @@ const typeDefs = `
   input VirtualConsoleGameUpdateInput {
     idx: ID
     ${inputVirtualConsoleGame}
+  }  
+  input ToBuyGameUpdateInput {
+    idx: ID
+    ${inputToBuyGame}
   }  
   input WiiUGameUpdateInput {
     idx: ID
@@ -102,6 +115,10 @@ const typeDefs = `
   type VirtualConsoleGame{
     idx: ID
     ${inputVirtualConsoleGame}
+  }
+  type ToBuyGame {
+    idx: ID
+    ${inputToBuyGame}
   }
   type OriginGame {
     idx: ID
@@ -164,6 +181,7 @@ const typeDefs = `
     allWiiGames: [WiiGame!]!
     allGameCubeGames: [GameCubeGame!]!
     allVirtualConsoleGames: [VirtualConsoleGame!]!
+    allToBuyGames: [ToBuyGame!]!
     allOriginGames: [OriginGame!]!
     allUbisoftGames: [UbisoftGame!]!
     allSteamGames: [SteamGame!]!
@@ -176,6 +194,7 @@ const typeDefs = `
     getWiiGame(id: String!): WiiGame
     getGameCubeGame(id: String!): GameCubeGame
     getVirtualConsoleGame(id: String!): VirtualConsoleGame
+    getToBuyGame(idx: ID!): ToBuyGame
     getOriginGame(idx: ID!): OriginGame
     getUbisoftGame(idx: ID!): UbisoftGame
     getConsoleFinishedGames(finished: Boolean!): [ConsoleGame!]!
@@ -189,18 +208,21 @@ const typeDefs = `
     createWiiGame(input: WiiGameInput): WiiGame
     createGameCubeGame(input: GameCubeGameInput): GameCubeGame
     createVirtualConsoleGame(input: VirtualConsoleGameInput): VirtualConsoleGame
+    createToBuyGame(input: ToBuyGameInput): ToBuyGame
     createOriginGame(input: OriginGameInput): OriginGame
     createUbisoftGame(input: UbisoftGameInput): UbisoftGame
     updateWiiUGame(input: WiiUGameUpdateInput): WiiUGame
     updateWiiGame(input: WiiGameUpdateInput): WiiGame
     updateGameCubeGame(input: GameCubeGameUpdateInput): GameCubeGame
     updateVirtualConsoleGame(input: VirtualConsoleGameUpdateInput): VirtualConsoleGame
+    updateToBuyGame(input: ToBuyGameUpdateInput): ToBuyGame
     updateOriginGame(input: OriginUpdateGameInput): OriginGame
     updateUbisoftGame(input: UbisoftUpdateGameInput): UbisoftGame
     deleteWiiUGame(idx: ID!): Boolean
     deleteWiiGame(idx: ID!): Boolean
     deleteGameCubeGame(idx: ID!): Boolean
     deleteVirtualConsoleGame(idx: ID!): Boolean
+    deleteToBuyGame(idx: ID!): Boolean
     deleteOriginGame(idx: ID!): Boolean
     deleteUbisoftGame(idx: ID!): Boolean
   }
@@ -235,6 +257,13 @@ const resolvers = {
     allVirtualConsoleGames: async (parent, args, ctx, info) => {
       const fields = ctx.requestedFields.getFields(info, {})      
       const sql = `SELECT ${fields.toString()} FROM [virtual_console_games]`
+      console.log(sql)
+      const games = await ctx.db.query(sql)
+      return games;
+    },
+    allToBuyGames: async (parent, args, ctx, info) => {
+      const fields = ctx.requestedFields.getFields(info, {})      
+      const sql = `SELECT ${fields.toString()} FROM [to_buy_games]`
       console.log(sql)
       const games = await ctx.db.query(sql)
       return games;
@@ -323,6 +352,13 @@ const resolvers = {
       const game = await ctx.db.query(sql)
       return game[0];
     },
+    getToBuyGame: async (parent, { idx }, ctx, info) => {
+      const fields = ctx.requestedFields.getFields(info, {})      
+      const sql = `SELECT ${fields.toString()} FROM [to_buy_games] WHERE [idx] = '${idx}'`
+      console.log(sql)
+      const game = await ctx.db.query(sql)
+      return game[0];
+    },
     getOriginGame: async (parent, { idx }, ctx, info) => {
       const fields = ctx.requestedFields.getFields(info, {})      
       const sql = `SELECT ${fields.toString()} FROM [origin_games] WHERE [idx] = ${idx}`
@@ -344,15 +380,15 @@ const resolvers = {
       const dlcs = await ctx.db.query(sql)
       return dlcs;
     },
-    getConsoleFinishedGames: async (parent, { finished }, ctx, info) => {  
-      // TODO insert virtual console select    
+    getConsoleFinishedGames: async (parent, { finished }, ctx, info) => {         
       const sql = `SELECT * FROM (
         SELECT [wii_games].title AS title, [wii_games].finished AS finished, [wii_games].[fisical_disc] AS fisical_disc, "Wii" as system FROM [wii_games]
               UNION
         SELECT [gamecube_games].title AS title, [gamecube_games].finished AS finished, [gamecube_games].[fisical_disc] AS fisical_disc, "GameCube" as system FROM [gamecube_games]
               UNION
-        SELECT [wiiu_games].title AS title, [wiiu_games].finished AS finished, [wiiu_games].fisical_disc AS fisical_disc, "WiiU" as system
-              FROM [wiiu_games] 
+        SELECT [wiiu_games].title AS title, [wiiu_games].finished AS finished, [wiiu_games].fisical_disc AS fisical_disc, "WiiU" as system FROM [wiiu_games] 
+              UNION
+        SELECT [virtual_console_games].title AS title, [virtual_console_games].finished AS finished, false AS fisical_disc, [virtual_console_games].system as system FROM [virtual_console_games] 
               ) AS all_fisical_and_finished
               WHERE (((all_fisical_and_finished.[finished])=${finished}))`
       const games = await ctx.db.query(sql)
@@ -412,6 +448,12 @@ const resolvers = {
       const game = await ctx.db.query(`SELECT * FROM [virtual_console_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
       return game[0];
     },
+    createToBuyGame: async (parent, args, ctx, info) => {
+      const { title, finished, system  } = args.input;
+      await ctx.db.execute(`INSERT INTO [to_buy_games] (title,finished,system) VALUES ('${title}',${finished},'${system}');`)
+      const game = await ctx.db.query(`SELECT * FROM [to_buy_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
+      return game[0];
+    },
     createOriginGame: async (parent, args, ctx, info) => {
       const { id, title, finished } = args.input;
       await ctx.db.execute(`INSERT INTO [origin_games] (id,title,finished) VALUES ('${id}','${title}',${finished});`)
@@ -446,6 +488,12 @@ const resolvers = {
       const { id, idx, title, finished, console, system } = args.input;
       await ctx.db.execute(`UPDATE [virtual_console_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [console] = ${console}, [system] = '${system}' WHERE [idx] = ${idx};`)
       const game = await ctx.db.query(`SELECT * FROM [virtual_console_games] WHERE [idx] = ${idx}`)
+      return game[0];
+    },
+    updateToBuyGame: async (parent, args, ctx, info) => {
+      const { idx, title, finished, system } = args.input;
+      await ctx.db.execute(`UPDATE [to_buy_games] SET [title] = '${title}', [finished] = ${finished}, [system] = '${system}' WHERE [idx] = ${idx};`)
+      const game = await ctx.db.query(`SELECT * FROM [to_buy_games] WHERE [idx] = ${idx}`)
       return game[0];
     },
     updateOriginGame: async (parent, args, ctx, info) => {
@@ -497,6 +545,17 @@ const resolvers = {
       let resp;
       try {
         await ctx.db.execute(`DELETE FROM [virtual_console_games] WHERE [idx] = ${idx};`)
+        resp = true;
+      } catch (error) {
+        console.error(error)
+        resp = false
+      }
+      return resp;
+    },
+    deleteVirtualConsoleGame: async (parent, { idx }, ctx, info) => {
+      let resp;
+      try {
+        await ctx.db.execute(`DELETE FROM [to_buy_games] WHERE [idx] = ${idx};`)
         resp = true;
       } catch (error) {
         console.error(error)
