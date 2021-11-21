@@ -48,8 +48,24 @@ const inputUbisoftGame = `
   finished: Boolean
 `
 
+const inputDLCGame = `
+  id: String
+  title: String
+  finished: Boolean
+ `
+
+ const inputCategory = `
+  description: String!
+ `
+
 // Construct a schema, using GraphQL schema language
 const typeDefs = `  
+  input CategoryInput {
+    ${inputCategory}
+  }
+  input DLCGameInput {
+    ${inputDLCGame}
+  }
   input WiiUGameInput {
     ${inputsWiiU}
   }
@@ -70,6 +86,14 @@ const typeDefs = `
   }
   input UbisoftGameInput{
     ${inputUbisoftGame}
+  }
+  input CategoryUpdateInput{
+    idx: ID
+    ${inputCategory}
+  }
+  input DLCGameUpdateInput {
+    idx: ID
+    ${inputDLCGame}
   }
   input WiiGameUpdateInput {
     idx: ID
@@ -128,6 +152,10 @@ const typeDefs = `
     idx: ID
     ${inputUbisoftGame}
   }
+  type Category {
+    idx: ID
+    ${inputCategory}
+  }
   type SteamGame {
     appid: String
     title: String
@@ -177,6 +205,7 @@ const typeDefs = `
   }  
   type Query {    
     hello: String
+    allCategories: [Category!]!
     allWiiUGames: [WiiUGame!]!
     allWiiGames: [WiiGame!]!
     allGameCubeGames: [GameCubeGame!]!
@@ -190,6 +219,8 @@ const typeDefs = `
     allPCGames: [PCGame!]!
     allGames: [Game!]!
     allGamesWithDLCs: [AppendGameDLC!]!
+    getCategory(idx: ID!) : Category
+    getDLCGame(idx: ID!) : DLC
     getWiiUGame(id: String!): WiiUGame
     getWiiGame(id: String!): WiiGame
     getGameCubeGame(id: String!): GameCubeGame
@@ -204,6 +235,8 @@ const typeDefs = `
     getStatisticsOfTotalFinishedGames: [TotalFinishedInfo!]!
   }
   type Mutation {
+    createCategory(input: CategoryInput) : Category
+    createDLCGame(input: DLCGameInput) : DLC
     createWiiUGame(input: WiiUGameInput): WiiUGame
     createWiiGame(input: WiiGameInput): WiiGame
     createGameCubeGame(input: GameCubeGameInput): GameCubeGame
@@ -211,6 +244,8 @@ const typeDefs = `
     createToBuyGame(input: ToBuyGameInput): ToBuyGame
     createOriginGame(input: OriginGameInput): OriginGame
     createUbisoftGame(input: UbisoftGameInput): UbisoftGame
+    updateCategory(input: CategoryUpdateInput): Category
+    updateDLCGame(input: DLCGameUpdateInput): DLC
     updateWiiUGame(input: WiiUGameUpdateInput): WiiUGame
     updateWiiGame(input: WiiGameUpdateInput): WiiGame
     updateGameCubeGame(input: GameCubeGameUpdateInput): GameCubeGame
@@ -218,6 +253,8 @@ const typeDefs = `
     updateToBuyGame(input: ToBuyGameUpdateInput): ToBuyGame
     updateOriginGame(input: OriginUpdateGameInput): OriginGame
     updateUbisoftGame(input: UbisoftUpdateGameInput): UbisoftGame
+    deleteCategory(idx: ID!): Boolean
+    deleteDLCGame(idx: ID!): Boolean
     deleteWiiUGame(idx: ID!): Boolean
     deleteWiiGame(idx: ID!): Boolean
     deleteGameCubeGame(idx: ID!): Boolean
@@ -232,6 +269,13 @@ const resolvers = {
   Query: {
     hello: (_) => {
       return 'hello';
+    },
+    allCategories: async (parent, args, ctx, info) => {
+      const fields = ctx.requestedFields.getFields(info, { })      
+      const sql = `SELECT ${fields.toString()} FROM [categories]`
+      console.log(sql)
+      const games = await ctx.db.query(sql)
+      return games;
     },
     allWiiUGames: async (parent, args, ctx, info) => {
       const fields = ctx.requestedFields.getFields(info, { keep: ["id"], exclude: ["dlcs"] })      
@@ -323,6 +367,20 @@ const resolvers = {
       console.log(sql)
       const games = await ctx.db.query(sql)
       return games;
+    },
+    getCategory: async (parent, { idx }, ctx, info) => {
+      const fields = ctx.requestedFields.getFields(info, {})      
+      const sql = `SELECT ${fields.toString()} FROM [categories] WHERE [idx] = '${idx}'`
+      console.log(sql)
+      const dlcs = await ctx.db.query(sql)
+      return dlcs[0];
+    },
+    getDLCGame: async (parent, { idx }, ctx, info) => {
+      const fields = ctx.requestedFields.getFields(info, {})      
+      const sql = `SELECT ${fields.toString()} FROM [dlcs] WHERE [idx] = '${idx}'`
+      console.log(sql)
+      const dlcs = await ctx.db.query(sql)
+      return dlcs[0];
     },
     getWiiUGame: async (parent, { id }, ctx, info) => {
       const fields = ctx.requestedFields.getFields(info, {})      
@@ -424,6 +482,12 @@ const resolvers = {
     },
   },
   Mutation: {
+    createDLCGame: async (parent, args, ctx, info) => {
+      const { id, title, finished } = args.input;
+      await ctx.db.execute(`INSERT INTO [dlcs] (id,title,finished) VALUES ('${id}','${title}',${finished});`)
+      const game = await ctx.db.query(`SELECT * FROM [dlcs] WHERE [id] = '${id}' AND [title] = '${title}'`)
+      return game[0];
+    },
     createWiiUGame: async (parent, args, ctx, info) => {
       const { id, title, finished, fisical_disc } = args.input;
       await ctx.db.execute(`INSERT INTO [wiiu_games] (id,title,finished,fisical_disc) VALUES ('${id}','${title}',${finished},${fisical_disc});`)
@@ -464,6 +528,12 @@ const resolvers = {
       const { id, title, finished } = args.input;
       await ctx.db.execute(`INSERT INTO [ubisoft_games] (id,title,finished) VALUES ('${id}','${title}',${finished});`)
       const game = await ctx.db.query(`SELECT * FROM [ubisoft_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
+      return game[0];
+    },
+    updateDLCGame: async (parent, args, ctx, info) => {
+      const { id, idx, title, finished } = args.input;
+      await ctx.db.execute(`UPDATE [dlcs] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`)
+      const game = await ctx.db.query(`SELECT * FROM [dlcs] WHERE [idx] = ${idx}`)
       return game[0];
     },
     updateWiiUGame: async (parent, args, ctx, info) => {
@@ -507,6 +577,17 @@ const resolvers = {
       await ctx.db.execute(`UPDATE [ubisoft_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`)
       const game = await ctx.db.query(`SELECT * FROM [ubisoft_games] WHERE [idx] = ${idx}`)
       return game[0];
+    },
+    deleteDLCGame: async (parent, { idx }, ctx, info) => {
+      let resp;
+      try {
+        await ctx.db.execute(`DELETE FROM [dlcs] WHERE [idx] = ${idx};`)
+        resp = true;
+      } catch (error) {
+        console.error(error)
+        resp = false
+      }
+      return resp;
     },
     deleteWiiUGame: async (parent, { idx }, ctx, info) => {
       let resp;
