@@ -242,7 +242,7 @@ const createGames = async (req, res) => {
     } else {
         let q = "";
 
-        if (tableName === 'wii' || tableName === 'wiiu') {
+        if (tableName === 'wii' || tableName === 'wiiu' || tableName === 'gamecube') {
             q = `INSERT INTO [${table}] (id,title,finished,fisical_disc) VALUES ('${id}','${title}',${finished},${fisical_disc});`;
         } else if (tableName === 'tobuy') {
             q = `INSERT INTO [${table}] (title,finished,system) VALUES ('${title}',${finished},${system});`;
