@@ -14,6 +14,8 @@ const selectTable = (tableName) => {
             return "origin_games"
         case "ubisoft":
             return "ubisoft_games"
+        case "tobuy":
+            return "to_buy_games"
         default:
             return null;
     }
@@ -162,6 +164,19 @@ const showVirtualConsoleGames = async (req, res) => {
     }
 }
 
+
+const showToBuyGames = async (req, res) => {
+    try {
+        const games = await query('SELECT * FROM [to_buy_games]');
+
+        res.send({ games })
+    } catch (error) {
+        console.error(error)
+        res.status(400).send({ msg: error.process.message }).end();
+    }
+}
+
+
 const showPCGames = async (req, res) => {
     try {
         const games = await query('SELECT * FROM [all_pc_games]');
@@ -202,7 +217,7 @@ const showDLCs = async (req, res) => {
 
 const createGames = async (req, res) => {
     const tableName = req.body.table;
-    let table, title, finished, fisical_disc, id;
+    let table, title, finished, fisical_disc, id, system;
 
     table = selectTable(tableName)
 
@@ -210,6 +225,7 @@ const createGames = async (req, res) => {
     finished = req.body.finished ? req.body.finished : false;
     fisical_disc = req.body.fisical_disc ? req.body.fisical_disc : false;
     id = req.body.id;
+    system = req.body.system;
 
     if (table == null) {
         const errorMessage = "Table does not match";
@@ -228,7 +244,10 @@ const createGames = async (req, res) => {
 
         if (tableName === 'wii' || tableName === 'wiiu') {
             q = `INSERT INTO [${table}] (id,title,finished,fisical_disc) VALUES ('${id}','${title}',${finished},${fisical_disc});`;
-        } else {
+        } else if (tableName === 'tobuy') {
+            q = `INSERT INTO [${table}] (title,finished,system) VALUES ('${title}',${finished},${system});`;
+        }
+        else {
             q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}','${title}',${finished});`;
         }
 
@@ -319,13 +338,14 @@ const searchGame = async (req, res) => {
 const updateGame = async (req, res) => {
 
     const tableName = req.body.table;
-    let table, id, idx, title, finished, fisical_disc;
+    let table, id, idx, title, finished, fisical_disc, system;
 
     id = req.body.id;
     idx = req.body.idx;
     title = req.body.title;
     finished = req.body.finished;
     fisical_disc = req.body.fisical_disc;
+    system = req.body.system
 
 
     table = selectTable(tableName)
@@ -351,6 +371,8 @@ const updateGame = async (req, res) => {
 
         if (table === 'wiiu_games' || table === 'wii_games' || table === 'gamecube_games') {
             q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;
+        } else if (table === 'tobuy') {
+            q = `UPDATE [${table}] SET [title] = '${title}', [finished] = ${finished}, [system] = '${system}' WHERE [idx] = ${idx};`;
         } else {
             q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`;
         }
@@ -402,6 +424,6 @@ const deleteGame = async (req, res) => {
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
-    showWiiUGames, showPCGames, showConsoleGames, showDLCs, createGames, finishDLC, finishGame,
-    searchGame, updateGame, deleteGame
+    showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, createGames, finishDLC,
+    finishGame, searchGame, updateGame, deleteGame
 }

@@ -50,6 +50,7 @@ app.get('/steam', requests.showSteamGames);
 app.get('/all', requests.showAllGames);
 app.get('/gamecube', requests.showGameCubeGames);
 app.get('/virtual_console', requests.showVirtualConsoleGames);
+app.get('/to_buy', requests.showToBuyGames);
 app.get('/wii', requests.showWiiGames);
 app.get('/wiiu', requests.showWiiUGames);
 app.get('/pc', requests.showPCGames);
