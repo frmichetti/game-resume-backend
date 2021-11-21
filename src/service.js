@@ -2,7 +2,7 @@ var Service = require('node-windows').Service;
 
 // Create a new service object
 var svc = new Service({
-  name:'MGR - Backend',
+  name:'mgr_backend',
   description: 'Backend do My Games Resume',
   script: 'D:\\DEV\\games-resume-backend\\build\\app.js'
 });

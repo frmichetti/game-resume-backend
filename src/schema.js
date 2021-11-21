@@ -9,8 +9,7 @@ const inputsWiiU = `
 
 const inputWiiGCGame = `
   id: String
-  title: String
-  iso_type: String
+  title: String  
   console: String
   finished: Boolean
   fisical_disc: Boolean
@@ -174,7 +173,7 @@ const resolvers = {
     },
     allWiiGCGames: async (parent, args, ctx, info) => {
       const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [wii_gc_games]`
+      const sql = `SELECT ${fields.toString()} FROM [wii_games]`
       console.log(sql)
       const games = await ctx.db.query(sql)
       return games;
@@ -244,7 +243,7 @@ const resolvers = {
     },
     getWiiGCGame: async (parent, { id }, ctx, info) => {
       const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [wii_gc_games] WHERE [id] = '${id}'`
+      const sql = `SELECT ${fields.toString()} FROM [wii_games] WHERE [id] = '${id}'`
       console.log(sql)
       const game = await ctx.db.query(sql)
       return game[0];
@@ -272,8 +271,8 @@ const resolvers = {
     },
     getConsoleFinishedGames: async (parent, { finished }, ctx, info) => {
       const sql = `SELECT *
-      FROM (SELECT [wii_gc_games].title AS title, [wii_gc_games].finished AS finished, [wii_gc_games].[fisical_disc] AS fisical_disc, [wii_gc_games].[iso_type] as system
-      FROM [wii_gc_games]
+      FROM (SELECT [wii_games].title AS title, [wii_games].finished AS finished, [wii_games].[fisical_disc] AS fisical_disc, "Wii" as system
+      FROM [wii_games]
       UNION
       SELECT [wiiu_games].title AS title, [wiiu_games].finished AS finished, [wiiu_games].fisical_disc AS fisical_disc, "WiiU" as system
       FROM [wiiu_games] 
@@ -320,9 +319,9 @@ const resolvers = {
       return game[0];
     },
     createWiiGCGame: async (parent, args, ctx, info) => {
-      const { id, title, finished, fisical_disc, size_gb, iso_type, console } = _.input;
-      await ctx.db.execute(`INSERT INTO [wii_gc_games] (id,title,finished,fisical_disc,size_gb,iso_type,console) VALUES ('${id}','${title}',${finished},${fisical_disc},'${size_gb}', '${iso_type}', '${console}');`)
-      const game = await ctx.db.query(`SELECT * FROM [wii_gc_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
+      const { id, title, finished, fisical_disc, size_gb,  console } = _.input;
+      await ctx.db.execute(`INSERT INTO [wii_games] (id,title,finished,fisical_disc,size_gb,console) VALUES ('${id}','${title}',${finished},${fisical_disc},'${size_gb}', '${console}');`)
+      const game = await ctx.db.query(`SELECT * FROM [wii_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
       return game[0];
     },
     createOriginGame: async (parent, args, ctx, info) => {
@@ -344,9 +343,9 @@ const resolvers = {
       return game[0];
     },
     updateWiiGCGame: async (parent, args, ctx, info) => {
-      const { id, idx, title, finished, fisical_disc, size_gb, iso_type, console } = _.input;
-      await ctx.db.execute(`UPDATE [wii_gc_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc}, [size_gb] = '${size_gb}', [iso_type] = '${iso_type}', [console] = '${console}' WHERE [idx] = ${idx};`)
-      const game = await ctx.db.query(`SELECT * FROM [wii_gc_games] WHERE [idx] = ${idx}`)
+      const { id, idx, title, finished, fisical_disc, size_gb, console } = _.input;
+      await ctx.db.execute(`UPDATE [wii_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc}, [size_gb] = '${size_gb}', [console] = '${console}' WHERE [idx] = ${idx};`)
+      const game = await ctx.db.query(`SELECT * FROM [wii_games] WHERE [idx] = ${idx}`)
       return game[0];
     },
     updateOriginGame: async (parent, args, ctx, info) => {
@@ -375,7 +374,7 @@ const resolvers = {
     deleteWiiGCGame: async (parent, { idx }, ctx, info) => {
       let resp;
       try {
-        await ctx.db.execute(`DELETE FROM [wii_gc_games] WHERE [idx] = ${idx};`)
+        await ctx.db.execute(`DELETE FROM [wii_games] WHERE [idx] = ${idx};`)
         resp = true;
       } catch (error) {
         console.error(error)

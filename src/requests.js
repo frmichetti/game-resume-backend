@@ -7,7 +7,7 @@ const selectTable = (tableName) => {
         case "wiiu":
             return "wiiu_games"
         case "wii":
-            return "wii_gc_games"
+            return "wii_games"
         case "origin":
             return "origin_games"
         case "ubisoft":
@@ -108,7 +108,7 @@ const showAllGames = async (req, res) => {
 
 const showWiiGames = async (req, res) => {
     try {
-        const games = await query('SELECT * FROM [wii_gc_games]');
+        const games = await query('SELECT * FROM [wii_games]');
 
         res.send({ games })
     } catch (error) {
@@ -315,7 +315,7 @@ const updateGame = async (req, res) => {
     } else {
         let q = "";
 
-        if (table === 'wiiu_games' || table === 'wii_gc_games') {
+        if (table === 'wiiu_games' || table === 'wii_games') {
             q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;
         } else {
             q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`;
