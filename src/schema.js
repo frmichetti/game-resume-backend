@@ -515,7 +515,7 @@ const resolvers = {
     createToBuyGame: async (parent, args, ctx, info) => {
       const { title, finished, system  } = args.input;
       await ctx.db.execute(`INSERT INTO [to_buy_games] (title,finished,system) VALUES ('${title}',${finished},'${system}');`)
-      const game = await ctx.db.query(`SELECT * FROM [to_buy_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
+      const game = await ctx.db.query(`SELECT * FROM [to_buy_games] WHERE [title] = '${title}'`)
       return game[0];
     },
     createOriginGame: async (parent, args, ctx, info) => {
