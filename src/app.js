@@ -49,7 +49,7 @@ app.get('/ubisoft', requests.showUbisoftGames);
 app.get('/steam', requests.showSteamGames);
 app.get('/all', requests.showAllGames);
 app.get('/gamecube', requests.showGameCubeGames);
-app.get('/virtual_console', requests.showVirtualConsoleGames);
+app.get('/virtualconsole', requests.showVirtualConsoleGames);
 app.get('/tobuy', requests.showToBuyGames);
 app.get('/wii', requests.showWiiGames);
 app.get('/wiiu', requests.showWiiUGames);

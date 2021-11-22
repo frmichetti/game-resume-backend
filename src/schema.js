@@ -507,8 +507,9 @@ const resolvers = {
       return game[0];
     },
     createVirtualConsoleGame: async (parent, args, ctx, info) => {
-      const { id, title, finished, console, system  } = args.input;
-      await ctx.db.execute(`INSERT INTO [virtual_console_games] (id,title,finished,console,system) VALUES ('${id}','${title}',${finished},${console},'${system}');`)
+      const { id, title, finished, system  } = args.input;
+      const _console = args.input.console;           
+      await ctx.db.execute(`INSERT INTO [virtual_console_games] (id,title,finished,console,system) VALUES ('${id}','${title}',${finished},'${_console}','${system}');`)            
       const game = await ctx.db.query(`SELECT * FROM [virtual_console_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
       return game[0];
     },
@@ -555,8 +556,9 @@ const resolvers = {
       return game[0];
     },
     updateVirtualConsoleGame: async (parent, args, ctx, info) => {
-      const { id, idx, title, finished, console, system } = args.input;
-      await ctx.db.execute(`UPDATE [virtual_console_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [console] = ${console}, [system] = '${system}' WHERE [idx] = ${idx};`)
+      const { id, idx, title, finished, system } = args.input;
+      const _console = args.input.console;
+      await ctx.db.execute(`UPDATE [virtual_console_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [console] = '${_console}', [system] = '${system}' WHERE [idx] = ${idx};`)
       const game = await ctx.db.query(`SELECT * FROM [virtual_console_games] WHERE [idx] = ${idx}`)
       return game[0];
     },
