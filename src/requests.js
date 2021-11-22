@@ -222,10 +222,47 @@ const showDLCsByID = async (req, res) => {
     console.log(id)
     try {
         const dlcs = await query(`SELECT * FROM [dlcs] WHERE id = '${id}';`);
-        res.send({ dlcs })
+        res.send({ games: dlcs })
     } catch (error) {
         console.error(error)
         res.status(400).send({ msg: error.process.message }).end();
+    }
+}
+
+const showCharts = async (req, res) => {
+    const type = req.query.type;
+    console.log(type)
+    // total_of_percentual_games_by_system
+
+    if (type === 'total') {
+        try {
+            const stats = await query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+            const labels = stats.map(i => i.system)
+            const values = stats.map(i => i.total)
+            const dataset = "Total of Games"
+
+            res.send({ stats, labels, values, dataset })
+
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ msg: error.process.message }).end();
+        }
+
+    } else if (type === 'finished') {
+        try {
+            const stats = await query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+            const labels = stats.map(i => i.system)
+            const values = stats.map(i => i.total)
+            const dataset = "Total of Finished Games"
+
+            res.send({ stats, labels, values, dataset })
+
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ msg: error.process.message }).end();
+        }
+    } else {
+        res.status(400).send({ msg: "unknow type" }).end();
     }
 }
 
@@ -444,6 +481,6 @@ const deleteGame = async (req, res) => {
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
-    showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, createGames, finishDLC,
+    showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, createGames, finishDLC,
     finishGame, searchGame, updateGame, deleteGame
 }
