@@ -18,6 +18,8 @@ const selectTable = (tableName) => {
             return "to_buy_games"
         case "virtualconsole":
             return "virtual_console_games"
+        case "dlcs":
+            return "dlcs";
         default:
             return null;
     }
@@ -206,6 +208,16 @@ const showConsoleGames = async (req, res) => {
 }
 
 const showDLCs = async (req, res) => {
+    try {
+        const dlcs = await query(`SELECT * FROM [dlcs];`);
+        res.send({ games: dlcs })
+    } catch (error) {
+        console.error(error)
+        res.status(400).send({ msg: error.process.message }).end();
+    }
+}
+
+const showDLCsByID = async (req, res) => {
     const id = req.query.id;
     console.log(id)
     try {
@@ -219,7 +231,7 @@ const showDLCs = async (req, res) => {
 
 const createGames = async (req, res) => {
     const tableName = req.body.table;
-    let table, title, finished, fisical_disc, id, system, console;
+    let table, title, finished, fisical_disc, id, system, _console;
 
     table = selectTable(tableName)
 
@@ -228,7 +240,7 @@ const createGames = async (req, res) => {
     fisical_disc = req.body.fisical_disc ? req.body.fisical_disc : false;
     id = req.body.id;
     system = req.body.system;
-    console = req.body.console;
+    _console = req.body.console;
 
     if (table == null) {
         const errorMessage = "Table does not match";
@@ -248,7 +260,7 @@ const createGames = async (req, res) => {
         if (tableName === 'wii' || tableName === 'wiiu' || tableName === 'gamecube') {
             q = `INSERT INTO [${table}] (id,title,finished,fisical_disc) VALUES ('${id}','${title}',${finished},${fisical_disc});`;
         } else if (tableName === 'virtualconsole') {
-            q = `INSERT INTO [${table}] (id,title,finished,console,system) VALUES ('${id}','${title}',${finished},'${console}', '${system}');`;
+            q = `INSERT INTO [${table}] (id,title,finished,console,system) VALUES ('${id}','${title}',${finished},'${_console}', '${system}');`;
         } else if (tableName === 'tobuy') {
             q = `INSERT INTO [${table}] (title,finished,system) VALUES ('${title}',${finished},'${system}');`;
         }
@@ -343,7 +355,7 @@ const searchGame = async (req, res) => {
 const updateGame = async (req, res) => {
 
     const tableName = req.body.table;
-    let table, id, idx, title, finished, fisical_disc, system, console;
+    let table, id, idx, title, finished, fisical_disc, system, _console;
 
     id = req.body.id;
     idx = req.body.idx;
@@ -351,7 +363,7 @@ const updateGame = async (req, res) => {
     finished = req.body.finished;
     fisical_disc = req.body.fisical_disc;
     system = req.body.system
-    console = req.body.console
+    _console = req.body.console
 
 
     table = selectTable(tableName)
@@ -378,7 +390,7 @@ const updateGame = async (req, res) => {
         if (table === 'wiiu_games' || table === 'wii_games' || table === 'gamecube_games') {
             q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;
         } else if (table === 'virtual_console_games') {
-            q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [system] = '${system}', [console] = '${console}' WHERE [idx] = ${idx};`;
+            q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [system] = '${system}', [console] = '${_console}' WHERE [idx] = ${idx};`;
         } else if (table === 'to_buy_games') {
             q = `UPDATE [${table}] SET [title] = '${title}', [finished] = ${finished}, [system] = '${system}' WHERE [idx] = ${idx};`;
         } else {
