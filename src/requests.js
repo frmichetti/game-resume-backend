@@ -261,6 +261,32 @@ const showCharts = async (req, res) => {
             console.error(error)
             res.status(400).send({ msg: error.process.message }).end();
         }
+    } else if (type === "total_percent") {
+        try {
+            const stats = await query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+            const labels = stats.map(i => i.system)
+            const values = stats.map(i => i.percentual)
+            const dataset = "Percent of Total Games"
+
+            res.send({ stats, labels, values, dataset })
+
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ msg: error.process.message }).end();
+        }
+    } else if (type === "finished_percent") {
+        try {
+            const stats = await query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+            const labels = stats.map(i => i.system)
+            const values = stats.map(i => i.percentual)
+            const dataset = "Percent of Finished Games"
+
+            res.send({ stats, labels, values, dataset })
+
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ msg: error.process.message }).end();
+        }
     } else {
         res.status(400).send({ msg: "unknow type" }).end();
     }
