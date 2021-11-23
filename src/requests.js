@@ -18,8 +18,10 @@ const selectTable = (tableName) => {
             return "to_buy_games"
         case "virtualconsole":
             return "virtual_console_games"
-        case "dlcs":
+        case "dlcs":            
             return "dlcs";
+        case "steam":
+            return "steam_games";    
         default:
             return null;
     }
@@ -386,7 +388,7 @@ const finishGame = async (req, res) => {
         let q = "";
 
         if (tableName === 'steam') {
-            q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [appid] = ${appid};`;
+            q = `UPDATE [steam_finished] SET [finished] = ${finished} WHERE [appid] = ${appid};`;
         } else {
             q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [title] = '${title}';`;
         }
