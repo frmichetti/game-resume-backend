@@ -323,14 +323,14 @@ const createGames = async (req, res) => {
         let q = "";
 
         if (tableName === 'wii' || tableName === 'wiiu' || tableName === 'gamecube') {
-            q = `INSERT INTO [${table}] (id,title,finished,fisical_disc) VALUES ('${id}','${title}',${finished},${fisical_disc});`;
+            q = `INSERT INTO [${table}] (id,title,finished,fisical_disc) VALUES ('${id}',"${title}",${finished},${fisical_disc});`;
         } else if (tableName === 'virtualconsole') {
-            q = `INSERT INTO [${table}] (id,title,finished,console,system) VALUES ('${id}','${title}',${finished},'${_console}', '${system}');`;
+            q = `INSERT INTO [${table}] (id,title,finished,console,system) VALUES ('${id}',"${title}",${finished},'${_console}', '${system}');`;
         } else if (tableName === 'tobuy') {
-            q = `INSERT INTO [${table}] (title,finished,system) VALUES ('${title}',${finished},'${system}');`;
+            q = `INSERT INTO [${table}] (title,finished,system) VALUES ("${title}",${finished},'${system}');`;
         }
         else {
-            q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}','${title}',${finished});`;
+            q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}',"${title}",${finished});`;
         }
 
         try {
@@ -453,13 +453,13 @@ const updateGame = async (req, res) => {
         let q = "";
 
         if (table === 'wiiu_games' || table === 'wii_games' || table === 'gamecube_games') {
-            q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;
+            q = `UPDATE [${table}] SET [id] = '${id}',[title] = "${title}", [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;
         } else if (table === 'virtual_console_games') {
-            q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [system] = '${system}', [console] = '${_console}' WHERE [idx] = ${idx};`;
+            q = `UPDATE [${table}] SET [id] = '${id}',[title] = "${title}", [finished] = ${finished}, [system] = '${system}', [console] = '${_console}' WHERE [idx] = ${idx};`;
         } else if (table === 'to_buy_games') {
-            q = `UPDATE [${table}] SET [title] = '${title}', [finished] = ${finished}, [system] = '${system}' WHERE [idx] = ${idx};`;
+            q = `UPDATE [${table}] SET [title] = "${title}", [finished] = ${finished}, [system] = '${system}' WHERE [idx] = ${idx};`;
         } else {
-            q = `UPDATE [${table}] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`;
+            q = `UPDATE [${table}] SET [id] = '${id}',[title] = "${title}", [finished] = ${finished} WHERE [idx] = ${idx};`;
         }
 
         try {
