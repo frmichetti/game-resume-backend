@@ -1,4 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
+import * as resolvers from './resolvers'
 
 const inputsWiiU = `
   id: String
@@ -54,7 +55,7 @@ const inputDLCGame = `
   finished: Boolean
  `
 
- const inputCategory = `
+const inputCategory = `
   description: String!
  `
 
@@ -265,414 +266,68 @@ const typeDefs = `
   }
 `;
 
-const resolvers = {
+const _resolvers = {
   Query: {
-    hello: (_) => {
-      return 'hello';
-    },
-    allCategories: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, { })      
-      const sql = `SELECT ${fields.toString()} FROM [categories]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allWiiUGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, { keep: ["id"], exclude: ["dlcs"] })      
-      const sql = `SELECT ${fields.toString()} FROM [wiiu_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allWiiGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [wii_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allGameCubeGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [gamecube_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allVirtualConsoleGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [virtual_console_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allToBuyGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [to_buy_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allOriginGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [origin_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allUbisoftGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [ubisoft_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allDLCs: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [dlcs]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allSteamGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [append_list_steam_finished_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allConsoleGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [all_console_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allPCGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, { keep: ["id"], exclude: ["dlcs"] })      
-      const sql = `SELECT ${fields.toString()} FROM [all_pc_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allGames: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [all_games_list]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    allGamesWithDLCs: async (parent, args, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [append_dlcs_with_games]`
-      console.log(sql)
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    getCategory: async (parent, { idx }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [categories] WHERE [idx] = '${idx}'`
-      console.log(sql)
-      const dlcs = await ctx.db.query(sql)
-      return dlcs[0];
-    },
-    getDLCGame: async (parent, { idx }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [dlcs] WHERE [idx] = '${idx}'`
-      console.log(sql)
-      const dlcs = await ctx.db.query(sql)
-      return dlcs[0];
-    },
-    getWiiUGame: async (parent, { id }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [wiiu_games] WHERE [id] = '${id}'`
-      console.log(sql)
-      const game = await ctx.db.query(sql)
-      return game[0];
-    },
-    getWiiGame: async (parent, { id }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [wii_games] WHERE [id] = '${id}'`
-      console.log(sql)
-      const game = await ctx.db.query(sql)
-      return game[0];
-    },
-    getGameCubeGame: async (parent, { id }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [gamecube_games] WHERE [id] = '${id}'`
-      console.log(sql)
-      const game = await ctx.db.query(sql)
-      return game[0];
-    },
-    getVirtualConsoleGame: async (parent, { id }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [virtual_console_games] WHERE [id] = '${id}'`
-      console.log(sql)
-      const game = await ctx.db.query(sql)
-      return game[0];
-    },
-    getToBuyGame: async (parent, { idx }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [to_buy_games] WHERE [idx] = '${idx}'`
-      console.log(sql)
-      const game = await ctx.db.query(sql)
-      return game[0];
-    },
-    getOriginGame: async (parent, { idx }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [origin_games] WHERE [idx] = ${idx}`
-      console.log(sql)
-      const game = await ctx.db.query(sql)
-      return game[0];
-    },
-    getUbisoftGame: async (parent, { idx }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [ubisoft_games] WHERE [idx] = ${idx}`
-      console.log(sql)
-      const game = await ctx.db.query(sql)
-      return game[0];
-    },
-    getDLC: async (parent, { id }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [dlcs] WHERE [id] = '${id}'`
-      console.log(sql)
-      const dlcs = await ctx.db.query(sql)
-      return dlcs;
-    },
-    getConsoleFinishedGames: async (parent, { finished }, ctx, info) => {         
-      const sql = `SELECT * FROM (
-        SELECT [wii_games].title AS title, [wii_games].finished AS finished, [wii_games].[fisical_disc] AS fisical_disc, "Wii" as system FROM [wii_games]
-              UNION
-        SELECT [gamecube_games].title AS title, [gamecube_games].finished AS finished, [gamecube_games].[fisical_disc] AS fisical_disc, "GameCube" as system FROM [gamecube_games]
-              UNION
-        SELECT [wiiu_games].title AS title, [wiiu_games].finished AS finished, [wiiu_games].fisical_disc AS fisical_disc, "WiiU" as system FROM [wiiu_games] 
-              UNION
-        SELECT [virtual_console_games].title AS title, [virtual_console_games].finished AS finished, false AS fisical_disc, [virtual_console_games].system as system FROM [virtual_console_games] 
-              ) AS all_fisical_and_finished
-              WHERE (((all_fisical_and_finished.[finished])=${finished}))`
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    getPCFinishedGames: async (parent, { finished }, ctx, info) => {
-      const sql = `SELECT *
-      FROM (SELECT [origin_games].title AS title, "Origin" AS platform, CBOOL([origin_games].finished) as finished 
-      FROM [origin_games]
-       UNION
-      SELECT [ubisoft_games].title AS title, "Ubisoft" AS platform, CBOOL([ubisoft_games].finished) as finished
-      FROM [ubisoft_games]
-       UNION SELECT [steam_games].[title] AS title, "Steam" AS platform, CBOOL([steam_finished].[finished]) as finished
-      FROM  [steam_finished] INNER JOIN [steam_games] ON [steam_finished].[appid] = [steam_games].[appid] )  AS pc_finished_games
-      WHERE finished = ${finished};
-      `
-      const games = await ctx.db.query(sql)
-      return games;
-    },
-    getStatisticsOfTotalGames: async (parent, { idx }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [total_games_for_dashboard]`
-      console.log(sql)
-      const stats = await ctx.db.query(sql)
-      return stats;
-    },
-    getStatisticsOfTotalFinishedGames: async (parent, { idx }, ctx, info) => {
-      const fields = ctx.requestedFields.getFields(info, {})      
-      const sql = `SELECT ${fields.toString()} FROM [total_finished_games_for_dashboard]`
-      console.log(sql)
-      const stats = await ctx.db.query(sql)
-      return stats;
-    },
+    hello: resolvers.hello,
+    allCategories: resolvers.allCategories,
+    allWiiUGames: resolvers.allWiiUGames,
+    allWiiGames: resolvers.allWiiGames,
+    allGameCubeGames: resolvers.allGameCubeGames,
+    allVirtualConsoleGames: resolvers.allVirtualConsoleGames,
+    allToBuyGames: resolvers.allToBuyGames,
+    allOriginGames: resolvers.allOriginGames,
+    allUbisoftGames: resolvers.allUbisoftGames,
+    allDLCs: resolvers.allDLCs,
+    allSteamGames: resolvers.allSteamGames,
+    allConsoleGames: resolvers.allConsoleGames,
+    allPCGames: resolvers.allPCGames,
+    allGames: resolvers.allGames,
+    allGamesWithDLCs: resolvers.allGamesWithDLCs,
+    getCategory: resolvers.getCategory,
+    getDLCGame: resolvers.getDLCGame,
+    getWiiUGame: resolvers.getWiiUGame,
+    getWiiGame: resolvers.getWiiGame ,
+    getGameCubeGame: resolvers.getGameCubeGame,
+    getVirtualConsoleGame: resolvers.getVirtualConsoleGame ,
+    getToBuyGame: resolvers.getToBuyGame,
+    getOriginGame: resolvers.getOriginGame,
+    getUbisoftGame: resolvers.getUbisoftGame ,
+    getDLC: resolvers.getDLC,
+    getConsoleFinishedGames: resolvers.getConsoleFinishedGames,
+    getPCFinishedGames: resolvers.getPCFinishedGames,
+    getStatisticsOfTotalGames: resolvers.getStatisticsOfTotalGames,
+    getStatisticsOfTotalFinishedGames: resolvers.getStatisticsOfTotalFinishedGames
   },
   Mutation: {
-    createDLCGame: async (parent, args, ctx, info) => {
-      const { id, title, finished } = args.input;
-      await ctx.db.execute(`INSERT INTO [dlcs] (id,title,finished) VALUES ('${id}','${title}',${finished});`)
-      const game = await ctx.db.query(`SELECT * FROM [dlcs] WHERE [id] = '${id}' AND [title] = '${title}'`)
-      return game[0];
-    },
-    createWiiUGame: async (parent, args, ctx, info) => {
-      const { id, title, finished, fisical_disc } = args.input;
-      await ctx.db.execute(`INSERT INTO [wiiu_games] (id,title,finished,fisical_disc) VALUES ('${id}','${title}',${finished},${fisical_disc});`)
-      const game = await ctx.db.query(`SELECT * FROM [wiiu_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-      return game[0];
-    },
-    createWiiGame: async (parent, args, ctx, info) => {
-      const { id, title, finished, fisical_disc, size_gb } = args.input;
-      await ctx.db.execute(`INSERT INTO [wii_games] (id,title,finished,fisical_disc,size_gb) VALUES ('${id}','${title}',${finished},${fisical_disc},'${size_gb}');`)
-      const game = await ctx.db.query(`SELECT * FROM [wii_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-      return game[0];
-    },
-    createGameCubeGame: async (parent, args, ctx, info) => {
-      const { id, title, finished, fisical_disc, size_gb } = args.input;
-      await ctx.db.execute(`INSERT INTO [gamecube_games] (id,title,finished,fisical_disc,size_gb) VALUES ('${id}','${title}',${finished},${fisical_disc},'${size_gb}');`)
-      const game = await ctx.db.query(`SELECT * FROM [gamecube_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-      return game[0];
-    },
-    createVirtualConsoleGame: async (parent, args, ctx, info) => {
-      const { id, title, finished, system  } = args.input;
-      const _console = args.input.console;           
-      await ctx.db.execute(`INSERT INTO [virtual_console_games] (id,title,finished,console,system) VALUES ('${id}','${title}',${finished},'${_console}','${system}');`)            
-      const game = await ctx.db.query(`SELECT * FROM [virtual_console_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-      return game[0];
-    },
-    createToBuyGame: async (parent, args, ctx, info) => {
-      const { title, finished, system  } = args.input;
-      await ctx.db.execute(`INSERT INTO [to_buy_games] (title,finished,system) VALUES ('${title}',${finished},'${system}');`)
-      const game = await ctx.db.query(`SELECT * FROM [to_buy_games] WHERE [title] = '${title}'`)
-      return game[0];
-    },
-    createOriginGame: async (parent, args, ctx, info) => {
-      const { id, title, finished } = args.input;
-      await ctx.db.execute(`INSERT INTO [origin_games] (id,title,finished) VALUES ('${id}','${title}',${finished});`)
-      const game = await ctx.db.query(`SELECT * FROM [origin_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-      return game[0];
-    },
-    createUbisoftGame: async (parent, args, ctx, info) => {
-      const { id, title, finished } = args.input;
-      await ctx.db.execute(`INSERT INTO [ubisoft_games] (id,title,finished) VALUES ('${id}','${title}',${finished});`)
-      const game = await ctx.db.query(`SELECT * FROM [ubisoft_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-      return game[0];
-    },
-    updateDLCGame: async (parent, args, ctx, info) => {
-      const { id, idx, title, finished } = args.input;
-      await ctx.db.execute(`UPDATE [dlcs] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`)
-      const game = await ctx.db.query(`SELECT * FROM [dlcs] WHERE [idx] = ${idx}`)
-      return game[0];
-    },
-    updateWiiUGame: async (parent, args, ctx, info) => {
-      const { id, idx, title, finished, fisical_disc } = args.input;
-      await ctx.db.execute(`UPDATE [wiiu_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`)
-      const game = await ctx.db.query(`SELECT * FROM [wiiu_games] WHERE [idx] = ${idx}`)
-      return game[0];
-    },
-    updateWiiGame: async (parent, args, ctx, info) => {
-      const { id, idx, title, finished, fisical_disc, size_gb } = args.input;
-      await ctx.db.execute(`UPDATE [wii_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc}, [size_gb] = '${size_gb}' WHERE [idx] = ${idx};`)
-      const game = await ctx.db.query(`SELECT * FROM [wii_games] WHERE [idx] = ${idx}`)
-      return game[0];
-    },
-    updateGameCubeGame: async (parent, args, ctx, info) => {
-      const { id, idx, title, finished, fisical_disc, size_gb } = args.input;
-      await ctx.db.execute(`UPDATE [gamecube_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [fisical_disc] = ${fisical_disc}, [size_gb] = '${size_gb}' WHERE [idx] = ${idx};`)
-      const game = await ctx.db.query(`SELECT * FROM [gamecube_games] WHERE [idx] = ${idx}`)
-      return game[0];
-    },
-    updateVirtualConsoleGame: async (parent, args, ctx, info) => {
-      const { id, idx, title, finished, system } = args.input;
-      const _console = args.input.console;
-      await ctx.db.execute(`UPDATE [virtual_console_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished}, [console] = '${_console}', [system] = '${system}' WHERE [idx] = ${idx};`)
-      const game = await ctx.db.query(`SELECT * FROM [virtual_console_games] WHERE [idx] = ${idx}`)
-      return game[0];
-    },
-    updateToBuyGame: async (parent, args, ctx, info) => {
-      const { idx, title, finished, system } = args.input;
-      await ctx.db.execute(`UPDATE [to_buy_games] SET [title] = '${title}', [finished] = ${finished}, [system] = '${system}' WHERE [idx] = ${idx};`)
-      const game = await ctx.db.query(`SELECT * FROM [to_buy_games] WHERE [idx] = ${idx}`)
-      return game[0];
-    },
-    updateOriginGame: async (parent, args, ctx, info) => {
-      const { id, idx, title, finished } = args.input;
-      await ctx.db.execute(`UPDATE [origin_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`)
-      const game = await ctx.db.query(`SELECT * FROM [origin_games] WHERE [idx] = ${idx}`)
-      return game[0];
-    },
-    updateUbisoftGame: async (parent, args, ctx, info) => {
-      const { id, idx, title, finished } = args.input;
-      await ctx.db.execute(`UPDATE [ubisoft_games] SET [id] = '${id}',[title] = '${title}', [finished] = ${finished} WHERE [idx] = ${idx};`)
-      const game = await ctx.db.query(`SELECT * FROM [ubisoft_games] WHERE [idx] = ${idx}`)
-      return game[0];
-    },
-    deleteDLCGame: async (parent, { idx }, ctx, info) => {
-      let resp;
-      try {
-        await ctx.db.execute(`DELETE FROM [dlcs] WHERE [idx] = ${idx};`)
-        resp = true;
-      } catch (error) {
-        console.error(error)
-        resp = false
-      }
-      return resp;
-    },
-    deleteWiiUGame: async (parent, { idx }, ctx, info) => {
-      let resp;
-      try {
-        await ctx.db.execute(`DELETE FROM [wiiu_games] WHERE [idx] = ${idx};`)
-        resp = true;
-      } catch (error) {
-        console.error(error)
-        resp = false
-      }
-      return resp;
-    },
-    deleteWiiGame: async (parent, { idx }, ctx, info) => {
-      let resp;
-      try {
-        await ctx.db.execute(`DELETE FROM [wii_games] WHERE [idx] = ${idx};`)
-        resp = true;
-      } catch (error) {
-        console.error(error)
-        resp = false
-      }
-      return resp;
-    },
-    deleteGameCubeGame: async (parent, { idx }, ctx, info) => {
-      let resp;
-      try {
-        await ctx.db.execute(`DELETE FROM [gamecube_games] WHERE [idx] = ${idx};`)
-        resp = true;
-      } catch (error) {
-        console.error(error)
-        resp = false
-      }
-      return resp;
-    },
-    deleteVirtualConsoleGame: async (parent, { idx }, ctx, info) => {
-      let resp;
-      try {
-        await ctx.db.execute(`DELETE FROM [virtual_console_games] WHERE [idx] = ${idx};`)
-        resp = true;
-      } catch (error) {
-        console.error(error)
-        resp = false
-      }
-      return resp;
-    },
-    deleteVirtualConsoleGame: async (parent, { idx }, ctx, info) => {
-      let resp;
-      try {
-        await ctx.db.execute(`DELETE FROM [to_buy_games] WHERE [idx] = ${idx};`)
-        resp = true;
-      } catch (error) {
-        console.error(error)
-        resp = false
-      }
-      return resp;
-    },
-    deleteOriginGame: async (parent, { idx }, ctx, info) => {
-      let resp;
-      try {
-        await ctx.db.execute(`DELETE FROM [origin_games] WHERE [idx] = ${idx};`)
-        resp = true;
-      } catch (error) {
-        console.error(error)
-        resp = false
-      }
-      return resp;
-    },
-    deleteUbisoftGame: async (parent, { idx }, ctx, info) => {
-      let resp;
-      try {
-        await ctx.db.execute(`DELETE FROM [ubisoft_games] WHERE [idx] = ${idx};`)
-        resp = true;
-      } catch (error) {
-        console.error(error)
-        resp = false
-      }
-      return resp;
-    }
+    createDLCGame: resolvers.createDLCGame,
+    createWiiUGame: resolvers.createWiiUGame,
+    createWiiGame: resolvers.createWiiGame,
+    createGameCubeGame: resolvers.createGameCubeGame,
+    createVirtualConsoleGame: resolvers.createVirtualConsoleGame,
+    createToBuyGame: resolvers.createToBuyGame,
+    createOriginGame: resolvers.createOriginGame ,
+    createUbisoftGame: resolvers.createUbisoftGame ,
+    updateDLCGame: resolvers.updateDLCGame,
+    updateWiiUGame: resolvers.updateWiiUGame,
+    updateWiiGame: resolvers.updateWiiGame,
+    updateGameCubeGame: resolvers.updateGameCubeGame,
+    updateVirtualConsoleGame: resolvers.updateVirtualConsoleGame,
+    updateToBuyGame: resolvers.updateToBuyGame,
+    updateOriginGame: resolvers.updateOriginGame,
+    updateUbisoftGame: resolvers.updateUbisoftGame ,
+    deleteDLCGame: resolvers.deleteDLCGame,
+    deleteWiiUGame: resolvers.deleteWiiUGame ,
+    deleteWiiGame: resolvers.deleteWiiGame,
+    deleteGameCubeGame: resolvers.deleteGameCubeGame,
+    deleteVirtualConsoleGame: resolvers.deleteVirtualConsoleGame,
+    deleteToBuyGame: resolvers.deleteToBuyGame,
+    deleteOriginGame: resolvers.deleteOriginGame ,
+    deleteUbisoftGame: resolvers.deleteUbisoftGame
   },
   WiiUGame: {
     dlcs: async (parent, args, { db, dataloaders }, info) => {
       let dlcs;
-      try {        
+      try {
         dlcs = dataloaders.dlcLoader.load(parent.id);
         return dlcs;
       } catch (error) {
@@ -683,7 +338,7 @@ const resolvers = {
   PCGame: {
     dlcs: async (parent, args, { db, dataloaders }, info) => {
       let dlcs;
-      try {        
+      try {
         dlcs = dataloaders.dlcLoader.load(parent.id);
         return dlcs;
       } catch (error) {
@@ -693,4 +348,4 @@ const resolvers = {
   }
 };
 
-export default makeExecutableSchema({ typeDefs, resolvers });
+export default makeExecutableSchema({ typeDefs, resolvers: _resolvers });
