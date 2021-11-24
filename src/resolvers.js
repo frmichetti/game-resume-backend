@@ -69,7 +69,7 @@ const allUbisoftGames = async (parent, args, ctx, info) => {
 
 const allDLCs = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [dlcs]`
+    const sql = `SELECT ${fields.toString()} FROM [dlcs] ORDER BY id ASC`
     console.log(sql)
     const games = await ctx.db.query(sql)
     return games;
