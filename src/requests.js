@@ -18,10 +18,12 @@ const selectTable = (tableName) => {
             return "to_buy_games"
         case "virtualconsole":
             return "virtual_console_games"
-        case "dlcs":            
+        case "dlcs":
             return "dlcs";
         case "steam":
-            return "steam_games";    
+            return "steam_games";
+        case "playing":
+            return "playing_games"    
         default:
             return null;
     }
@@ -294,6 +296,11 @@ const showCharts = async (req, res) => {
     }
 }
 
+const showPlayingGames = async (req, res) => {
+    const games = await query('SELECT * FROM [is_playing]')
+    res.send({ games })
+}
+
 const createGames = async (req, res) => {
     const tableName = req.body.table;
     let table, title, finished, fisical_disc, id, system, _console;
@@ -328,6 +335,8 @@ const createGames = async (req, res) => {
             q = `INSERT INTO [${table}] (id,title,finished,console,system) VALUES ('${id}',"${title}",${finished},'${_console}', '${system}');`;
         } else if (tableName === 'tobuy') {
             q = `INSERT INTO [${table}] (title,finished,system) VALUES ("${title}",${finished},'${system}');`;
+        } else if (tableName === 'playing'){
+            q = `INSERT INTO [${table}] (id, started_at) VALUES ("${id}","${new Date().toISOString().slice(0, 19).replace('T', ' ')}");`    
         }
         else {
             q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}',"${title}",${finished});`;
@@ -509,6 +518,6 @@ const deleteGame = async (req, res) => {
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
-    showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, createGames, finishDLC,
+    showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, createGames, finishDLC,
     finishGame, searchGame, updateGame, deleteGame
 }
