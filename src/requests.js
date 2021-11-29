@@ -372,8 +372,9 @@ const finishDLC = async (req, res) => {
 const finishGame = async (req, res) => {
 
     const tableName = req.body.table;
-    let table, title, finished, appid;
+    let table, title, finished, appid, idx;
 
+    idx = req.body.idx;
     title = req.body.title;
     appid = req.body.appid;
     finished = req.body.finished;
@@ -398,6 +399,8 @@ const finishGame = async (req, res) => {
 
         if (tableName === 'steam') {
             q = `UPDATE [steam_finished] SET [finished] = ${finished} WHERE [appid] = ${appid};`;
+        } else if(tableName === 'playing') {
+            q = `UPDATE [${table}] SET [finished] = ${finished}, [finished_at] = "${new Date().toISOString().slice(0, 19).replace('T', ' ')}" WHERE [idx] = ${idx};`;
         } else {
             q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [title] = '${title}';`;
         }
@@ -487,6 +490,7 @@ const deleteGame = async (req, res) => {
 
     const tableName = req.body.table;
     const title = req.body.title;
+    const idx = req.body.idx;
 
     let table;
 
@@ -500,6 +504,18 @@ const deleteGame = async (req, res) => {
         const errorMessage = "Game Title is Empty";
         res.statusMessage = errorMessage;
         res.status(400).send({ msg: errorMessage }).end();
+    } else if (table === 'playing_games') {
+        let q = "";
+        q = `DELETE FROM [${table}] WHERE [idx] = ${idx};`;
+
+        try {
+            const result = await execute(q);
+
+            res.send({ ok: "ok" })
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ msg: error.process.message }).end();
+        }
     } else {
         let q = "";
         q = `DELETE FROM [${table}] WHERE [title] = '${title}';`;
