@@ -2,6 +2,10 @@ import getMessage from './getMessage';
 import { query, execute } from './queries';
 import lodash from 'lodash';
 
+const now = () =>{
+    return new Date().toISOString().slice(0, 19).replace('T', ' ');
+}
+
 const selectTable = (tableName) => {
     switch (tableName) {
         case "wiiu":
@@ -336,7 +340,7 @@ const createGames = async (req, res) => {
         } else if (tableName === 'tobuy') {
             q = `INSERT INTO [${table}] (title,finished,system) VALUES ("${title}",${finished},'${system}');`;
         } else if (tableName === 'playing'){
-            q = `INSERT INTO [${table}] (id, started_at) VALUES ("${id}","${new Date().toISOString().slice(0, 19).replace('T', ' ')}");`    
+            q = `INSERT INTO [${table}] (id, started_at) VALUES ("${id}","${now()}");`    
         }
         else {
             q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}',"${title}",${finished});`;
@@ -354,7 +358,7 @@ const createGames = async (req, res) => {
 }
 const finishDLC = async (req, res) => {
     const { idx, id, finished } = req.body
-    let q = `UPDATE [dlcs] SET [finished] = ${finished} WHERE [idx] = ${idx} AND [id] = '${id}';`;
+    let q = `UPDATE [dlcs] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [idx] = ${idx} AND [id] = '${id}';`;
     try {
         let result = await execute(q);
 
@@ -398,11 +402,11 @@ const finishGame = async (req, res) => {
         let q = "";
 
         if (tableName === 'steam') {
-            q = `UPDATE [steam_finished] SET [finished] = ${finished} WHERE [appid] = ${appid};`;
+            q = `UPDATE [steam_finished] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [appid] = ${appid};`;
         } else if(tableName === 'playing') {
-            q = `UPDATE [${table}] SET [finished] = ${finished}, [finished_at] = "${new Date().toISOString().slice(0, 19).replace('T', ' ')}" WHERE [idx] = ${idx};`;
+            q = `UPDATE [${table}] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [idx] = ${idx};`;
         } else {
-            q = `UPDATE [${table}] SET [finished] = ${finished} WHERE [title] = '${title}';`;
+            q = `UPDATE [${table}] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [title] = '${title}';`;
         }
 
         try {

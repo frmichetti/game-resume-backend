@@ -10,6 +10,8 @@ import schema from './schema';
 import { DataLoaderFactory } from './dataloader';
 import { RequestedFiels } from './RequestedFields';
 
+process.env.TZ = 'America/Sao_Paulo';
+
 
 const app = express();
 const dataLoaderFactory = new DataLoaderFactory(connection);
