@@ -203,6 +203,17 @@ const typeDefs = `
     appid: String
     game_title: String
     game_finished: Boolean
+  }
+  type ChartStat {
+    system: String
+    total: Int
+    percentual: Float
+  }
+  type ChartData {
+    stats: [ChartStat]
+    labels: [String]
+    values: [Float]
+    dataset: String
   }  
   type Query {    
     hello: String
@@ -234,6 +245,10 @@ const typeDefs = `
     getDLC(id: String!) : [DLC!]!
     getStatisticsOfTotalGames: [TotalGameInfo!]!
     getStatisticsOfTotalFinishedGames: [TotalFinishedInfo!]!
+    getTotalChart: ChartData
+    getFinishedChart: ChartData
+    getTotalPercentChart: ChartData
+    getPercentFinishedChart: ChartData
   }
   type Mutation {
     createCategory(input: CategoryInput) : Category
@@ -296,7 +311,11 @@ const _resolvers = {
     getConsoleFinishedGames: resolvers.getConsoleFinishedGames,
     getPCFinishedGames: resolvers.getPCFinishedGames,
     getStatisticsOfTotalGames: resolvers.getStatisticsOfTotalGames,
-    getStatisticsOfTotalFinishedGames: resolvers.getStatisticsOfTotalFinishedGames
+    getStatisticsOfTotalFinishedGames: resolvers.getStatisticsOfTotalFinishedGames,
+    getTotalChart: resolvers.getTotalChart,
+    getFinishedChart: resolvers.getFinishedChart,
+    getTotalPercentChart: resolvers.getTotalPercentChart,
+    getPercentFinishedChart: resolvers.getPercentFinishedChart
   },
   Mutation: {
     createDLCGame: resolvers.createDLCGame,

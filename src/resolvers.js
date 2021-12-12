@@ -229,16 +229,79 @@ const getStatisticsOfTotalGames = async (parent, { idx }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
     const sql = `SELECT ${fields.toString()} FROM [total_games_for_dashboard]`
     console.log(sql)
-    const stats = await ctx.db.query(sql)
-    return stats;
+    try {
+        const stats = await ctx.db.query(sql)
+        return stats;
+    } catch (error) {
+        console.error(error);
+        return []
+    }
 }
 
 const getStatisticsOfTotalFinishedGames = async (parent, { idx }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
     const sql = `SELECT ${fields.toString()} FROM [total_finished_games_for_dashboard]`
     console.log(sql)
-    const stats = await ctx.db.query(sql)
-    return stats;
+    try {
+        const stats = await ctx.db.query(sql)
+        return stats;
+    } catch (error) {
+        console.error(error);
+        return []
+    }
+}
+
+const getTotalChart = async (parent, args, ctx, info) => {
+    try {
+        const stats = await ctx.db.query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+        const labels = stats.map(i => i.system)
+        const values = stats.map(i => i.total)
+        const dataset = "Total of Games"
+
+        return { stats, labels, values, dataset };
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const getFinishedChart = async (parent, args, ctx, info) => {
+    try {
+        const stats = await ctx.db.query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+        const labels = stats.map(i => i.system)
+        const values = stats.map(i => i.total)
+        const dataset = "Total of Finished Games"
+
+        return { stats, labels, values, dataset };
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const getTotalPercentChart = async (parent, args, ctx, info) => {
+    try {
+        const stats = await ctx.db.query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+        const labels = stats.map(i => i.system)
+        const values = stats.map(i => i.percentual)
+        const dataset = "Percent of Total Games"
+
+
+        return { stats, labels, values, dataset };
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const getPercentFinishedChart = async (parent, args, ctx, info) => {
+    try {
+        const stats = await ctx.db.query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+        const labels = stats.map(i => i.system)
+        const values = stats.map(i => i.percentual)
+        const dataset = "Percent of Finished Games"
+
+        return { stats, labels, values, dataset };
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 // Mutations
@@ -461,7 +524,8 @@ export {
     getCategory, getDLCGame, getWiiUGame, getWiiGame, getGameCubeGame,
     getVirtualConsoleGame, getToBuyGame, getOriginGame, getUbisoftGame,
     getDLC, getConsoleFinishedGames, getPCFinishedGames, getStatisticsOfTotalGames,
-    getStatisticsOfTotalFinishedGames, createDLCGame, createWiiUGame,
+    getStatisticsOfTotalFinishedGames, getTotalChart, getFinishedChart, getTotalPercentChart, getPercentFinishedChart,
+    createDLCGame, createWiiUGame,
     createWiiGame, createGameCubeGame, createVirtualConsoleGame, createToBuyGame,
     createOriginGame, createUbisoftGame, updateDLCGame, updateWiiUGame,
     updateWiiGame, updateGameCubeGame, updateVirtualConsoleGame, updateToBuyGame, updateOriginGame,
