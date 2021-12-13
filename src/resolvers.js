@@ -115,6 +115,30 @@ const allGamesWithDLCs = async (parent, args, ctx, info) => {
     return games;
 }
 
+const allGamesFinished = async (parent, args, ctx, info) => {
+    const fields = ctx.requestedFields.getFields(info, {})
+    const sql = `SELECT ${fields.toString()} FROM [all_games_finished_list]`
+    console.log(sql)
+    const games = await ctx.db.query(sql)
+    return games;
+}
+
+const allGamesFinishedDetailed = async (parent, args, ctx, info) => {
+    const fields = ctx.requestedFields.getFields(info, {})
+    const sql = `SELECT ${fields.toString()} FROM [all_games_finished_list_detailed]`
+    console.log(sql)
+    const games = await ctx.db.query(sql)
+    return games;
+}
+
+const allGamesUnfinished = async (parent, args, ctx, info) => {
+    const fields = ctx.requestedFields.getFields(info, {})
+    const sql = `SELECT ${fields.toString()} FROM [all_unfinished_games_list]`
+    console.log(sql)
+    const games = await ctx.db.query(sql)
+    return games;
+}
+
 const getCategory = async (parent, { idx }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
     const sql = `SELECT ${fields.toString()} FROM [categories] WHERE [idx] = '${idx}'`
@@ -520,7 +544,7 @@ const deleteUbisoftGame = async (parent, { idx }, ctx, info) => {
 export {
     hello, allCategories, allWiiUGames, allWiiGames, allGameCubeGames, allVirtualConsoleGames,
     allToBuyGames, allOriginGames, allUbisoftGames, allDLCs, allSteamGames,
-    allConsoleGames, allPCGames, allGames, allGamesWithDLCs,
+    allConsoleGames, allPCGames, allGames, allGamesWithDLCs, allGamesFinished, allGamesFinishedDetailed, allGamesUnfinished,
     getCategory, getDLCGame, getWiiUGame, getWiiGame, getGameCubeGame,
     getVirtualConsoleGame, getToBuyGame, getOriginGame, getUbisoftGame,
     getDLC, getConsoleFinishedGames, getPCFinishedGames, getStatisticsOfTotalGames,
