@@ -1,8 +1,9 @@
 import getMessage from './getMessage';
 import { query, execute } from './queries';
 import lodash from 'lodash';
+const ExportData = require('./exportTocsv');
 
-const now = () =>{
+const now = () => {
     return new Date().toISOString().slice(0, 19).replace('T', ' ');
 }
 
@@ -27,7 +28,7 @@ const selectTable = (tableName) => {
         case "steam":
             return "steam_games";
         case "playing":
-            return "playing_games"    
+            return "playing_games"
         default:
             return null;
     }
@@ -339,8 +340,8 @@ const createGames = async (req, res) => {
             q = `INSERT INTO [${table}] (id,title,finished,console,system) VALUES ('${id}',"${title}",${finished},'${_console}', '${system}');`;
         } else if (tableName === 'tobuy') {
             q = `INSERT INTO [${table}] (title,finished,system) VALUES ("${title}",${finished},'${system}');`;
-        } else if (tableName === 'playing'){
-            q = `INSERT INTO [${table}] (id, started_at) VALUES ("${id}","${now()}");`    
+        } else if (tableName === 'playing') {
+            q = `INSERT INTO [${table}] (id, started_at) VALUES ("${id}","${now()}");`
         }
         else {
             q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}',"${title}",${finished});`;
@@ -403,7 +404,7 @@ const finishGame = async (req, res) => {
 
         if (tableName === 'steam') {
             q = `UPDATE [steam_finished] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [appid] = ${appid};`;
-        } else if(tableName === 'playing') {
+        } else if (tableName === 'playing') {
             q = `UPDATE [${table}] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [idx] = ${idx};`;
         } else {
             q = `UPDATE [${table}] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [title] = '${title}';`;
@@ -535,9 +536,24 @@ const deleteGame = async (req, res) => {
     }
 }
 
+const exportToCsv = async (req, res, next) => {
+    let table = req.query.table;
+    let result = await query(`SELECT * FROM [${table}]`)
+
+    try {
+        let { filename, csv } = ExportData.tocsv(result, Object.keys(result[0]));
+        res.header('Content-Type', 'text/csv');
+        res.attachment(filename);
+        res.status(200).send(csv);        
+        
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, createGames, finishDLC,
-    finishGame, searchGame, updateGame, deleteGame
+    finishGame, searchGame, updateGame, deleteGame, exportToCsv
 }

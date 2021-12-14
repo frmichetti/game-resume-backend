@@ -57,9 +57,10 @@ app.get('/wii', requests.showWiiGames);
 app.get('/wiiu', requests.showWiiUGames);
 app.get('/pc', requests.showPCGames);
 app.get('/console', requests.showConsoleGames);
-app.get('/dlcs', requests.showDLCs)
-app.get('/charts', requests.showCharts)
-app.get('/playing', requests.showPlayingGames)
+app.get('/dlcs', requests.showDLCs);
+app.get('/charts', requests.showCharts);
+app.get('/playing', requests.showPlayingGames);
+app.get('/csv', requests.exportToCsv);
 
 app.post('/create', requests.createGames);
 app.post('/dlc_finished', requests.finishDLC);
