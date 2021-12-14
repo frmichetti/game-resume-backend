@@ -252,6 +252,8 @@ const typeDefs = `
     getFinishedChart: ChartData
     getTotalPercentChart: ChartData
     getPercentFinishedChart: ChartData
+    getFinishedBySystem(system: String!): [Game!]!
+    getUnfinishedBySystem(system: String!): [Game!]!
   }
   type Mutation {
     createCategory(input: CategoryInput) : Category
@@ -321,7 +323,9 @@ const _resolvers = {
     getTotalChart: resolvers.getTotalChart,
     getFinishedChart: resolvers.getFinishedChart,
     getTotalPercentChart: resolvers.getTotalPercentChart,
-    getPercentFinishedChart: resolvers.getPercentFinishedChart
+    getPercentFinishedChart: resolvers.getPercentFinishedChart,
+    getFinishedBySystem: resolvers.getFinishedBySystem,
+    getUnfinishedBySystem: resolvers.getUnfinishedBySystem
   },
   Mutation: {
     createDLCGame: resolvers.createDLCGame,

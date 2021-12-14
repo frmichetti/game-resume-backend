@@ -328,6 +328,24 @@ const getPercentFinishedChart = async (parent, args, ctx, info) => {
     }
 }
 
+const getFinishedBySystem = async (parent, { system }, ctx, info) => {
+    try {
+        const games = await ctx.db.query(`SELECT * FROM [all_games_list] WHERE [finished] = true AND [system] = '${system}';`);
+        return games;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const getUnfinishedBySystem = async (parent, { system }, ctx, info) => {
+    try {
+        const games = await ctx.db.query(`SELECT * FROM [all_games_list] WHERE [finished] = false AND [system] = '${system}';`);
+        return games;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 // Mutations
 
 const createDLCGame = async (parent, args, ctx, info) => {
@@ -549,6 +567,7 @@ export {
     getVirtualConsoleGame, getToBuyGame, getOriginGame, getUbisoftGame,
     getDLC, getConsoleFinishedGames, getPCFinishedGames, getStatisticsOfTotalGames,
     getStatisticsOfTotalFinishedGames, getTotalChart, getFinishedChart, getTotalPercentChart, getPercentFinishedChart,
+    getFinishedBySystem, getUnfinishedBySystem,
     createDLCGame, createWiiUGame,
     createWiiGame, createGameCubeGame, createVirtualConsoleGame, createToBuyGame,
     createOriginGame, createUbisoftGame, updateDLCGame, updateWiiUGame,
