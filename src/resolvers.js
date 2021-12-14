@@ -139,6 +139,14 @@ const allGamesUnfinished = async (parent, args, ctx, info) => {
     return games;
 }
 
+const allGamesUnfinishedDetailed = async (parent, args, ctx, info) => {
+    const fields = ctx.requestedFields.getFields(info, {})
+    const sql = `SELECT ${fields.toString()} FROM [all_games_unfinished_list_detailed]`
+    console.log(sql)
+    const games = await ctx.db.query(sql)
+    return games;
+}
+
 const getCategory = async (parent, { idx }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
     const sql = `SELECT ${fields.toString()} FROM [categories] WHERE [idx] = '${idx}'`
@@ -563,6 +571,7 @@ export {
     hello, allCategories, allWiiUGames, allWiiGames, allGameCubeGames, allVirtualConsoleGames,
     allToBuyGames, allOriginGames, allUbisoftGames, allDLCs, allSteamGames,
     allConsoleGames, allPCGames, allGames, allGamesWithDLCs, allGamesFinished, allGamesFinishedDetailed, allGamesUnfinished,
+    allGamesUnfinishedDetailed,
     getCategory, getDLCGame, getWiiUGame, getWiiGame, getGameCubeGame,
     getVirtualConsoleGame, getToBuyGame, getOriginGame, getUbisoftGame,
     getDLC, getConsoleFinishedGames, getPCFinishedGames, getStatisticsOfTotalGames,

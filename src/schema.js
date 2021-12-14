@@ -234,6 +234,7 @@ const typeDefs = `
     allGamesFinished: [Game!]!
     allGamesFinishedDetailed: [Game!]!
     allGamesUnfinished: [Game!]!
+    allGamesUnfinishedDetailed: [Game!]!
     getCategory(idx: ID!) : Category
     getDLCGame(idx: ID!) : DLC
     getWiiUGame(id: String!): WiiUGame
@@ -306,6 +307,7 @@ const _resolvers = {
     allGamesFinished: resolvers.allGamesFinished,
     allGamesFinishedDetailed: resolvers.allGamesFinishedDetailed,
     allGamesUnfinished: resolvers.allGamesUnfinished,
+    allGamesUnfinishedDetailed: resolvers.allGamesUnfinishedDetailed,
     getCategory: resolvers.getCategory,
     getDLCGame: resolvers.getDLCGame,
     getWiiUGame: resolvers.getWiiUGame,
