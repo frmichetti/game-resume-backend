@@ -1,7 +1,11 @@
 import getMessage from './getMessage';
 import { query, execute } from './queries';
 import lodash from 'lodash';
+
 const ExportData = require('./exportTocsv');
+const ejs = require('ejs')
+const path = require('path')
+const puppeteer = require('puppeteer')
 
 const now = () => {
     return new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -544,16 +548,91 @@ const exportToCsv = async (req, res, next) => {
         let { filename, csv } = ExportData.tocsv(result, Object.keys(result[0]));
         res.header('Content-Type', 'text/csv');
         res.attachment(filename);
-        res.status(200).send(csv);        
-        
+        res.status(200).send(csv);
+
     } catch (error) {
         console.error(error)
     }
+}
+
+const exportToPDF = async (req, res, next) => {    
+    let from = req.query.from;
+
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+
+    await page.goto(`http://localhost:4000/report?from=${from}`, {
+        waitUntil: 'networkidle0'
+    })
+
+    const pdf = await page.pdf({
+        printBackground: true,
+        format: 'Letter'
+    })
+
+    await browser.close()
+
+    res.contentType("application/pdf")
+
+    return res.send(pdf)
+}
+
+const showReport = async (req, res, next) => {    
+    let q = ""
+
+    switch (req.query.from) {
+        case 'steam':
+            q = `SELECT * FROM [steam_games] INNER JOIN [steam_finished] ON [steam_games].appid = [steam_finished].appid`
+            break;
+        case 'origin':
+            q = 'SELECT * FROM [origin_games];'
+            break;
+        case 'ubisoft':
+            q = `SELECT * FROM [ubisoft_games];`
+            break;
+        case 'gamecube':
+            q = `SELECT * FROM [gamecube_games];`
+            break;
+        case 'wii':
+            q = `SELECT * FROM [wii_games];`
+            break;
+        case 'wiiu':
+            q = `SELECT * FROM [wiiu_games];`
+            break;
+        case 'virtualconsole':
+            q = `SELECT * FROM [virtual_console_games];`
+            break;
+        case 'all':
+            q = `SELECT * FROM [all_games_list];`
+            break;
+        case 'finished':
+            q = `SELECT * FROM [all_finished_games_list];`
+            break;
+        case 'unfinished':            
+            q = `SELECT * FROM [all_unfinished_games_list];`
+            break;
+        default:
+            q = 'SELECT 1'
+            break;
+    }
+
+    let games = await query(q);
+    games = games.map(g => {
+        return { id: g['steam_games.appid'] || g.id, title: g.title, finished: g.finished }
+    })
+    const filePath = path.join(__dirname, "report.ejs")
+    ejs.renderFile(filePath, { games }, (err, html) => {
+        if (err) {
+            return res.send('Erro na leitura do arquivo')
+        }
+        
+        return res.send(html)
+    })
 }
 
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, createGames, finishDLC,
-    finishGame, searchGame, updateGame, deleteGame, exportToCsv
+    finishGame, searchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport
 }

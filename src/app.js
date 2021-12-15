@@ -60,7 +60,9 @@ app.get('/console', requests.showConsoleGames);
 app.get('/dlcs', requests.showDLCs);
 app.get('/charts', requests.showCharts);
 app.get('/playing', requests.showPlayingGames);
+app.get('/report', requests.showReport);
 app.get('/csv', requests.exportToCsv);
+app.get('/pdf', requests.exportToPDF);
 
 app.post('/create', requests.createGames);
 app.post('/dlc_finished', requests.finishDLC);
