@@ -555,7 +555,7 @@ const exportToCsv = async (req, res, next) => {
     }
 }
 
-const exportToPDF = async (req, res, next) => {    
+const exportToPDF = async (req, res, next) => {
     let from = req.query.from;
 
     const browser = await puppeteer.launch()
@@ -577,7 +577,7 @@ const exportToPDF = async (req, res, next) => {
     return res.send(pdf)
 }
 
-const showReport = async (req, res, next) => {    
+const showReport = async (req, res, next) => {
     let q = ""
 
     switch (req.query.from) {
@@ -608,7 +608,7 @@ const showReport = async (req, res, next) => {
         case 'finished':
             q = `SELECT * FROM [all_finished_games_list];`
             break;
-        case 'unfinished':            
+        case 'unfinished':
             q = `SELECT * FROM [all_unfinished_games_list];`
             break;
         default:
@@ -625,14 +625,56 @@ const showReport = async (req, res, next) => {
         if (err) {
             return res.send('Erro na leitura do arquivo')
         }
-        
+
         return res.send(html)
     })
+}
+const exportToXls = async (req, res, next) => {
+    let q = ""
+
+    switch (req.query.from) {
+        case 'steam':
+            q = `SELECT * FROM [steam_games] INNER JOIN [steam_finished] ON [steam_games].appid = [steam_finished].appid`
+            break;
+        case 'origin':
+            q = 'SELECT * FROM [origin_games];'
+            break;
+        case 'ubisoft':
+            q = `SELECT * FROM [ubisoft_games];`
+            break;
+        case 'gamecube':
+            q = `SELECT * FROM [gamecube_games];`
+            break;
+        case 'wii':
+            q = `SELECT * FROM [wii_games];`
+            break;
+        case 'wiiu':
+            q = `SELECT * FROM [wiiu_games];`
+            break;
+        case 'virtualconsole':
+            q = `SELECT * FROM [virtual_console_games];`
+            break;
+        case 'all':
+            q = `SELECT * FROM [all_games_list];`
+            break;
+        case 'finished':
+            q = `SELECT * FROM [all_finished_games_list];`
+            break;
+        case 'unfinished':
+            q = `SELECT * FROM [all_unfinished_games_list];`
+            break;
+        default:
+            q = 'SELECT 1'
+            break;
+    }
+
+    let games = await query(q);
+    res.xls('games.xlsx', games);
 }
 
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, createGames, finishDLC,
-    finishGame, searchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport
+    finishGame, searchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls
 }

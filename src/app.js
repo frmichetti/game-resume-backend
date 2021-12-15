@@ -10,6 +10,8 @@ import schema from './schema';
 import { DataLoaderFactory } from './dataloader';
 import { RequestedFiels } from './RequestedFields';
 
+const json2xls = require('json2xls');
+
 process.env.TZ = 'America/Sao_Paulo';
 
 
@@ -22,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(express.static('public'));
+app.use(json2xls.middleware);
 
 app.use('/graphql',
   (req, res, next) => {
@@ -63,6 +66,7 @@ app.get('/playing', requests.showPlayingGames);
 app.get('/report', requests.showReport);
 app.get('/csv', requests.exportToCsv);
 app.get('/pdf', requests.exportToPDF);
+app.get('/xls', requests.exportToXls)
 
 app.post('/create', requests.createGames);
 app.post('/dlc_finished', requests.finishDLC);
