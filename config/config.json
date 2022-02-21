@@ -1,0 +1,35 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "mgr_dev",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "define": {
+      "timestamps": true,
+      "underscored": true
+    }
+  },
+  "test": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "mgr_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "define": {
+      "timestamps": true,
+      "underscored": true
+    }
+  },
+  "production": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "mgr_prod",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "define": {
+      "timestamps": true,
+      "underscored": true
+    }
+  }
+}
