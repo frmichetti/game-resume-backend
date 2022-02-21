@@ -29,7 +29,7 @@ app.use(json2xls.middleware);
 app.use('/graphql',
   (req, res, next) => {
     req["context"] = {}
-    req["context"].db = connection;
+    req["context"].db = connection;    
     req["context"].dataloaders = dataLoaderFactory.getLoaders();
     req["context"].requestedFields = requestedFields;
     next();

@@ -1,5 +1,6 @@
 import getMessage from './getMessage';
 import { query, execute } from './queries';
+import db from './models/index';
 import lodash from 'lodash';
 
 const ExportData = require('./exportTocsv');
@@ -89,7 +90,8 @@ const showCategories = async (req, res) => {
 
 const showOriginGames = async (req, res) => {
     try {
-        const games = await query('SELECT * FROM [origin_games]');
+        // const games = await query('SELECT * FROM [origin_games]');
+        const games = await db.Origin.findAll();
         res.send({ games })
     } catch (error) {
         console.error(error)

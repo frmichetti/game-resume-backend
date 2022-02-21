@@ -7,8 +7,8 @@ module.exports = {
       title: 'Assassins Creed 4: Black Frag',
       finished: false,
       finished_at: null,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      created_at: new Date(),
+      updated_at: new Date()
      }
     ], {});
   },
