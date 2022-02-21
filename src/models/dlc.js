@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Steam, {foreignKey: 'app_id', as: 'steam_owner'});
+      this.belongsTo(models.Wii, {foreignKey: 'app_id', as: 'wii_owner'})
     }
   }
   DLC.init({

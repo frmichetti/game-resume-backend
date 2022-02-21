@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsToMany(models.Category, {foreignKey: 'category_id', through: 'GamesCategories', as: 'categories'});
     }
   }
   VirtualConsole.init({
