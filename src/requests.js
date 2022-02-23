@@ -82,7 +82,8 @@ const showStatistics = async (req, res) => {
 
 const showCategories = async (req, res) => {
     try {
-        let result = await query('SELECT * FROM [categories]')
+        // let result = await query('SELECT * FROM [categories]')
+        const result = await db.Category.findAll();
         res.status(200).send({ result })
     } catch (error) {
         console.error(error)
@@ -132,7 +133,8 @@ const showSteamGames = async (req, res) => {
 
 const showAllGames = async (req, res) => {
     try {
-        const games = await query('SELECT * FROM [All Games]');
+        // const games = await query('SELECT * FROM [All Games]');
+        const games = await db.sequelize.query('SELECT * FROM all_games', { type: QueryTypes.SELECT })
         
         /*
         const mapped = lodash.map(games, (item) => {
@@ -197,7 +199,8 @@ const showVirtualConsoleGames = async (req, res) => {
 
 const showToBuyGames = async (req, res) => {
     try {
-        const games = await query('SELECT * FROM [to_buy_games]');
+        // const games = await query('SELECT * FROM [to_buy_games]');
+        const games = await db.ToBuy.findAll();
 
         res.send({ games })
     } catch (error) {
@@ -249,10 +252,10 @@ const showDLCs = async (req, res) => {
 }
 
 const showDLCsByID = async (req, res) => {
-    const id = req.query.id;
-    console.log(id)
-    try {
-        const dlcs = await query(`SELECT * FROM [dlcs] WHERE id = '${id}';`);
+    const id = req.query.id;    
+    try {        
+        //const dlcs = await query(`SELECT * FROM [dlcs] WHERE id = '${id}';`);
+        const dlcs = await db.DLC.findAll({where: {id}});
         res.send({ games: dlcs })
     } catch (error) {
         console.error(error)
@@ -261,13 +264,12 @@ const showDLCsByID = async (req, res) => {
 }
 
 const showCharts = async (req, res) => {
-    const type = req.query.type;
-    console.log(type)
-    // total_of_percentual_games_by_system
+    const type = req.query.type;    
 
     if (type === 'total') {
         try {
-            const stats = await query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+            // const stats = await query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+            const stats = await db.sequelize.query('SELECT * FROM total_of_games_by_system', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.total)
             const dataset = "Total of Games"
@@ -281,7 +283,8 @@ const showCharts = async (req, res) => {
 
     } else if (type === 'finished') {
         try {
-            const stats = await query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+            // const stats = await query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+            const stats = await db.sequelize.query('SELECT * FROM total_of_finished_games_by_system', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.total)
             const dataset = "Total of Finished Games"
@@ -294,7 +297,8 @@ const showCharts = async (req, res) => {
         }
     } else if (type === "total_percent") {
         try {
-            const stats = await query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+            // const stats = await query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+            const stats = await db.sequelize.query('SELECT * FROM total_of_games_by_system_percentual', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.percentual)
             const dataset = "Percent of Total Games"
@@ -307,7 +311,8 @@ const showCharts = async (req, res) => {
         }
     } else if (type === "finished_percent") {
         try {
-            const stats = await query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+            // const stats = await query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+            const stats = await db.sequelize.query('SELECT * FROM total_of_finished_games_by_system_percentual', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.percentual)
             const dataset = "Percent of Finished Games"
@@ -324,7 +329,8 @@ const showCharts = async (req, res) => {
 }
 
 const showPlayingGames = async (req, res) => {
-    const games = await query('SELECT * FROM [is_playing]')
+    // const games = await query('SELECT * FROM [is_playing]')
+    const games = await db.Playing.findAll();
     res.send({ games })
 }
 
