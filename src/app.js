@@ -73,7 +73,7 @@ app.get('/xls', requests.exportToXls)
 app.post('/create', requests.createGames);
 app.post('/dlc_finished', requests.finishDLC);
 app.post('/finished', requests.finishGame);
-app.post('/search', requests.searchGame)
+app.get('/search', requests.searchGame)
 
 app.put('/update', requests.updateGame);
 

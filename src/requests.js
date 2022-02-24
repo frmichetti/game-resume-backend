@@ -405,10 +405,9 @@ const finishGame = async (req, res) => {
 }
 
 const searchGame = async (req, res) => {
-    const q = req.body.query;
-    try {
-
-        const games = await query(`SELECT * FROM [all_games_list_api] WHERE title Like "*${q}*";`);
+    const q = req.query.query;
+    try {                
+        const games = await db.sequelize.query(`SELECT * FROM all_games_list_api WHERE title ilike '%${q}%';`, { type: QueryTypes.SELECT });  
 
         res.send({ games })
     } catch (error) {
