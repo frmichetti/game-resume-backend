@@ -35,232 +35,190 @@ const allGameCubeGames = async (parent, args, ctx, info) => {
 
 const allVirtualConsoleGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [virtual_console_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "VirtualConsole"`    
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT }); 
     return games;
 }
 
 const allToBuyGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [to_buy_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "ToBuy"`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });     
     return games;
 }
 
 const allOriginGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [origin_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "Origin"`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });         
     return games;
 }
 
 const allUbisoftGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [ubisoft_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "Ubisoft"`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allDLCs = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [dlcs] ORDER BY id ASC`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
-    return games;
+    const sql = `SELECT ${fields.toString()} FROM "DLC" ORDER BY app_id ASC`
+    const dlcs = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
+    return dlcs;
 }
 
 const allSteamGames = async (parent, args, ctx, info) => {
-    const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [append_list_steam_finished_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
+    const sql = `SELECT ${fields.toString()} FROM "Steam"`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allConsoleGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [all_console_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "all_console_games"`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allPCGames = async (parent, args, ctx, info) => {
-    const fields = ctx.requestedFields.getFields(info, { keep: ["id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM [all_pc_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
+    const sql = `SELECT ${fields.toString()} FROM "all_pc_games"`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [all_games_list]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "all_games"`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesWithDLCs = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [append_dlcs_with_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "all_games_list_api"`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesFinished = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [all_games_finished_list]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "all_games" WHERE finished = true`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesFinishedDetailed = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [all_games_finished_list_detailed]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "all_games_list_api" WHERE finished = true`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesUnfinished = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [all_unfinished_games_list]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "all_games" WHERE finished = false`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesUnfinishedDetailed = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [all_games_unfinished_list_detailed]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "all_games_list_api" WHERE finished = false`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
-const getCategory = async (parent, { idx }, ctx, info) => {
+const getCategory = async (parent, { id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [categories] WHERE [idx] = '${idx}'`
-    console.log(sql)
-    const dlcs = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "Category" WHERE id = '${id}'`
+    const categories = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
+    return categories[0];
+}
+
+const getDLCGame = async (parent, { id }, ctx, info) => {
+    const fields = ctx.requestedFields.getFields(info, {})
+    const sql = `SELECT ${fields.toString()} FROM "DLC" WHERE id = '${id}'`    
+    const dlcs = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return dlcs[0];
 }
 
-const getDLCGame = async (parent, { idx }, ctx, info) => {
+const getWiiUGame = async (parent, { app_id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [dlcs] WHERE [idx] = '${idx}'`
-    console.log(sql)
-    const dlcs = await ctx.db.query(sql)
-    return dlcs[0];
-}
-
-const getWiiUGame = async (parent, { id }, ctx, info) => {
-    const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [wiiu_games] WHERE [id] = '${id}'`
-    console.log(sql)
-    const game = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "WiiU" WHERE app_id = '${app_id}'`    
+    const game = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return game[0];
 }
 
-const getWiiGame = async (parent, { id }, ctx, info) => {
+const getWiiGame = async (parent, { app_id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [wii_games] WHERE [id] = '${id}'`
-    console.log(sql)
-    const game = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "Wii" WHERE app_id = '${app_id}'`
+    const game = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return game[0];
 }
 
-const getGameCubeGame = async (parent, { id }, ctx, info) => {
+const getGameCubeGame = async (parent, { app_id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [gamecube_games] WHERE [id] = '${id}'`
-    console.log(sql)
-    const game = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "GameCube" WHERE app_id = '${app_id}'`
+    const game = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return game[0];
 }
 
 const getVirtualConsoleGame = async (parent, { id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [virtual_console_games] WHERE [id] = '${id}'`
-    console.log(sql)
-    const game = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "VirtualConsole" WHERE id = '${id}'`
+    const game = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return game[0];
 }
 
-const getToBuyGame = async (parent, { idx }, ctx, info) => {
+const getToBuyGame = async (parent, { id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [to_buy_games] WHERE [idx] = '${idx}'`
-    console.log(sql)
-    const game = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "ToBuy" WHERE id = '${id}'`
+    const game = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return game[0];
 }
 
-const getOriginGame = async (parent, { idx }, ctx, info) => {
+const getOriginGame = async (parent, { id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [origin_games] WHERE [idx] = ${idx}`
-    console.log(sql)
-    const game = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "Origin" WHERE id = ${id}`
+    const game = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return game[0];
 }
 
 const getUbisoftGame = async (parent, { idx }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [ubisoft_games] WHERE [idx] = ${idx}`
-    console.log(sql)
-    const game = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "Ubisoft" WHERE id = ${id}`
+    const game = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return game[0];
 }
 
-const getDLC = async (parent, { id }, ctx, info) => {
+const getDLC = async (parent, { app_id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [dlcs] WHERE [id] = '${id}'`
-    console.log(sql)
-    const dlcs = await ctx.db.query(sql)
+    const sql = `SELECT ${fields.toString()} FROM "DLC" WHERE app_id = '${app_id}'`    
+    const dlcs = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return dlcs;
 }
 
 const getConsoleFinishedGames = async (parent, { finished }, ctx, info) => {
-    const sql = `SELECT * FROM (
-      SELECT [wii_games].title AS title, [wii_games].finished AS finished, [wii_games].[fisical_disc] AS fisical_disc, "Wii" as system FROM [wii_games]
-            UNION
-      SELECT [gamecube_games].title AS title, [gamecube_games].finished AS finished, [gamecube_games].[fisical_disc] AS fisical_disc, "GameCube" as system FROM [gamecube_games]
-            UNION
-      SELECT [wiiu_games].title AS title, [wiiu_games].finished AS finished, [wiiu_games].fisical_disc AS fisical_disc, "WiiU" as system FROM [wiiu_games] 
-            UNION
-      SELECT [virtual_console_games].title AS title, [virtual_console_games].finished AS finished, false AS fisical_disc, [virtual_console_games].system as system FROM [virtual_console_games] 
-            ) AS all_fisical_and_finished
-            WHERE (((all_fisical_and_finished.[finished])=${finished}))`
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT * FROM "all_console_games" WHERE finished = ${finished}`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const getPCFinishedGames = async (parent, { finished }, ctx, info) => {
-    const sql = `SELECT *
-    FROM (SELECT [origin_games].title AS title, "Origin" AS platform, CBOOL([origin_games].finished) as finished 
-    FROM [origin_games]
-     UNION
-    SELECT [ubisoft_games].title AS title, "Ubisoft" AS platform, CBOOL([ubisoft_games].finished) as finished
-    FROM [ubisoft_games]
-     UNION SELECT [steam_games].[title] AS title, "Steam" AS platform, CBOOL([steam_finished].[finished]) as finished
-    FROM  [steam_finished] INNER JOIN [steam_games] ON [steam_finished].[appid] = [steam_games].[appid] )  AS pc_finished_games
-    WHERE finished = ${finished};
-    `
-    const games = await ctx.db.query(sql)
+    const sql = `SELECT * FROM "all_pc_games" WHERE finished = ${finished};`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const getStatisticsOfTotalGames = async (parent, { idx }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [total_games_for_dashboard]`
-    console.log(sql)
+    const sql = `SELECT ${fields.toString()} FROM "total_games_for_dashboard"`
+    
     try {
-        const stats = await ctx.db.query(sql)
+        const stats = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
         return stats;
     } catch (error) {
         console.error(error);
@@ -270,10 +228,10 @@ const getStatisticsOfTotalGames = async (parent, { idx }, ctx, info) => {
 
 const getStatisticsOfTotalFinishedGames = async (parent, { idx }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [total_finished_games_for_dashboard]`
-    console.log(sql)
+    const sql = `SELECT ${fields.toString()} FROM "total_finished_games_for_dashboard"`
+    
     try {
-        const stats = await ctx.db.query(sql)
+        const stats = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
         return stats;
     } catch (error) {
         console.error(error);
@@ -283,7 +241,7 @@ const getStatisticsOfTotalFinishedGames = async (parent, { idx }, ctx, info) => 
 
 const getTotalChart = async (parent, args, ctx, info) => {
     try {
-        const stats = await ctx.db.query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+        const stats = await ctx.orm.sequelize.query(`SELECT * FROM "total_of_games_by_system_percentual"`,{ type: QueryTypes.SELECT });
         const labels = stats.map(i => i.system)
         const values = stats.map(i => i.total)
         const dataset = "Total of Games"
@@ -296,7 +254,7 @@ const getTotalChart = async (parent, args, ctx, info) => {
 
 const getFinishedChart = async (parent, args, ctx, info) => {
     try {
-        const stats = await ctx.db.query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+        const stats = await ctx.orm.sequelize.query(`SELECT * FROM "total_of_finished_games_by_system_percentual"`,{ type: QueryTypes.SELECT });
         const labels = stats.map(i => i.system)
         const values = stats.map(i => i.total)
         const dataset = "Total of Finished Games"
@@ -309,12 +267,10 @@ const getFinishedChart = async (parent, args, ctx, info) => {
 
 const getTotalPercentChart = async (parent, args, ctx, info) => {
     try {
-        const stats = await ctx.db.query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+        const stats = await ctx.orm.sequelize.query(`SELECT * FROM "total_of_games_by_system_percentual"`,{ type: QueryTypes.SELECT });
         const labels = stats.map(i => i.system)
         const values = stats.map(i => i.percentual)
         const dataset = "Percent of Total Games"
-
-
         return { stats, labels, values, dataset };
     } catch (error) {
         console.error(error);
@@ -323,7 +279,7 @@ const getTotalPercentChart = async (parent, args, ctx, info) => {
 
 const getPercentFinishedChart = async (parent, args, ctx, info) => {
     try {
-        const stats = await ctx.db.query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+        const stats = await ctx.orm.sequelize.query(`SELECT * FROM "total_of_finished_games_by_system_percentual"`,{ type: QueryTypes.SELECT });
         const labels = stats.map(i => i.system)
         const values = stats.map(i => i.percentual)
         const dataset = "Percent of Finished Games"

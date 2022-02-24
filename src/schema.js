@@ -161,11 +161,12 @@ const typeDefs = `
     ${inputCategory}
   }
   type SteamGame {
+    id: ID
     appid: String
     title: String
     finished: Boolean
-    playtime_forever: Int
-    playtime_hours: Float 
+    collection: Boolean
+    dlcs: [DLC!]! 
   }
   type DLC {
     id: ID
@@ -174,13 +175,14 @@ const typeDefs = `
     finished: Boolean   
   }
   type ConsoleGame {
+    app_id: String
     title: String
     finished: Boolean
     fisical_disc:Boolean
     system: String
   }
   type PCGame {
-    id: String
+    app_id: String
     title: String
     platform: String
     finished: Boolean
@@ -193,19 +195,16 @@ const typeDefs = `
   }
   type TotalFinishedInfo {
     description: String
-    total_games_finished: Int
+    total: Float
   }
   type TotalGameInfo {
     description: String
-    total_games: Int
+    total: Float
   }
   type AppendGameDLC {
-    dlc_id: String
-    dlc_title: String
-    dlc_finished: Boolean
-    appid: String
-    game_title: String
-    game_finished: Boolean
+    title: String
+    system: String
+    finished: Boolean
   }
   type ChartStat {
     system: String
@@ -238,18 +237,18 @@ const typeDefs = `
     allGamesFinishedDetailed: [Game!]!
     allGamesUnfinished: [Game!]!
     allGamesUnfinishedDetailed: [Game!]!
-    getCategory(idx: ID!) : Category
-    getDLCGame(idx: ID!) : DLC
-    getWiiUGame(id: String!): WiiUGame
-    getWiiGame(id: String!): WiiGame
-    getGameCubeGame(id: String!): GameCubeGame
-    getVirtualConsoleGame(id: String!): VirtualConsoleGame
-    getToBuyGame(idx: ID!): ToBuyGame
-    getOriginGame(idx: ID!): OriginGame
-    getUbisoftGame(idx: ID!): UbisoftGame
+    getCategory(id: ID!) : Category
+    getDLCGame(id: ID!) : DLC
+    getWiiUGame(app_id: String!): WiiUGame
+    getWiiGame(app_id: String!): WiiGame
+    getGameCubeGame(app_id: String!): GameCubeGame
+    getVirtualConsoleGame(id: ID!): VirtualConsoleGame
+    getToBuyGame(id: ID!): ToBuyGame
+    getOriginGame(id: ID!): OriginGame
+    getUbisoftGame(id: ID!): UbisoftGame
     getConsoleFinishedGames(finished: Boolean!): [ConsoleGame!]!
     getPCFinishedGames(finished: Boolean!): [PCGame!]!
-    getDLC(id: String!) : [DLC!]!
+    getDLC(app_id: String!) : [DLC!]!
     getStatisticsOfTotalGames: [TotalGameInfo!]!
     getStatisticsOfTotalFinishedGames: [TotalFinishedInfo!]!
     getTotalChart: ChartData
@@ -381,6 +380,17 @@ const _resolvers = {
     }
   },
   GameCubeGame: {
+    dlcs: async (parent, args, { db, dataloaders }, info) => {
+      let dlcs;
+      try {
+        dlcs = dataloaders.dlcLoader.load(parent.app_id || '-');
+        return dlcs;
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  },
+  SteamGame: {
     dlcs: async (parent, args, { db, dataloaders }, info) => {
       let dlcs;
       try {
