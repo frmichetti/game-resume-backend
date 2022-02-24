@@ -559,10 +559,10 @@ const deleteGame = async (req, res) => {
 }
 
 const exportToCsv = async (req, res, next) => {
-    let table = req.query.table;
-    let result = await query(`SELECT * FROM [${table}]`)
+    let table = req.query.table;    
 
     try {
+        let result = await db.sequelize.query(`SELECT * FROM "${table}"`, { type: QueryTypes.SELECT })
         let { filename, csv } = ExportData.tocsv(result, Object.keys(result[0]));
         res.header('Content-Type', 'text/csv');
         res.attachment(filename);
@@ -570,6 +570,7 @@ const exportToCsv = async (req, res, next) => {
 
     } catch (error) {
         console.error(error)
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
