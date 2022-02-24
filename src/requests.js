@@ -14,6 +14,46 @@ const now = () => {
     return new Date().toISOString().slice(0, 19).replace('T', ' ');
 }
 
+const queryInTable = (tableName) => {
+    let q = ""
+switch (tableName) {
+        case 'steam':
+            q = `SELECT * FROM [steam_games]`
+            break;
+        case 'origin':
+            q = 'SELECT * FROM [origin_games];'
+            break;
+        case 'ubisoft':
+            q = `SELECT * FROM [ubisoft_games];`
+            break;
+        case 'gamecube':
+            q = `SELECT * FROM [gamecube_games];`
+            break;
+        case 'wii':
+            q = `SELECT * FROM [wii_games];`
+            break;
+        case 'wiiu':
+            q = `SELECT * FROM [wiiu_games];`
+            break;
+        case 'virtualconsole':
+            q = `SELECT * FROM [virtual_console_games];`
+            break;
+        case 'all':
+            q = `SELECT * FROM [all_games];`
+            break;
+        case 'finished':
+            q = `SELECT * FROM [all_games] WHERE finished=true;`
+            break;
+        case 'unfinished':
+            q = `SELECT * FROM [all_games] WHERE finished=false;`
+            break;
+        default:
+            q = 'SELECT 1'
+            break;
+    }
+    return q;
+}
+
 const selectTable = (tableName) => {
     switch (tableName) {
         case "wiiu":
@@ -556,47 +596,11 @@ const exportToPDF = async (req, res, next) => {
 }
 
 const showReport = async (req, res, next) => {
-    let q = ""
-
-    switch (req.query.from) {
-        case 'steam':
-            q = `SELECT * FROM [steam_games] INNER JOIN [steam_finished] ON [steam_games].appid = [steam_finished].appid`
-            break;
-        case 'origin':
-            q = 'SELECT * FROM [origin_games];'
-            break;
-        case 'ubisoft':
-            q = `SELECT * FROM [ubisoft_games];`
-            break;
-        case 'gamecube':
-            q = `SELECT * FROM [gamecube_games];`
-            break;
-        case 'wii':
-            q = `SELECT * FROM [wii_games];`
-            break;
-        case 'wiiu':
-            q = `SELECT * FROM [wiiu_games];`
-            break;
-        case 'virtualconsole':
-            q = `SELECT * FROM [virtual_console_games];`
-            break;
-        case 'all':
-            q = `SELECT * FROM [all_games_list];`
-            break;
-        case 'finished':
-            q = `SELECT * FROM [all_finished_games_list];`
-            break;
-        case 'unfinished':
-            q = `SELECT * FROM [all_unfinished_games_list];`
-            break;
-        default:
-            q = 'SELECT 1'
-            break;
-    }
-
+    const q = queryInTable(req.query.from);
+    
     let games = await query(q);
     games = games.map(g => {
-        return { id: g['steam_games.appid'] || g.id, title: g.title, finished: g.finished }
+        return { id: g.app_id || g.id, title: g.title, finished: g.finished }
     })
     const filePath = path.join(__dirname, "report.ejs")
     ejs.renderFile(filePath, { games }, (err, html) => {
@@ -608,44 +612,8 @@ const showReport = async (req, res, next) => {
     })
 }
 const exportToXls = async (req, res, next) => {
-    let q = ""
-
-    switch (req.query.from) {
-        case 'steam':
-            q = `SELECT * FROM [steam_games] INNER JOIN [steam_finished] ON [steam_games].appid = [steam_finished].appid`
-            break;
-        case 'origin':
-            q = 'SELECT * FROM [origin_games];'
-            break;
-        case 'ubisoft':
-            q = `SELECT * FROM [ubisoft_games];`
-            break;
-        case 'gamecube':
-            q = `SELECT * FROM [gamecube_games];`
-            break;
-        case 'wii':
-            q = `SELECT * FROM [wii_games];`
-            break;
-        case 'wiiu':
-            q = `SELECT * FROM [wiiu_games];`
-            break;
-        case 'virtualconsole':
-            q = `SELECT * FROM [virtual_console_games];`
-            break;
-        case 'all':
-            q = `SELECT * FROM [all_games_list];`
-            break;
-        case 'finished':
-            q = `SELECT * FROM [all_finished_games_list];`
-            break;
-        case 'unfinished':
-            q = `SELECT * FROM [all_unfinished_games_list];`
-            break;
-        default:
-            q = 'SELECT 1'
-            break;
-    }
-
+    const q = queryInTable(req.query.from);
+    
     let games = await query(q);
     res.xls('games.xlsx', games);
 }
