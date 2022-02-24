@@ -46,9 +46,9 @@ const showWelcome = (req, res) => {
 }
 
 const showTest = async (req, res) => {
-    try {
-        let result = await query('SELECT * FROM [origin_games]')
-        res.status(200).send({ result })
+    try {        
+        const games = await db.Origin.findAll();
+        res.status(200).send({ games })
     } catch (error) {
         console.error(error)
         res.status(400).send({ msg: error.process.message }).end();
@@ -56,7 +56,7 @@ const showTest = async (req, res) => {
 }
 
 const showStatistics = async (req, res) => {
-    console.log("from", req.query.from);
+    
     let q = ""
 
     switch (req.query.from) {
@@ -81,10 +81,9 @@ const showStatistics = async (req, res) => {
 }
 
 const showCategories = async (req, res) => {
-    try {
-        // let result = await query('SELECT * FROM [categories]')
-        const result = await db.Category.findAll();
-        res.status(200).send({ result })
+    try {        
+        const categories = await db.Category.findAll();
+        res.status(200).send({ categories })
     } catch (error) {
         console.error(error)
         res.status(400).send({ msg: error.process.message }).end();
@@ -92,8 +91,7 @@ const showCategories = async (req, res) => {
 }
 
 const showOriginGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [origin_games]');
+    try {        
         const games = await db.Origin.findAll();
         res.send({ games })
     } catch (error) {
@@ -103,8 +101,7 @@ const showOriginGames = async (req, res) => {
 }
 
 const showUbisoftGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [ubisoft_games]');
+    try {        
         const games = await db.Ubisoft.findAll();
         res.send({ games })
     } catch (error) {
@@ -114,15 +111,7 @@ const showUbisoftGames = async (req, res) => {
 }
 
 const showSteamGames = async (req, res) => {
-    try {
-        /*
-        const games = await query('SELECT * FROM [steam_games]');
-
-        const mapped = lodash.map(games, (item) => {
-            return { finished: item.finished == 0 ? false : true, title: item.title, appid: item.appid, idx: item.idx }
-        })
-
-        res.send({ games: mapped })*/
+    try {        
         const games = await db.Steam.findAll();
         res.send({ games })
     } catch (error) {
@@ -132,15 +121,8 @@ const showSteamGames = async (req, res) => {
 }
 
 const showAllGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [All Games]');
-        const games = await db.sequelize.query('SELECT * FROM all_games', { type: QueryTypes.SELECT })
-        
-        /*
-        const mapped = lodash.map(games, (item) => {
-            return { finished: item.finished == 0 ? false : true, title: item.title, system: item.system }
-        })*/
-
+    try {        
+        const games = await db.sequelize.query('SELECT * FROM all_games', { type: QueryTypes.SELECT });        
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -149,10 +131,8 @@ const showAllGames = async (req, res) => {
 }
 
 const showWiiGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [wii_games]');
+    try {        
         const games = await db.Wii.findAll();
-
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -161,10 +141,8 @@ const showWiiGames = async (req, res) => {
 }
 
 const showWiiUGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [wiiu_games]');
+    try {        
         const games = await db.WiiU.findAll();
-
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -173,10 +151,8 @@ const showWiiUGames = async (req, res) => {
 }
 
 const showGameCubeGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [gamecube_games]');
+    try {        
         const games = await db.GameCube.findAll();
-
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -185,10 +161,8 @@ const showGameCubeGames = async (req, res) => {
 }
 
 const showVirtualConsoleGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [virtual_console_games]');
+    try {        
         const games = await db.VirtualConsole.findAll();
-
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -198,10 +172,8 @@ const showVirtualConsoleGames = async (req, res) => {
 
 
 const showToBuyGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [to_buy_games]');
+    try {        
         const games = await db.ToBuy.findAll();
-
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -211,15 +183,8 @@ const showToBuyGames = async (req, res) => {
 
 
 const showPCGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [all_pc_games]');
-        /*
-        const mapped = lodash.map(games, (item) => {
-            return { finished: item.finished == 0 ? false : true, title: item.title, platform: item.platform }
-        })*/
-
-        const games = await db.sequelize.query('SELECT * FROM all_pc_games', { type: QueryTypes.SELECT })
-
+    try {        
+        const games = await db.sequelize.query('SELECT * FROM all_pc_games', { type: QueryTypes.SELECT });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -228,10 +193,8 @@ const showPCGames = async (req, res) => {
 }
 
 const showConsoleGames = async (req, res) => {
-    try {
-        // const games = await query('SELECT * FROM [all_console_games]');
-        const games = await db.sequelize.query('SELECT * FROM all_console_games', { type: QueryTypes.SELECT })
-
+    try {        
+        const games = await db.sequelize.query('SELECT * FROM all_console_games', { type: QueryTypes.SELECT });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -240,10 +203,8 @@ const showConsoleGames = async (req, res) => {
 }
 
 const showDLCs = async (req, res) => {
-    try {
-        // const dlcs = await query(`SELECT * FROM [dlcs];`);
+    try {        
         const dlcs = await db.DLC.findAll();
-
         res.send({ games: dlcs })
     } catch (error) {
         console.error(error)
@@ -253,8 +214,7 @@ const showDLCs = async (req, res) => {
 
 const showDLCsByID = async (req, res) => {
     const id = req.query.id;    
-    try {        
-        //const dlcs = await query(`SELECT * FROM [dlcs] WHERE id = '${id}';`);
+    try {                
         const dlcs = await db.DLC.findAll({where: {id}});
         res.send({ games: dlcs })
     } catch (error) {
@@ -267,8 +227,7 @@ const showCharts = async (req, res) => {
     const type = req.query.type;    
 
     if (type === 'total') {
-        try {
-            // const stats = await query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+        try {            
             const stats = await db.sequelize.query('SELECT * FROM total_of_games_by_system', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.total)
@@ -282,8 +241,7 @@ const showCharts = async (req, res) => {
         }
 
     } else if (type === 'finished') {
-        try {
-            // const stats = await query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+        try {            
             const stats = await db.sequelize.query('SELECT * FROM total_of_finished_games_by_system', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.total)
@@ -296,8 +254,7 @@ const showCharts = async (req, res) => {
             res.status(400).send({ msg: error.process.message }).end();
         }
     } else if (type === "total_percent") {
-        try {
-            // const stats = await query(`SELECT * FROM [total_of_percentual_games_by_system];`);
+        try {            
             const stats = await db.sequelize.query('SELECT * FROM total_of_games_by_system_percentual', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.percentual)
@@ -310,8 +267,7 @@ const showCharts = async (req, res) => {
             res.status(400).send({ msg: error.process.message }).end();
         }
     } else if (type === "finished_percent") {
-        try {
-            // const stats = await query(`SELECT * FROM [total_of_percentual_finished_games_by_system];`);
+        try {            
             const stats = await db.sequelize.query('SELECT * FROM total_of_finished_games_by_system_percentual', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.percentual)
@@ -328,8 +284,7 @@ const showCharts = async (req, res) => {
     }
 }
 
-const showPlayingGames = async (req, res) => {
-    // const games = await query('SELECT * FROM [is_playing]')
+const showPlayingGames = async (req, res) => {    
     const games = await db.Playing.findAll();
     res.send({ games })
 }
