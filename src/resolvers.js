@@ -7,25 +7,22 @@ const hello = (parent, args, ctx, info) => {
 }
 const allCategories = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "Category"`
-    console.log(sql)
+    const sql = `SELECT ${fields.toString()} FROM "Category"`    
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });        
     return games;
 }
 
 const allWiiUGames = async (parent, args, ctx, info) => {
-    const fields = ctx.requestedFields.getFields(info, { keep: ["id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM [wiiu_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
+    const sql = `SELECT ${fields.toString()} FROM "WiiU"`    
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });        
     return games;
 }
 
 const allWiiGames = async (parent, args, ctx, info) => {
-    const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [wii_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
+    const sql = `SELECT ${fields.toString()} FROM "Wii"`    
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT }); 
     return games;
 }
 

@@ -1,23 +1,30 @@
 import DataLoader from "dataloader"
+const { QueryTypes } = require('sequelize');
 
 
 class DLCLoader {
     static async batchDlcs(connection, ids) {
-        let idsString = ids.map(v => `"${v}"`).toString();
-        let sql = `SELECT * FROM [dlcs] WHERE id IN (${idsString}) ORDER BY id ASC;`;
-        console.log("data loader sql: ", sql)
-        const dlcs = await connection.query(sql);
+        let idsString = ids.map(v => `'${v}'`).toString();
+        let sql = `SELECT * FROM "DLC" WHERE app_id IN (${idsString}) ORDER BY app_id ASC;`;        
+        
+        let dlcs;
+
+        try {
+            dlcs = await connection.sequelize.query(sql, { type: QueryTypes.SELECT });       
+        } catch (error) {
+            console.error(error);
+        }
 
 
         const ordened = new Map()
 
         dlcs.forEach(dlc=>{
-            ordened.set(dlc.id, [])
+            ordened.set(dlc.app_id, [])
         })
 
         let id;
         dlcs.forEach(dlc => {
-            id = dlc.id
+            id = dlc.app_id
             ordened.get(id).push(dlc)
         })
 

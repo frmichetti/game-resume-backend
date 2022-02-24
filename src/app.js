@@ -17,7 +17,7 @@ process.env.TZ = 'America/Sao_Paulo';
 
 
 const app = express();
-const dataLoaderFactory = new DataLoaderFactory(connection);
+const dataLoaderFactory = new DataLoaderFactory(db);
 const requestedFields = new RequestedFiels();
 
 app.use(cors());
