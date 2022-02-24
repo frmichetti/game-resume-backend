@@ -1,3 +1,5 @@
+const { QueryTypes } = require('sequelize');
+
 // Queries
 
 const hello = (parent, args, ctx, info) => {
@@ -5,9 +7,9 @@ const hello = (parent, args, ctx, info) => {
 }
 const allCategories = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [categories]`
+    const sql = `SELECT ${fields.toString()} FROM "Category"`
     console.log(sql)
-    const games = await ctx.db.query(sql)
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });        
     return games;
 }
 

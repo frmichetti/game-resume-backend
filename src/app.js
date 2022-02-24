@@ -31,7 +31,7 @@ app.use('/graphql',
   (req, res, next) => {
     req["context"] = {}
     req["context"].db = connection;    
-    req["context"].sql = db;  
+    req["context"].orm = db;  
     req["context"].dataloaders = dataLoaderFactory.getLoaders();
     req["context"].requestedFields = requestedFields;
     next();

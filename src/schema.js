@@ -2,14 +2,14 @@ import { makeExecutableSchema } from '@graphql-tools/schema'
 import * as resolvers from './resolvers'
 
 const inputsWiiU = `
-  id: String
+  app_id: String
   title: String
   finished: Boolean
   fisical_disc: Boolean  
 `;
 
 const inputWiiGame = `
-  id: String
+  app_id: String
   title: String    
   finished: Boolean
   fisical_disc: Boolean
@@ -17,7 +17,7 @@ const inputWiiGame = `
 `;
 
 const inputGameCubeGame = `
-  id: String
+  app_id: String
   title: String    
   finished: Boolean
   fisical_disc: Boolean
@@ -25,7 +25,7 @@ const inputGameCubeGame = `
 `;
 
 const inputVirtualConsoleGame = `  
-  id: String
+  app_id: String
   title: String  
   finished: Boolean
   console: String
@@ -39,24 +39,25 @@ const inputToBuyGame = `
 `;
 
 const inputOriginGame = `
-  id: String
+  app_id: String
   title: String
   finished: Boolean
 `
 const inputUbisoftGame = `
-  id: String
+  app_id: String
   title: String
   finished: Boolean
 `
 
 const inputDLCGame = `
-  id: String
+  app_id: String
   title: String
   finished: Boolean
  `
 
 const inputCategory = `
-  description: String!
+  slugname: String!
+  name: String!
  `
 
 // Construct a schema, using GraphQL schema language
@@ -89,72 +90,72 @@ const typeDefs = `
     ${inputUbisoftGame}
   }
   input CategoryUpdateInput{
-    idx: ID
+    id: ID
     ${inputCategory}
   }
   input DLCGameUpdateInput {
-    idx: ID
+    id: ID
     ${inputDLCGame}
   }
   input WiiGameUpdateInput {
-    idx: ID
+    id: ID
     ${inputWiiGame}
   }  
   input GameCubeGameUpdateInput {
-    idx: ID
+    id: ID
     ${inputGameCubeGame}
   }  
   input VirtualConsoleGameUpdateInput {
-    idx: ID
+    id: ID
     ${inputVirtualConsoleGame}
   }  
   input ToBuyGameUpdateInput {
-    idx: ID
+    id: ID
     ${inputToBuyGame}
   }  
   input WiiUGameUpdateInput {
-    idx: ID
+    id: ID
     ${inputsWiiU}  
   }
   input OriginUpdateGameInput {
-    idx: ID
+    id: ID
     ${inputOriginGame}  
   }
   input UbisoftUpdateGameInput {
-    idx: ID
+    id: ID
     ${inputUbisoftGame}  
   }
   type WiiUGame {
-    idx: ID
+    id: ID
     ${inputsWiiU}  
     dlcs: [DLC!]!
   }
   type WiiGame {
-    idx: ID
+    id: ID
     ${inputWiiGame}
   }  
   type GameCubeGame {
-    idx: ID
+    id: ID
     ${inputGameCubeGame}
   }  
   type VirtualConsoleGame{
-    idx: ID
+    id: ID
     ${inputVirtualConsoleGame}
   }
   type ToBuyGame {
-    idx: ID
+    id: ID
     ${inputToBuyGame}
   }
   type OriginGame {
-    idx: ID
+    id: ID
     ${inputOriginGame}
   }
   type UbisoftGame {
-    idx: ID
+    id: ID
     ${inputUbisoftGame}
   }
   type Category {
-    idx: ID
+    id: ID
     ${inputCategory}
   }
   type SteamGame {
@@ -165,8 +166,8 @@ const typeDefs = `
     playtime_hours: Float 
   }
   type DLC {
-    idx: ID
-    id: String
+    id: ID
+    app_id: String
     title: String
     finished: Boolean   
   }
@@ -275,15 +276,15 @@ const typeDefs = `
     updateToBuyGame(input: ToBuyGameUpdateInput): ToBuyGame
     updateOriginGame(input: OriginUpdateGameInput): OriginGame
     updateUbisoftGame(input: UbisoftUpdateGameInput): UbisoftGame
-    deleteCategory(idx: ID!): Boolean
-    deleteDLCGame(idx: ID!): Boolean
-    deleteWiiUGame(idx: ID!): Boolean
-    deleteWiiGame(idx: ID!): Boolean
-    deleteGameCubeGame(idx: ID!): Boolean
-    deleteVirtualConsoleGame(idx: ID!): Boolean
-    deleteToBuyGame(idx: ID!): Boolean
-    deleteOriginGame(idx: ID!): Boolean
-    deleteUbisoftGame(idx: ID!): Boolean
+    deleteCategory(id: ID!): Boolean
+    deleteDLCGame(id: ID!): Boolean
+    deleteWiiUGame(id: ID!): Boolean
+    deleteWiiGame(id: ID!): Boolean
+    deleteGameCubeGame(id: ID!): Boolean
+    deleteVirtualConsoleGame(id: ID!): Boolean
+    deleteToBuyGame(id: ID!): Boolean
+    deleteOriginGame(id: ID!): Boolean
+    deleteUbisoftGame(id: ID!): Boolean
   }
 `;
 
