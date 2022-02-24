@@ -591,7 +591,7 @@ const exportToPDF = async (req, res, next) => {
 
     await browser.close()
 
-    res.contentType("application/pdf")
+    res.contentType("application/pdf");    
 
     return res.send(pdf)
 }
