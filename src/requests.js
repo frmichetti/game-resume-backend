@@ -18,34 +18,34 @@ const queryInTable = (tableName) => {
     let q = ""
 switch (tableName) {
         case 'steam':
-            q = `SELECT * FROM [steam_games]`
+            q = `SELECT * FROM "Steam"`
             break;
         case 'origin':
-            q = 'SELECT * FROM [origin_games];'
+            q = 'SELECT * FROM "Origin";'
             break;
         case 'ubisoft':
-            q = `SELECT * FROM [ubisoft_games];`
+            q = `SELECT * FROM "Ubisoft";`
             break;
         case 'gamecube':
-            q = `SELECT * FROM [gamecube_games];`
+            q = `SELECT * FROM "GameCube";`
             break;
         case 'wii':
-            q = `SELECT * FROM [wii_games];`
+            q = `SELECT * FROM "Wii";`
             break;
         case 'wiiu':
-            q = `SELECT * FROM [wiiu_games];`
+            q = `SELECT * FROM "WiiU";`
             break;
         case 'virtualconsole':
-            q = `SELECT * FROM [virtual_console_games];`
+            q = `SELECT * FROM "VirtualConsole";`
             break;
         case 'all':
-            q = `SELECT * FROM [all_games];`
+            q = `SELECT * FROM "all_games";`
             break;
         case 'finished':
-            q = `SELECT * FROM [all_games] WHERE finished=true;`
+            q = `SELECT * FROM "all_games" WHERE finished=true;`
             break;
         case 'unfinished':
-            q = `SELECT * FROM [all_games] WHERE finished=false;`
+            q = `SELECT * FROM "all_games" WHERE finished=false;`
             break;
         default:
             q = 'SELECT 1'
@@ -599,7 +599,7 @@ const exportToPDF = async (req, res, next) => {
 const showReport = async (req, res, next) => {
     const q = queryInTable(req.query.from);
     
-    let games = await query(q);
+    let games = await db.sequelize.query(q, { type: QueryTypes.SELECT });
     games = games.map(g => {
         return { id: g.app_id || g.id, title: g.title, finished: g.finished }
     })
@@ -615,7 +615,7 @@ const showReport = async (req, res, next) => {
 const exportToXls = async (req, res, next) => {
     const q = queryInTable(req.query.from);
     
-    let games = await query(q);
+    let games = await db.sequelize.query(q, { type: QueryTypes.SELECT });
     res.xls('games.xlsx', games);
 }
 
