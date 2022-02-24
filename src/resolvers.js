@@ -27,10 +27,9 @@ const allWiiGames = async (parent, args, ctx, info) => {
 }
 
 const allGameCubeGames = async (parent, args, ctx, info) => {
-    const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM [gamecube_games]`
-    console.log(sql)
-    const games = await ctx.db.query(sql)
+    const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
+    const sql = `SELECT ${fields.toString()} FROM "GameCube"`
+    const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT }); 
     return games;
 }
 

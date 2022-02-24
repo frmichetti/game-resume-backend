@@ -138,6 +138,7 @@ const typeDefs = `
   type GameCubeGame {
     id: ID
     ${inputGameCubeGame}
+    dlcs: [DLC!]!
   }  
   type VirtualConsoleGame{
     id: ID
@@ -369,6 +370,17 @@ const _resolvers = {
     }
   },
   WiiGame: {
+    dlcs: async (parent, args, { db, dataloaders }, info) => {
+      let dlcs;
+      try {
+        dlcs = dataloaders.dlcLoader.load(parent.app_id || '-');
+        return dlcs;
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  },
+  GameCubeGame: {
     dlcs: async (parent, args, { db, dataloaders }, info) => {
       let dlcs;
       try {
