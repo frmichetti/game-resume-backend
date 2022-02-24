@@ -1,6 +1,7 @@
 import express from 'express';
 import * as requests from './requests';
 import { connection } from './queries';
+import db from './models/index';
 import cors from 'cors';
 import bodyParser from "body-parser";
 
@@ -30,6 +31,7 @@ app.use('/graphql',
   (req, res, next) => {
     req["context"] = {}
     req["context"].db = connection;    
+    req["context"].sql = db;  
     req["context"].dataloaders = dataLoaderFactory.getLoaders();
     req["context"].requestedFields = requestedFields;
     next();
