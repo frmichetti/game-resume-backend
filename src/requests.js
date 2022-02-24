@@ -61,18 +61,18 @@ const showStatistics = async (req, res) => {
 
     switch (req.query.from) {
         case 'finished':
-            q = 'SELECT * FROM [total_finished_games_for_dashboard];'
+            q = 'SELECT * FROM total_finished_games_for_dashboard;'
             break;
         case 'totals':
-            q = `SELECT * FROM [total_games_for_dashboard];`
+            q = `SELECT * FROM total_games_for_dashboard;`
             break;
         default:
             q = 'SELECT 1'
             break;
     }
 
-    try {
-        const result = await query(q);
+    try {        
+        const result = await db.sequelize.query(q, { type: QueryTypes.SELECT });        
         res.status(200).send({ result })
     } catch (error) {
         console.error(error)

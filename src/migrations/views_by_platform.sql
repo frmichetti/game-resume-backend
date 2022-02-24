@@ -28,3 +28,20 @@ UNION
 SELECT app_id, id, title, finished, finished_at, collection, 'CONSOLE' AS platform, 'WIIU' AS "system", genuine FROM "WiiU"
 UNION 
 SELECT app_id, id, title, finished, finished_at, false, platform, "system", genuine FROM "VirtualConsole";
+
+CREATE or REPLACE VIEW all_games_list_api AS
+SELECT app_id, id, title, finished, finished_at, false AS collection, 'PC' AS platform, 'ORIGIN' AS "system", true AS "genuine" FROM "Origin"
+UNION
+SELECT app_id, id, title, finished, finished_at, false AS collection, 'PC' AS platform, 'UBISOFT' AS "system", true AS "genuine" FROM "Ubisoft"
+UNION
+SELECT app_id, id, title, finished, finished_at, collection, 'PC' AS platform, 'STEAM' AS "system", true AS "genuine" FROM "Steam"
+UNION
+SELECT app_id, id, title, finished, finished_at, collection, 'CONSOLE' AS platform, 'GAMECUBE' AS "system", genuine FROM "GameCube"
+UNION
+SELECT app_id, id, title, finished, finished_at, collection, 'CONSOLE' AS platform, 'WII' AS "system", genuine FROM "Wii"
+UNION
+SELECT app_id, id, title, finished, finished_at, collection, 'CONSOLE' AS platform, 'WIIU' AS "system", genuine FROM "WiiU"
+UNION 
+SELECT app_id, id, title, finished, finished_at, false, platform, "system", genuine FROM "VirtualConsole"
+UNION
+SELECT app_id, id, title, finished, finished_at, collection, '-' AS platform, '-' AS "system", null AS genuine FROM "DLC";
