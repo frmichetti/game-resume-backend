@@ -57,25 +57,25 @@ switch (tableName) {
 const selectTable = (tableName) => {
     switch (tableName) {
         case "wiiu":
-            return "wiiu_games"
+            return "WiiU"
         case "gamecube":
-            return "gamecube_games"
+            return "GameCube"
         case "wii":
-            return "wii_games"
+            return "Wii"
         case "origin":
-            return "origin_games"
+            return "Origin"
         case "ubisoft":
-            return "ubisoft_games"
+            return "Ubisoft"
         case "tobuy":
-            return "to_buy_games"
+            return "ToBuy"
         case "virtualconsole":
-            return "virtual_console_games"
+            return "VirtualConsole"
         case "dlcs":
-            return "dlcs";
+            return "DLC";
         case "steam":
-            return "steam_games";
+            return "Steam";
         case "playing":
-            return "playing_games"
+            return "Playing"
         default:
             return null;
     }
@@ -331,16 +331,18 @@ const showPlayingGames = async (req, res) => {
 
 const createGames = async (req, res) => {
     const tableName = req.body.table;
-    let table, title, finished, fisical_disc, id, system, _console;
+    let table, title, finished, fisical_disc, app_id, system, platform, genuine, collection;
 
     table = selectTable(tableName)
 
     title = req.body.title;
     finished = req.body.finished ? req.body.finished : false;
     fisical_disc = req.body.fisical_disc ? req.body.fisical_disc : false;
-    id = req.body.id;
+    app_id = req.body.app_id;
     system = req.body.system;
-    _console = req.body.console;
+    platform = req.body.platform;
+    genuine = req.body.genuine;
+    collection = req.body.collection;
 
     if (table == null) {
         const errorMessage = "Table does not match";
@@ -358,25 +360,25 @@ const createGames = async (req, res) => {
         let q = "";
 
         if (tableName === 'wii' || tableName === 'wiiu' || tableName === 'gamecube') {
-            q = `INSERT INTO [${table}] (id,title,finished,fisical_disc) VALUES ('${id}',"${title}",${finished},${fisical_disc});`;
+            q = `INSERT INTO "${table}" (app_id,title,finished,collection,genuine,fisical_disc) VALUES ('${app_id}','${title}',${finished},${collection},${genuine},${fisical_disc}) RETURNING *`;
         } else if (tableName === 'virtualconsole') {
-            q = `INSERT INTO [${table}] (id,title,finished,console,system) VALUES ('${id}',"${title}",${finished},'${_console}', '${system}');`;
+            q = `INSERT INTO "${table}" (app_id,title,finished,genuine,platform,system) VALUES ('${app_id}','${title}',${finished},'${genuine}','${platform}','${system}') RETURNING *`;
         } else if (tableName === 'tobuy') {
-            q = `INSERT INTO [${table}] (title,finished,system) VALUES ("${title}",${finished},'${system}');`;
+            q = `INSERT INTO "${table}" (title,finished,genuine,system) VALUES ('${title}',${finished},${genuine},'${system}') RETURNING *`;
         } else if (tableName === 'playing') {
-            q = `INSERT INTO [${table}] (id, started_at) VALUES ("${id}","${now()}");`
+            q = `INSERT INTO "${table}" (app_id, started_at) VALUES ('${app_id}','${now()}') RETURNING *`
         }
         else {
-            q = `INSERT INTO [${table}] (id,title,finished) VALUES ('${id}',"${title}",${finished});`;
+            q = `INSERT INTO "${table}" (app_id,title,finished) VALUES ('${app_id}','${title}',${finished}) RETURNING *`;
         }
 
         try {
-            const result = await execute(q);
+            const [result,metadata] = await db.sequelize.query(q, { type: QueryTypes.INSERT })
 
-            res.send({ ok: "ok" })
+            res.send({ ok: true, result, metadata })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.process.message }).end();
+            res.status(400).send({ msg: error.message || error.process.message  }).end();
         }
     }
 }
