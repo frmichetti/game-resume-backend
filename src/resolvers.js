@@ -292,7 +292,7 @@ const getPercentFinishedChart = async (parent, args, ctx, info) => {
 
 const getFinishedBySystem = async (parent, { system }, ctx, info) => {
     try {
-        const games = await ctx.db.query(`SELECT * FROM [all_games_list] WHERE [finished] = true AND [system] = '${system}';`);
+        const games = await ctx.orm.sequelize.query(`SELECT * FROM "all_games" WHERE finished = true AND system ilike '%${system}%';`,{ type: QueryTypes.SELECT });
         return games;
     } catch (error) {
         console.error(error);
@@ -301,7 +301,7 @@ const getFinishedBySystem = async (parent, { system }, ctx, info) => {
 
 const getUnfinishedBySystem = async (parent, { system }, ctx, info) => {
     try {
-        const games = await ctx.db.query(`SELECT * FROM [all_games_list] WHERE [finished] = false AND [system] = '${system}';`);
+        const games = await ctx.orm.sequelize.query(`SELECT * FROM "all_games" WHERE finished = false AND system ilike '%${system}%';`,{ type: QueryTypes.SELECT });
         return games;
     } catch (error) {
         console.error(error);
@@ -311,60 +311,51 @@ const getUnfinishedBySystem = async (parent, { system }, ctx, info) => {
 // Mutations
 
 const createDLCGame = async (parent, args, ctx, info) => {
-    const { id, title, finished } = args.input;
-    await ctx.db.execute(`INSERT INTO [dlcs] (id,title,finished) VALUES ('${id}','${title}',${finished});`)
-    const game = await ctx.db.query(`SELECT * FROM [dlcs] WHERE [id] = '${id}' AND [title] = '${title}'`)
-    return game[0];
+    const { app_id, title, finished, finished_at, collection } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "DLC" (app_id,title,finished,finished_at,collection) VALUES (?,?,?,?,?) RETURNING *`,{ type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, collection] })    
+    return result[0];
 }
 
 const createWiiUGame = async (parent, args, ctx, info) => {
-    const { id, title, finished, fisical_disc } = args.input;
-    await ctx.db.execute(`INSERT INTO [wiiu_games] (id,title,finished,fisical_disc) VALUES ('${id}','${title}',${finished},${fisical_disc});`)
-    const game = await ctx.db.query(`SELECT * FROM [wiiu_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-    return game[0];
+    const { app_id, title, finished, finished_at, collection, genuine, fisical_disc } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "WiiU" (app_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES (?,?,?,?,?,?,?) RETURNING *`,{ type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc] })    
+    return result[0];
 }
 
 const createWiiGame = async (parent, args, ctx, info) => {
-    const { id, title, finished, fisical_disc, size_gb } = args.input;
-    await ctx.db.execute(`INSERT INTO [wii_games] (id,title,finished,fisical_disc,size_gb) VALUES ('${id}','${title}',${finished},${fisical_disc},'${size_gb}');`)
-    const game = await ctx.db.query(`SELECT * FROM [wii_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-    return game[0];
+    const { app_id, title, finished, finished_at, collection, genuine, fisical_disc } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Wii" (app_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES (?,?,?,?,?,?,?) RETURNING *`,{ type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc] })    
+    return result[0];
 }
 
 const createGameCubeGame = async (parent, args, ctx, info) => {
-    const { id, title, finished, fisical_disc, size_gb } = args.input;
-    await ctx.db.execute(`INSERT INTO [gamecube_games] (id,title,finished,fisical_disc,size_gb) VALUES ('${id}','${title}',${finished},${fisical_disc},'${size_gb}');`)
-    const game = await ctx.db.query(`SELECT * FROM [gamecube_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-    return game[0];
+    const { app_id, title, finished, finished_at, collection, genuine, fisical_disc } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "GameCube" (app_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES (?,?,?,?,?,?,?) RETURNING *`,{ type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc] })    
+    return result[0];
 }
 
 const createVirtualConsoleGame = async (parent, args, ctx, info) => {
-    const { id, title, finished, system } = args.input;
-    const _console = args.input.console;
-    await ctx.db.execute(`INSERT INTO [virtual_console_games] (id,title,finished,console,system) VALUES ('${id}','${title}',${finished},'${_console}','${system}');`)
-    const game = await ctx.db.query(`SELECT * FROM [virtual_console_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-    return game[0];
+    const { app_id, title, finished, finished_at, genuine, platform, system } = args.input;    
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "VirtualConsole" (app_id,title,finished,finished_at,genuine,platform,system) VALUES (?,?,?,?,?,?,?) RETURNING *`,{ type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, genuine, platform, system] })
+    return result[0];
 }
 
 const createToBuyGame = async (parent, args, ctx, info) => {
-    const { title, finished, system } = args.input;
-    await ctx.db.execute(`INSERT INTO [to_buy_games] (title,finished,system) VALUES ('${title}',${finished},'${system}');`)
-    const game = await ctx.db.query(`SELECT * FROM [to_buy_games] WHERE [title] = '${title}'`)
-    return game[0];
+    const { title, finished, finished_at, genuine, system } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "ToBuy" (title,finished,finished_at,genuine,system) VALUES (?,?,?,?,?) RETURNING *`,{ type: QueryTypes.UPDATE, replacements: [title, finished, finished_at, genuine, system] })    
+    return result[0];
 }
 
 const createOriginGame = async (parent, args, ctx, info) => {
-    const { id, title, finished } = args.input;
-    await ctx.db.execute(`INSERT INTO [origin_games] (id,title,finished) VALUES ('${id}','${title}',${finished});`)
-    const game = await ctx.db.query(`SELECT * FROM [origin_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-    return game[0];
+    const { app_id, title, finished, finished_at } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Origin" (app_id,title,finished,finished_at) VALUES (?,?,?,?) RETURNING *`,{ type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at] })    
+    return result[0];
 }
 
 const createUbisoftGame = async (parent, args, ctx, info) => {
-    const { id, title, finished } = args.input;
-    await ctx.db.execute(`INSERT INTO [ubisoft_games] (id,title,finished) VALUES ('${id}','${title}',${finished});`)
-    const game = await ctx.db.query(`SELECT * FROM [ubisoft_games] WHERE [id] = '${id}' AND [title] = '${title}'`)
-    return game[0];
+    const { app_id, title, finished, finished_at } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Ubisoft" (app_id,title,finished,finished_at) VALUES (?,?,?,?) RETURNING *`,{ type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at] })    
+    return result[0];
 }
 
 const updateDLCGame = async (parent, args, ctx, info) => {

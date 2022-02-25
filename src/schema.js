@@ -5,6 +5,9 @@ const inputsWiiU = `
   app_id: String
   title: String
   finished: Boolean
+  finished_at: Date
+  collection: Boolean
+  genuine: Boolean
   fisical_disc: Boolean  
 `;
 
@@ -12,29 +15,37 @@ const inputWiiGame = `
   app_id: String
   title: String    
   finished: Boolean
-  fisical_disc: Boolean
-  size_gb: String
+  finished_at: Date
+  collection: Boolean
+  genuine: Boolean
+  fisical_disc: Boolean  
 `;
 
 const inputGameCubeGame = `
   app_id: String
   title: String    
   finished: Boolean
-  fisical_disc: Boolean
-  size_gb: String
+  finished_at: Date
+  collection: Boolean
+  genuine: Boolean
+  fisical_disc: Boolean  
 `;
 
 const inputVirtualConsoleGame = `  
   app_id: String
   title: String  
   finished: Boolean
-  console: String
+  finished_at: Date
+  genuine: Boolean
+  platform: String
   system: String  
 `;
 
 const inputToBuyGame = `    
   title: String  
   finished: Boolean  
+  finished_at: Date
+  genuine: Boolean
   system: String  
 `;
 
@@ -42,17 +53,21 @@ const inputOriginGame = `
   app_id: String
   title: String
   finished: Boolean
+  finished_at: Date
 `
 const inputUbisoftGame = `
   app_id: String
   title: String
   finished: Boolean
+  finished_at: Date
 `
 
 const inputDLCGame = `
   app_id: String
   title: String
   finished: Boolean
+  finished_at: Date
+  collection: Boolean
  `
 
 const inputCategory = `
@@ -62,6 +77,7 @@ const inputCategory = `
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = `  
+  scalar Date
   input CategoryInput {
     ${inputCategory}
   }
@@ -173,6 +189,8 @@ const typeDefs = `
     app_id: String
     title: String
     finished: Boolean   
+    finished_at: Date
+    collection: Boolean
   }
   type ConsoleGame {
     app_id: String
