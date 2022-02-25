@@ -406,10 +406,10 @@ const updateUbisoftGame = async (parent, args, ctx, info) => {
     return result[0];
 }
 
-const deleteDLCGame = async (parent, { idx }, ctx, info) => {
+const deleteDLCGame = async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.db.execute(`DELETE FROM [dlcs] WHERE [idx] = ${idx};`)
+        await ctx.orm.sequelize.query(`DELETE FROM "DLC" WHERE id = :id`,{ type: QueryTypes.DELETE, replacements: {id} })        
         resp = true;
     } catch (error) {
         console.error(error)
@@ -418,10 +418,10 @@ const deleteDLCGame = async (parent, { idx }, ctx, info) => {
     return resp;
 }
 
-const deleteWiiUGame = async (parent, { idx }, ctx, info) => {
+const deleteWiiUGame = async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.db.execute(`DELETE FROM [wiiu_games] WHERE [idx] = ${idx};`)
+        await ctx.orm.sequelize.query(`DELETE FROM "WiiU" WHERE id = :id`,{ type: QueryTypes.DELETE, replacements: {id} })        
         resp = true;
     } catch (error) {
         console.error(error)
@@ -430,10 +430,10 @@ const deleteWiiUGame = async (parent, { idx }, ctx, info) => {
     return resp;
 }
 
-const deleteWiiGame = async (parent, { idx }, ctx, info) => {
+const deleteWiiGame = async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.db.execute(`DELETE FROM [wii_games] WHERE [idx] = ${idx};`)
+        await ctx.orm.sequelize.query(`DELETE FROM "Wii" WHERE id = :id`,{ type: QueryTypes.DELETE, replacements: {id} })        
         resp = true;
     } catch (error) {
         console.error(error)
@@ -442,10 +442,10 @@ const deleteWiiGame = async (parent, { idx }, ctx, info) => {
     return resp;
 }
 
-const deleteGameCubeGame = async (parent, { idx }, ctx, info) => {
+const deleteGameCubeGame = async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.db.execute(`DELETE FROM [gamecube_games] WHERE [idx] = ${idx};`)
+        await ctx.orm.sequelize.query(`DELETE FROM "GameCube" WHERE id = :id`,{ type: QueryTypes.DELETE, replacements: {id} })        
         resp = true;
     } catch (error) {
         console.error(error)
@@ -454,10 +454,10 @@ const deleteGameCubeGame = async (parent, { idx }, ctx, info) => {
     return resp;
 }
 
-const deleteVirtualConsoleGame = async (parent, { idx }, ctx, info) => {
+const deleteVirtualConsoleGame = async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.db.execute(`DELETE FROM [virtual_console_games] WHERE [idx] = ${idx};`)
+        await ctx.orm.sequelize.query(`DELETE FROM "VirtualConsole" WHERE id = :id`,{ type: QueryTypes.DELETE, replacements: {id} })        
         resp = true;
     } catch (error) {
         console.error(error)
@@ -466,10 +466,10 @@ const deleteVirtualConsoleGame = async (parent, { idx }, ctx, info) => {
     return resp;
 }
 
-const deleteToBuyGame = async (parent, { idx }, ctx, info) => {
+const deleteToBuyGame = async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.db.execute(`DELETE FROM [to_buy_games] WHERE [idx] = ${idx};`)
+        await ctx.orm.sequelize.query(`DELETE FROM "ToBuy" WHERE id = :id`,{ type: QueryTypes.DELETE, replacements: {id} })        
         resp = true;
     } catch (error) {
         console.error(error)
@@ -478,10 +478,10 @@ const deleteToBuyGame = async (parent, { idx }, ctx, info) => {
     return resp;
 }
 
-const deleteOriginGame = async (parent, { idx }, ctx, info) => {
+const deleteOriginGame = async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.db.execute(`DELETE FROM [origin_games] WHERE [idx] = ${idx};`)
+        await ctx.orm.sequelize.query(`DELETE FROM "Origin" WHERE id = :id`,{ type: QueryTypes.DELETE, replacements: {id} })        
         resp = true;
     } catch (error) {
         console.error(error)
@@ -490,10 +490,10 @@ const deleteOriginGame = async (parent, { idx }, ctx, info) => {
     return resp;
 }
 
-const deleteUbisoftGame = async (parent, { idx }, ctx, info) => {
+const deleteUbisoftGame = async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.db.execute(`DELETE FROM [ubisoft_games] WHERE [idx] = ${idx};`)
+        await ctx.orm.sequelize.query(`DELETE FROM "Ubisoft" WHERE id = :id`,{ type: QueryTypes.DELETE, replacements: {id} })        
         resp = true;
     } catch (error) {
         console.error(error)
