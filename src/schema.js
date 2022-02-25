@@ -106,39 +106,39 @@ const typeDefs = `
     ${inputUbisoftGame}
   }
   input CategoryUpdateInput{
-    id: ID
+    id: ID!
     ${inputCategory}
   }
   input DLCGameUpdateInput {
-    id: ID
+    id: ID!
     ${inputDLCGame}
   }
   input WiiGameUpdateInput {
-    id: ID
+    id: ID!
     ${inputWiiGame}
   }  
   input GameCubeGameUpdateInput {
-    id: ID
+    id: ID!
     ${inputGameCubeGame}
   }  
   input VirtualConsoleGameUpdateInput {
-    id: ID
+    id: ID!
     ${inputVirtualConsoleGame}
   }  
   input ToBuyGameUpdateInput {
-    id: ID
+    id: ID!
     ${inputToBuyGame}
   }  
   input WiiUGameUpdateInput {
-    id: ID
+    id: ID!
     ${inputsWiiU}  
   }
   input OriginUpdateGameInput {
-    id: ID
+    id: ID!
     ${inputOriginGame}  
   }
   input UbisoftUpdateGameInput {
-    id: ID
+    id: ID!
     ${inputUbisoftGame}  
   }
   type WiiUGame {
