@@ -1,3 +1,5 @@
+/*Deprecated*/
+
 import ADODB from 'node-adodb';
 ADODB.debug = true;
 

@@ -1,7 +1,6 @@
 import getMessage from './getMessage';
-import { query, execute } from './queries';
 import db from './models/index';
-import lodash from 'lodash';
+
 const { QueryTypes } = require('sequelize');
 
 
