@@ -91,7 +91,7 @@ const showTest = async (req, res) => {
         res.status(200).send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -116,7 +116,7 @@ const showStatistics = async (req, res) => {
         res.status(200).send({ result })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -126,7 +126,7 @@ const showCategories = async (req, res) => {
         res.status(200).send({ categories })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -136,7 +136,7 @@ const showOriginGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -146,7 +146,7 @@ const showUbisoftGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -156,7 +156,7 @@ const showSteamGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -166,7 +166,7 @@ const showAllGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -176,7 +176,7 @@ const showWiiGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -186,7 +186,7 @@ const showWiiUGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -196,7 +196,7 @@ const showGameCubeGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -206,7 +206,7 @@ const showVirtualConsoleGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -217,7 +217,7 @@ const showToBuyGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -228,7 +228,7 @@ const showPCGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -238,7 +238,7 @@ const showConsoleGames = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -248,7 +248,7 @@ const showDLCs = async (req, res) => {
         res.send({ games: dlcs })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -259,7 +259,7 @@ const showDLCsByID = async (req, res) => {
         res.send({ games: dlcs })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
@@ -277,7 +277,7 @@ const showCharts = async (req, res) => {
 
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.process.message }).end();
+            res.status(400).send({ msg: error.message || error.process.message }).end();
         }
 
     } else if (type === 'finished') {
@@ -291,7 +291,7 @@ const showCharts = async (req, res) => {
 
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.process.message }).end();
+            res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     } else if (type === "total_percent") {
         try {            
@@ -304,7 +304,7 @@ const showCharts = async (req, res) => {
 
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.process.message }).end();
+            res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     } else if (type === "finished_percent") {
         try {            
@@ -317,7 +317,7 @@ const showCharts = async (req, res) => {
 
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.process.message }).end();
+            res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     } else {
         res.status(400).send({ msg: "unknow type" }).end();
@@ -383,30 +383,26 @@ const createGames = async (req, res) => {
     }
 }
 const finishDLC = async (req, res) => {
-    const { idx, id, finished } = req.body
-    let q = `UPDATE [dlcs] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [idx] = ${idx} AND [id] = '${id}';`;
+    const { id, app_id, finished } = req.body
+    let q = `UPDATE "DLC" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} AND app_id = '${app_id}' RETURNING *`;
     try {
-        let result = await execute(q);
+        const [result,metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });                
 
-        q = `SELECT * FROM [dlcs] WHERE [id] = '${id}';`
-
-        result = await query(q);
-
-        res.send({ dlcs: result });
+        res.send({ dlcs: result[0] });
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
 const finishGame = async (req, res) => {
 
     const tableName = req.body.table;
-    let table, title, finished, appid, idx;
+    let table, title, finished, app_id, id;
 
-    idx = req.body.idx;
+    id = req.body.id;
     title = req.body.title;
-    appid = req.body.appid;
+    app_id = req.body.app_id;
     finished = req.body.finished;
 
     table = selectTable(tableName)
@@ -427,21 +423,21 @@ const finishGame = async (req, res) => {
 
         let q = "";
 
-        if (tableName === 'steam') {
-            q = `UPDATE [steam_finished] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [appid] = ${appid};`;
-        } else if (tableName === 'playing') {
-            q = `UPDATE [${table}] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [idx] = ${idx};`;
+        if (tableName === 'steam' || tableName === 'Steam') {
+            q = `UPDATE "Steam" SET finished = ${finished}, finished_at = '${now()}' WHERE app_id = '${app_id}' RETURNING *`;
+        } else if (tableName === 'playing' || tableName === 'Playing') {
+            q = `UPDATE "Playing" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
         } else {
-            q = `UPDATE [${table}] SET [finished] = ${finished}, [finished_at] = "${now()}" WHERE [title] = '${title}';`;
+            q = `UPDATE "${table}" SET finished = ${finished}, finished_at = '${now()}' WHERE title = '${title}' RETURNING *`;
         }
 
-        try {
-            const result = await execute(q);
+        try {            
+            const [result,metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });                
 
-            res.send({ result });
+            res.send({ result: result[0] });
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.process.message }).end();
+            res.status(400).send({ msg: error.message ||error.process.message }).end();
         }
     }
 }
@@ -454,22 +450,22 @@ const searchGame = async (req, res) => {
         res.send({ games })
     } catch (error) {
         console.error(error)
-        res.status(400).send({ msg: error.process.message }).end();
+        res.status(400).send({ msg: error.message || error.process.message }).end();
     }
 }
 
 const updateGame = async (req, res) => {
 
     const tableName = req.body.table;
-    let table, id, idx, title, finished, fisical_disc, system, _console;
+    let table, id, app_id, title, finished, fisical_disc, system, platform;
 
     id = req.body.id;
-    idx = req.body.idx;
+    app_id = req.body.app_id;
     title = req.body.title;
     finished = req.body.finished;
     fisical_disc = req.body.fisical_disc;
     system = req.body.system
-    _console = req.body.console
+    platform = req.body.platform
 
 
     table = selectTable(tableName)
@@ -486,31 +482,31 @@ const updateGame = async (req, res) => {
         const errorMessage = "Finished is not Defined";
         res.statusMessage = errorMessage;
         res.status(400).send({ msg: errorMessage }).end();
-    } else if (idx == null) {
-        const errorMessage = "IDX is required";
+    } else if (id == null) {
+        const errorMessage = "ID is required";
         res.statusMessage = errorMessage;
         res.status(400).send({ msg: errorMessage }).end();
     } else {
         let q = "";
 
-        if (table === 'wiiu_games' || table === 'wii_games' || table === 'gamecube_games') {
-            q = `UPDATE [${table}] SET [id] = '${id}',[title] = "${title}", [finished] = ${finished}, [fisical_disc] = ${fisical_disc} WHERE [idx] = ${idx};`;
-        } else if (table === 'virtual_console_games') {
-            q = `UPDATE [${table}] SET [id] = '${id}',[title] = "${title}", [finished] = ${finished}, [system] = '${system}', [console] = '${_console}' WHERE [idx] = ${idx};`;
-        } else if (table === 'to_buy_games') {
-            q = `UPDATE [${table}] SET [title] = "${title}", [finished] = ${finished}, [system] = '${system}' WHERE [idx] = ${idx};`;
+        if (table === 'WiiU' || table === 'Wii' || table === 'GameCube') {
+            q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, fisical_disc = ${fisical_disc} WHERE id = ${id} RETURNING *`;
+        } else if (table === 'VirtualConsole') {
+            q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, system = '${system}', platform = '${platform}' WHERE id = ${id} RETURNING *`;
+        } else if (table === 'ToBuy') {
+            q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, system = '${system}' WHERE id = ${id} RETURNING *`;
         } else {
-            q = `UPDATE [${table}] SET [id] = '${id}',[title] = "${title}", [finished] = ${finished} WHERE [idx] = ${idx};`;
+            q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished} WHERE id = ${id} RETURNING *`;
         }
 
         try {
-            const result = await execute(q);
+            const [result,metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });                            
 
-            res.send({ result });
+            res.send({ result: result[0] });
 
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.process.message }).end();
+            res.status(400).send({ msg: error.message ||error.process.message }).end();
         }
     }
 }
@@ -519,7 +515,7 @@ const deleteGame = async (req, res) => {
 
     const tableName = req.body.table;
     const title = req.body.title;
-    const idx = req.body.idx;
+    const id = req.body.id;
 
     let table;
 
@@ -533,29 +529,29 @@ const deleteGame = async (req, res) => {
         const errorMessage = "Game Title is Empty";
         res.statusMessage = errorMessage;
         res.status(400).send({ msg: errorMessage }).end();
-    } else if (table === 'playing_games') {
+    } else if (table === 'Playing') {
         let q = "";
-        q = `DELETE FROM [${table}] WHERE [idx] = ${idx};`;
+        q = `DELETE FROM "Playing" WHERE id = ${id};`;
 
         try {
-            const result = await execute(q);
+            await db.sequelize.query(q, { type: QueryTypes.DELETE });
 
-            res.send({ ok: "ok" })
+            res.send({ ok: true })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.process.message }).end();
+            res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     } else {
         let q = "";
-        q = `DELETE FROM [${table}] WHERE [title] = '${title}';`;
+        q = `DELETE FROM "${table}" WHERE title = '${title}';`;
 
         try {
-            const result = await execute(q);
+            await db.sequelize.query(q, { type: QueryTypes.DELETE });
 
-            res.send({ ok: "ok" })
+            res.send({ ok: true })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.process.message }).end();
+            res.status(400).send({ msg: error.message ||error.process.message }).end();
         }
     }
 }
