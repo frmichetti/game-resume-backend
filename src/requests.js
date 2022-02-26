@@ -225,7 +225,7 @@ const showVirtualConsoleGames = async (req, res) => {
 
 const showToBuyGames = async (req, res) => {
     try {        
-        const games = await db.ToBuy.findAll();
+        const games = await db.ToBuy.findAll({order: [["title","ASC"]]});
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -337,7 +337,7 @@ const showCharts = async (req, res) => {
 }
 
 const showPlayingGames = async (req, res) => {    
-    const games = await db.Playing.findAll();
+    const games = await db.Playing.findAll({order: [["title","ASC"]]});
     res.send({ games })
 }
 
