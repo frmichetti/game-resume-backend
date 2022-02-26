@@ -1,5 +1,7 @@
 import getMessage from './getMessage';
 import db from './models/index';
+import axios from 'axios';
+
 const { QueryTypes } = require('sequelize');
 
 
@@ -151,6 +153,18 @@ const showUbisoftGames = async (req, res) => {
 const showSteamGames = async (req, res) => {
     try {        
         const games = await db.Steam.findAll();
+        res.send({ games })
+    } catch (error) {
+        console.error(error)
+        res.status(400).send({ msg: error.message || error.process.message }).end();
+    }
+}
+
+const getSteamGames = async (req, res) => {
+    try {      
+        const response = await axios.get(` http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=4E1711643EDB18164E58D14FC3B11FD3&steamid=76561198179840806&format=json&include_appinfo=true`);
+        const games = response.data.response.games;
+        
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -617,7 +631,7 @@ const exportToXls = async (req, res, next) => {
 
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
-    showSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
+    showSteamGames,getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, createGames, finishDLC,
     finishGame, searchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls
 }

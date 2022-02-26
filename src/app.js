@@ -53,6 +53,7 @@ app.get('/categories', requests.showCategories);
 app.get('/origin', requests.showOriginGames);
 app.get('/ubisoft', requests.showUbisoftGames);
 app.get('/steam', requests.showSteamGames);
+app.get('/steam_api', requests.getSteamGames);
 app.get('/all', requests.showAllGames);
 app.get('/gamecube', requests.showGameCubeGames);
 app.get('/virtualconsole', requests.showVirtualConsoleGames);
