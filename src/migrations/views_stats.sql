@@ -31,21 +31,21 @@ FROM all_games
 GROUP BY all_games.system, finished
 HAVING all_games.finished = true;
 
-CREATE or REPLACE VIEW total_of_finished_games_by_system_percentual AS
-SELECT all_games.system, all_games.finished,COUNT(all_games.id) AS total, (Count(all_games.id::float) / tmp.cnt::float) * 100 AS percentual
-FROM all_games, (SELECT COUNT(id) AS cnt FROM all_games)  AS tmp
-GROUP BY all_games.system, all_games.finished, tmp.cnt
-HAVING all_games.finished = true;
+-- CREATE or REPLACE VIEW total_of_finished_games_by_system_percentual AS
+-- SELECT all_games.system, all_games.finished,COUNT(all_games.id) AS total, (Count(all_games.id::float) / tmp.cnt::float) * 100 AS percentual
+-- FROM all_games, (SELECT COUNT(id) AS cnt FROM all_games)  AS tmp
+-- GROUP BY all_games.system, all_games.finished, tmp.cnt
+-- HAVING all_games.finished = true;
 
 CREATE or REPLACE VIEW total_of_games_by_system AS
 SELECT system, Count(*) AS total
 FROM all_games
 GROUP BY all_games.system;
 
-CREATE or REPLACE VIEW total_of_games_by_system_percentual AS
-SELECT all_games.system, COUNT(all_games.id) AS total, (Count(all_games.id::float) / tmp.cnt::float) * 100 AS percentual
-FROM all_games, (SELECT COUNT(id) AS cnt FROM all_games)  AS tmp
-GROUP BY all_games.system, tmp.cnt;
+-- CREATE or REPLACE VIEW total_of_games_by_system_percentual AS
+-- SELECT all_games.system, COUNT(all_games.id) AS total, (Count(all_games.id::float) / tmp.cnt::float) * 100 AS percentual
+-- FROM all_games, (SELECT COUNT(id) AS cnt FROM all_games)  AS tmp
+-- GROUP BY all_games.system, tmp.cnt;
 
 CREATE OR REPLACE VIEW total_of_genuine_games AS
 SELECT COUNT(genuine) AS total

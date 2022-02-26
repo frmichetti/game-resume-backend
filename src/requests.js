@@ -1,6 +1,5 @@
 import getMessage from './getMessage';
 import db from './models/index';
-
 const { QueryTypes } = require('sequelize');
 
 
