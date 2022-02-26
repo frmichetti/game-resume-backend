@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Playing.init({
     app_id: DataTypes.STRING,
+    title: DataTypes.STRING,
     started_at: DataTypes.DATE,
     finished: DataTypes.BOOLEAN,
     finished_at: DataTypes.DATE
