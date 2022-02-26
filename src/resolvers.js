@@ -7,56 +7,56 @@ const hello = (parent, args, ctx, info) => {
 }
 const allCategories = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "Category"`    
+    const sql = `SELECT ${fields.toString()} FROM "Category" ORDER BY name ASC`    
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });        
     return games;
 }
 
 const allWiiUGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM "WiiU"`    
+    const sql = `SELECT ${fields.toString()} FROM "WiiU" ORDER BY title ASC`    
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });        
     return games;
 }
 
 const allWiiGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM "Wii"`    
+    const sql = `SELECT ${fields.toString()} FROM "Wii" ORDER BY title ASC`    
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT }); 
     return games;
 }
 
 const allGameCubeGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM "GameCube"`
+    const sql = `SELECT ${fields.toString()} FROM "GameCube" ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT }); 
     return games;
 }
 
 const allVirtualConsoleGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "VirtualConsole"`    
+    const sql = `SELECT ${fields.toString()} FROM "VirtualConsole" ORDER BY title ASC`    
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT }); 
     return games;
 }
 
 const allToBuyGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "ToBuy"`
+    const sql = `SELECT ${fields.toString()} FROM "ToBuy" ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });     
     return games;
 }
 
 const allOriginGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "Origin"`
+    const sql = `SELECT ${fields.toString()} FROM "Origin" ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });         
     return games;
 }
 
 const allUbisoftGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "Ubisoft"`
+    const sql = `SELECT ${fields.toString()} FROM "Ubisoft" ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
@@ -70,63 +70,63 @@ const allDLCs = async (parent, args, ctx, info) => {
 
 const allSteamGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM "Steam"`
+    const sql = `SELECT ${fields.toString()} FROM "Steam" ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allConsoleGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "all_console_games"`
+    const sql = `SELECT ${fields.toString()} FROM "all_console_games" ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allPCGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM "all_pc_games"`
+    const sql = `SELECT ${fields.toString()} FROM "all_pc_games" ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "all_games"`
+    const sql = `SELECT ${fields.toString()} FROM "all_games" ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesWithDLCs = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "all_games_list_api"`
+    const sql = `SELECT ${fields.toString()} FROM "all_games_list_api" ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesFinished = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "all_games" WHERE finished = true`
+    const sql = `SELECT ${fields.toString()} FROM "all_games" WHERE finished = true ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesFinishedDetailed = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "all_games_list_api" WHERE finished = true`
+    const sql = `SELECT ${fields.toString()} FROM "all_games_list_api" WHERE finished = true  ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesUnfinished = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "all_games" WHERE finished = false`
+    const sql = `SELECT ${fields.toString()} FROM "all_games" WHERE finished = false ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
 
 const allGamesUnfinishedDetailed = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "all_games_list_api" WHERE finished = false`
+    const sql = `SELECT ${fields.toString()} FROM "all_games_list_api" WHERE finished = false ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }
@@ -292,7 +292,7 @@ const getPercentFinishedChart = async (parent, args, ctx, info) => {
 
 const getFinishedBySystem = async (parent, { system }, ctx, info) => {
     try {
-        const games = await ctx.orm.sequelize.query(`SELECT * FROM "all_games" WHERE finished = true AND system ilike '%${system}%';`,{ type: QueryTypes.SELECT });
+        const games = await ctx.orm.sequelize.query(`SELECT * FROM "all_games" WHERE finished = true AND system ilike '%${system}%' ORDER BY title ASC`,{ type: QueryTypes.SELECT });
         return games;
     } catch (error) {
         console.error(error);
@@ -301,7 +301,7 @@ const getFinishedBySystem = async (parent, { system }, ctx, info) => {
 
 const getUnfinishedBySystem = async (parent, { system }, ctx, info) => {
     try {
-        const games = await ctx.orm.sequelize.query(`SELECT * FROM "all_games" WHERE finished = false AND system ilike '%${system}%';`,{ type: QueryTypes.SELECT });
+        const games = await ctx.orm.sequelize.query(`SELECT * FROM "all_games" WHERE finished = false AND system ilike '%${system}%' ORDER BY title ASC`,{ type: QueryTypes.SELECT });
         return games;
     } catch (error) {
         console.error(error);

@@ -18,34 +18,34 @@ const queryInTable = (tableName) => {
     let q = ""
 switch (tableName) {
         case 'steam':
-            q = `SELECT * FROM "Steam"`
+            q = `SELECT * FROM "Steam ORDER BY title ASC"`
             break;
         case 'origin':
-            q = 'SELECT * FROM "Origin";'
+            q = 'SELECT * FROM "Origin ORDER BY title ASC'
             break;
         case 'ubisoft':
-            q = `SELECT * FROM "Ubisoft";`
+            q = `SELECT * FROM "Ubisoft ORDER BY title ASC`
             break;
         case 'gamecube':
-            q = `SELECT * FROM "GameCube";`
+            q = `SELECT * FROM "GameCube ORDER BY title ASC`
             break;
         case 'wii':
-            q = `SELECT * FROM "Wii";`
+            q = `SELECT * FROM "Wii" ORDER BY title ASC`
             break;
         case 'wiiu':
-            q = `SELECT * FROM "WiiU";`
+            q = `SELECT * FROM "WiiU" ORDER BY title ASC`
             break;
         case 'virtualconsole':
-            q = `SELECT * FROM "VirtualConsole";`
+            q = `SELECT * FROM "VirtualConsole" ORDER BY title ASC`
             break;
         case 'all':
-            q = `SELECT * FROM "all_games";`
+            q = `SELECT * FROM "all_games" ORDER BY title ASC`
             break;
         case 'finished':
-            q = `SELECT * FROM "all_games" WHERE finished=true;`
+            q = `SELECT * FROM "all_games" WHERE finished=true ORDER BY title ASC`
             break;
         case 'unfinished':
-            q = `SELECT * FROM "all_games" WHERE finished=false;`
+            q = `SELECT * FROM "all_games" WHERE finished=false ORDER BY title ASC`
             break;
         default:
             q = 'SELECT 1'
@@ -101,10 +101,10 @@ const showStatistics = async (req, res) => {
 
     switch (req.query.from) {
         case 'finished':
-            q = 'SELECT * FROM total_finished_games_for_dashboard;'
+            q = 'SELECT * FROM "total_finished_games_for_dashboard"'
             break;
         case 'totals':
-            q = `SELECT * FROM total_games_for_dashboard;`
+            q = `SELECT * FROM "total_games_for_dashboard"`
             break;
         default:
             q = 'SELECT 1'
@@ -174,7 +174,7 @@ const getSteamGames = async (req, res) => {
 
 const showAllGames = async (req, res) => {
     try {        
-        const games = await db.sequelize.query('SELECT * FROM all_games', { type: QueryTypes.SELECT });        
+        const games = await db.sequelize.query('SELECT * FROM "all_games" ORDER BY title ASC', { type: QueryTypes.SELECT });        
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -236,7 +236,7 @@ const showToBuyGames = async (req, res) => {
 
 const showPCGames = async (req, res) => {
     try {        
-        const games = await db.sequelize.query('SELECT * FROM all_pc_games', { type: QueryTypes.SELECT });
+        const games = await db.sequelize.query('SELECT * FROM "all_pc_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -246,7 +246,7 @@ const showPCGames = async (req, res) => {
 
 const showConsoleGames = async (req, res) => {
     try {        
-        const games = await db.sequelize.query('SELECT * FROM all_console_games', { type: QueryTypes.SELECT });
+        const games = await db.sequelize.query('SELECT * FROM "all_console_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -280,7 +280,7 @@ const showCharts = async (req, res) => {
 
     if (type === 'total') {
         try {            
-            const stats = await db.sequelize.query('SELECT * FROM total_of_games_by_system', { type: QueryTypes.SELECT })
+            const stats = await db.sequelize.query('SELECT * FROM "total_of_games_by_system"', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.total)
             const dataset = "Total of Games"
@@ -294,7 +294,7 @@ const showCharts = async (req, res) => {
 
     } else if (type === 'finished') {
         try {            
-            const stats = await db.sequelize.query('SELECT * FROM total_of_finished_games_by_system', { type: QueryTypes.SELECT })
+            const stats = await db.sequelize.query('SELECT * FROM "total_of_finished_games_by_system"', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.total)
             const dataset = "Total of Finished Games"
@@ -457,7 +457,7 @@ const finishGame = async (req, res) => {
 const searchGame = async (req, res) => {
     const q = req.query.query;
     try {                
-        const games = await db.sequelize.query(`SELECT * FROM all_games_list_api WHERE title ilike '%${q}%';`, { type: QueryTypes.SELECT });  
+        const games = await db.sequelize.query(`SELECT * FROM "all_games_list_api" WHERE title ilike '%${q}%';`, { type: QueryTypes.SELECT });  
 
         res.send({ games })
     } catch (error) {
