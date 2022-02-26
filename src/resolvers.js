@@ -196,7 +196,7 @@ const getUbisoftGame = async (parent, { idx }, ctx, info) => {
 
 const getDLC = async (parent, { app_id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
-    const sql = `SELECT ${fields.toString()} FROM "DLC" WHERE app_id = '${app_id}'`    
+    const sql = `SELECT ${fields.toString()} FROM "DLC" WHERE app_id = '${app_id}' ORDER BY title ASC, id ASC`    
     const dlcs = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });    
     return dlcs;
 }

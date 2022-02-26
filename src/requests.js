@@ -132,7 +132,7 @@ const showCategories = async (req, res) => {
 
 const showOriginGames = async (req, res) => {
     try {        
-        const games = await db.Origin.findAll();
+        const games = await db.Origin.findAll({order: [["title","ASC"]]});
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -142,7 +142,7 @@ const showOriginGames = async (req, res) => {
 
 const showUbisoftGames = async (req, res) => {
     try {        
-        const games = await db.Ubisoft.findAll();
+        const games = await db.Ubisoft.findAll({order: [["title","ASC"]]});
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -152,7 +152,7 @@ const showUbisoftGames = async (req, res) => {
 
 const showSteamGames = async (req, res) => {
     try {        
-        const games = await db.Steam.findAll();
+        const games = await db.Steam.findAll({order: [["title","ASC"]]});
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -184,7 +184,7 @@ const showAllGames = async (req, res) => {
 
 const showWiiGames = async (req, res) => {
     try {        
-        const games = await db.Wii.findAll();
+        const games = await db.Wii.findAll({order: [["title","ASC"]]});
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -194,7 +194,7 @@ const showWiiGames = async (req, res) => {
 
 const showWiiUGames = async (req, res) => {
     try {        
-        const games = await db.WiiU.findAll();
+        const games = await db.WiiU.findAll({order: [["title","ASC"]]});
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -204,7 +204,7 @@ const showWiiUGames = async (req, res) => {
 
 const showGameCubeGames = async (req, res) => {
     try {        
-        const games = await db.GameCube.findAll();
+        const games = await db.GameCube.findAll({order: [["title","ASC"]]});
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -214,7 +214,7 @@ const showGameCubeGames = async (req, res) => {
 
 const showVirtualConsoleGames = async (req, res) => {
     try {        
-        const games = await db.VirtualConsole.findAll();
+        const games = await db.VirtualConsole.findAll({order: [["title","ASC"]]});
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -256,7 +256,7 @@ const showConsoleGames = async (req, res) => {
 
 const showDLCs = async (req, res) => {
     try {        
-        const dlcs = await db.DLC.findAll();
+        const dlcs = await db.DLC.findAll({order: [["app_id", "ASC"],["id","ASC"]]});
         res.send({ games: dlcs })
     } catch (error) {
         console.error(error)
