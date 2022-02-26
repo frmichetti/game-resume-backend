@@ -162,7 +162,7 @@ const showSteamGames = async (req, res) => {
 
 const getSteamGames = async (req, res) => {
     try {      
-        const response = await axios.get(` http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=4E1711643EDB18164E58D14FC3B11FD3&steamid=76561198179840806&format=json&include_appinfo=true`);
+        const response = await axios.get(`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=4E1711643EDB18164E58D14FC3B11FD3&steamid=76561198179840806&format=json&include_appinfo=true`);
         const games = response.data.response.games;
         
         res.send({ games })
@@ -307,7 +307,7 @@ const showCharts = async (req, res) => {
         }
     } else if (type === "total_percent") {
         try {            
-            const stats = await db.sequelize.query('SELECT * FROM total_of_games_by_system_percentual', { type: QueryTypes.SELECT })
+            const stats = await db.sequelize.query('SELECT * FROM "total_of_games_by_system_percentual"', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.percentual)
             const dataset = "Percent of Total Games"
@@ -320,7 +320,7 @@ const showCharts = async (req, res) => {
         }
     } else if (type === "finished_percent") {
         try {            
-            const stats = await db.sequelize.query('SELECT * FROM total_of_finished_games_by_system_percentual', { type: QueryTypes.SELECT })
+            const stats = await db.sequelize.query('SELECT * FROM "total_of_finished_games_by_system_percentual"', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.percentual)
             const dataset = "Percent of Finished Games"
@@ -376,10 +376,10 @@ const createGames = async (req, res) => {
         } else if (tableName === 'virtualconsole') {
             q = `INSERT INTO "${table}" (app_id,title,finished,genuine,platform,system) VALUES ('${app_id}','${title}',${finished},'${genuine}','${platform}','${system}') RETURNING *`;
         } else if (tableName === 'tobuy') {
-            q = `INSERT INTO "${table}" (title,finished,genuine,system) VALUES ('${title}',${finished},${genuine},'${system}') RETURNING *`;
+            q = `INSERT INTO "${table}" (title,finished,system) VALUES ('${title}',${finished},'${system}') RETURNING *`;
         } else if (tableName === 'playing') {
-            q = `INSERT INTO "${table}" (app_id, started_at) VALUES ('${app_id}','${now()}') RETURNING *`
-        }
+            q = `INSERT INTO "${table}" (app_id, title, started_at) VALUES ('${app_id}','${title}','${now()}') RETURNING *`
+        } 
         else {
             q = `INSERT INTO "${table}" (app_id,title,finished) VALUES ('${app_id}','${title}',${finished}) RETURNING *`;
         }
