@@ -3,7 +3,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Ubisoft', [{
-      app_id: null,
+      app_id: 'ACBF4',
       title: 'Assassins Creed 4: Black Frag',
       finished: false,
       finished_at: null,
