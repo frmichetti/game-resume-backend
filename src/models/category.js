@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.Steam, {foreignKey: 'app_id', through: 'GamesCategories', as: 'steam_categories'});  
-      this.belongsToMany(models.Ubisoft, {foreignKey: 'app_id', through: 'GamesCategories', as: 'ubisoft_categories'});  
-      this.belongsToMany(models.Origin, {foreignKey: 'app_id', through: 'GamesCategories', as: 'origin_categories'});
-      this.belongsToMany(models.WiiU, {foreignKey: 'app_id', through: 'GamesCategories', as: 'wiiu_categories'});
-      this.belongsToMany(models.Wii, {foreignKey: 'app_id', through: 'GamesCategories', as: 'wii_categories'});
-      this.belongsToMany(models.GameCube, {foreignKey: 'app_id', through: 'GamesCategories', as: 'gamecube_categories'});
-      this.belongsToMany(models.VirtualConsole, {foreignKey: 'app_id', through: 'GamesCategories', as: 'virtualconsole_categories'});
+      this.belongsToMany(models.Steam, {foreignKey: 'category_id', through: 'GamesCategories', as: 'steam_categories'});  
+      this.belongsToMany(models.Ubisoft, {foreignKey: 'category_id', through: 'GamesCategories', as: 'ubisoft_categories'});  
+      this.belongsToMany(models.Origin, {foreignKey: 'category_id', through: 'GamesCategories', as: 'origin_categories'});
+      this.belongsToMany(models.WiiU, {foreignKey: 'category_id', through: 'GamesCategories', as: 'wiiu_categories'});
+      this.belongsToMany(models.Wii, {foreignKey: 'category_id', through: 'GamesCategories', as: 'wii_categories'});
+      this.belongsToMany(models.GameCube, {foreignKey: 'category_id', through: 'GamesCategories', as: 'gamecube_categories'});
+      this.belongsToMany(models.VirtualConsole, {foreignKey: 'category_id', through: 'GamesCategories', as: 'virtualconsole_categories'});
     }
   }
   Category.init({

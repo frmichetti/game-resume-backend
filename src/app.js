@@ -50,6 +50,8 @@ app.get('/', requests.showWelcome);
 app.get('/test', requests.showTest);
 app.get('/statistics', requests.showStatistics);
 app.get('/categories', requests.showCategories);
+app.get('/game/:app_id/categories', requests.showCategoriesOfGame);
+app.get('/game/:app_id/dlcs', requests.showDLCsOfGame);
 app.get('/origin', requests.showOriginGames);
 app.get('/ubisoft', requests.showUbisoftGames);
 app.get('/steam', requests.showSteamGames);
@@ -71,11 +73,15 @@ app.get('/pdf', requests.exportToPDF);
 app.get('/xls', requests.exportToXls)
 
 app.post('/create', requests.createGames);
+app.post('/categories', requests.createCategory);
+app.post('/games/:app_id/categories', requests.addCategoriesToGame);
 app.post('/dlc_finished', requests.finishDLC);
 app.post('/finished', requests.finishGame);
 app.get('/search', requests.searchGame)
 
 app.put('/update', requests.updateGame);
+app.put('/categories', requests.updateCategory);
+app.put('/games/:app_id/categories', requests.updateCategoriesToGame);
 
 app.delete('/remove', requests.deleteGame);
 

@@ -122,7 +122,7 @@ const showStatistics = async (req, res) => {
 
 const showCategories = async (req, res) => {
     try {        
-        const categories = await db.Category.findAll();
+        const categories = await db.Category.findAll({order: [["name","ASC"]]});
         res.status(200).send({ categories })
     } catch (error) {
         console.error(error)
@@ -629,9 +629,45 @@ const exportToXls = async (req, res, next) => {
     res.xls('games.xlsx', games);
 }
 
+const createCategory = async (req, res, next) => {
+    const {slugname,name} = req.body;
+    const category = await db.Category.create({slugname,name});
+    res.send({category})
+}
+
+const updateCategory = async (req, res, next) => {
+    const {id, slugname, name} = req.body;
+    const result = await db.Category.update({slugname,name}, {where: {id}});
+    const category = await db.Category.findOne({where: {id}})
+    res.send({category})    
+}
+
+const addCategoriesToGame = async (req, res, next) => {
+    res.send({ok: true})
+}
+
+const updateCategoriesToGame = async (req, res, next) => {
+    res.send({ok: true})
+}
+
+const showCategoriesOfGame = async (req, res, next) => {
+    const {app_id} = req.params;
+    const game = await db.Steam.findOne({where:{app_id}})    
+    const categories = await game.getCategories();
+    res.send({categories})
+}
+
+const showDLCsOfGame = async (req, res, next) => {
+    const {app_id} = req.params;
+    const game = await db.Steam.findOne({where:{app_id}})    
+    const dlcs = await game.getDlcs()
+    res.send({dlcs})
+}
+
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames,getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, createGames, finishDLC,
-    finishGame, searchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls
+    finishGame, searchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls, 
+    createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame,showDLCsOfGame
 }
