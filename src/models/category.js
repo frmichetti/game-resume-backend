@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.Steam, {foreignKey: 'category_id', through: 'GamesCategories', as: 'steam_categories'});  
+      this.belongsToMany(models.Steam, {foreignKey: 'category_id', otherKey: 'app_id', through: 'GamesCategories', as: 'steam_categories'});  
       this.belongsToMany(models.Ubisoft, {foreignKey: 'category_id', through: 'GamesCategories', as: 'ubisoft_categories'});  
       this.belongsToMany(models.Origin, {foreignKey: 'category_id', through: 'GamesCategories', as: 'origin_categories'});
       this.belongsToMany(models.WiiU, {foreignKey: 'category_id', through: 'GamesCategories', as: 'wiiu_categories'});

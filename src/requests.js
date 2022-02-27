@@ -16,7 +16,7 @@ const now = () => {
 
 const queryInTable = (tableName) => {
     let q = ""
-switch (tableName) {
+    switch (tableName) {
         case 'steam':
             q = `SELECT * FROM "Steam ORDER BY title ASC"`
             break;
@@ -86,7 +86,7 @@ const showWelcome = (req, res) => {
 }
 
 const showTest = async (req, res) => {
-    try {        
+    try {
         const games = await db.Origin.findAll();
         res.status(200).send({ games })
     } catch (error) {
@@ -96,7 +96,7 @@ const showTest = async (req, res) => {
 }
 
 const showStatistics = async (req, res) => {
-    
+
     let q = ""
 
     switch (req.query.from) {
@@ -111,8 +111,8 @@ const showStatistics = async (req, res) => {
             break;
     }
 
-    try {        
-        const result = await db.sequelize.query(q, { type: QueryTypes.SELECT });        
+    try {
+        const result = await db.sequelize.query(q, { type: QueryTypes.SELECT });
         res.status(200).send({ result })
     } catch (error) {
         console.error(error)
@@ -121,8 +121,8 @@ const showStatistics = async (req, res) => {
 }
 
 const showCategories = async (req, res) => {
-    try {        
-        const categories = await db.Category.findAll({order: [["name","ASC"]]});
+    try {
+        const categories = await db.Category.findAll({ order: [["name", "ASC"]] });
         res.status(200).send({ categories })
     } catch (error) {
         console.error(error)
@@ -131,8 +131,8 @@ const showCategories = async (req, res) => {
 }
 
 const showOriginGames = async (req, res) => {
-    try {        
-        const games = await db.Origin.findAll({order: [["title","ASC"]]});
+    try {
+        const games = await db.Origin.findAll({ order: [["title", "ASC"]] });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -141,8 +141,8 @@ const showOriginGames = async (req, res) => {
 }
 
 const showUbisoftGames = async (req, res) => {
-    try {        
-        const games = await db.Ubisoft.findAll({order: [["title","ASC"]]});
+    try {
+        const games = await db.Ubisoft.findAll({ order: [["title", "ASC"]] });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -151,8 +151,8 @@ const showUbisoftGames = async (req, res) => {
 }
 
 const showSteamGames = async (req, res) => {
-    try {        
-        const games = await db.Steam.findAll({order: [["title","ASC"]]});
+    try {
+        const games = await db.Steam.findAll({ order: [["title", "ASC"]] });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -161,10 +161,10 @@ const showSteamGames = async (req, res) => {
 }
 
 const getSteamGames = async (req, res) => {
-    try {      
+    try {
         const response = await axios.get(`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=4E1711643EDB18164E58D14FC3B11FD3&steamid=76561198179840806&format=json&include_appinfo=true`);
         const games = response.data.response.games;
-        
+
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -173,8 +173,8 @@ const getSteamGames = async (req, res) => {
 }
 
 const showAllGames = async (req, res) => {
-    try {        
-        const games = await db.sequelize.query('SELECT * FROM "all_games" ORDER BY title ASC', { type: QueryTypes.SELECT });        
+    try {
+        const games = await db.sequelize.query('SELECT * FROM "all_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -183,8 +183,8 @@ const showAllGames = async (req, res) => {
 }
 
 const showWiiGames = async (req, res) => {
-    try {        
-        const games = await db.Wii.findAll({order: [["title","ASC"]]});
+    try {
+        const games = await db.Wii.findAll({ order: [["title", "ASC"]] });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -193,8 +193,8 @@ const showWiiGames = async (req, res) => {
 }
 
 const showWiiUGames = async (req, res) => {
-    try {        
-        const games = await db.WiiU.findAll({order: [["title","ASC"]]});
+    try {
+        const games = await db.WiiU.findAll({ order: [["title", "ASC"]] });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -203,8 +203,8 @@ const showWiiUGames = async (req, res) => {
 }
 
 const showGameCubeGames = async (req, res) => {
-    try {        
-        const games = await db.GameCube.findAll({order: [["title","ASC"]]});
+    try {
+        const games = await db.GameCube.findAll({ order: [["title", "ASC"]] });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -213,8 +213,8 @@ const showGameCubeGames = async (req, res) => {
 }
 
 const showVirtualConsoleGames = async (req, res) => {
-    try {        
-        const games = await db.VirtualConsole.findAll({order: [["title","ASC"]]});
+    try {
+        const games = await db.VirtualConsole.findAll({ order: [["title", "ASC"]] });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -224,8 +224,8 @@ const showVirtualConsoleGames = async (req, res) => {
 
 
 const showToBuyGames = async (req, res) => {
-    try {        
-        const games = await db.ToBuy.findAll({order: [["title","ASC"]]});
+    try {
+        const games = await db.ToBuy.findAll({ order: [["title", "ASC"]] });
         res.send({ games })
     } catch (error) {
         console.error(error)
@@ -235,7 +235,7 @@ const showToBuyGames = async (req, res) => {
 
 
 const showPCGames = async (req, res) => {
-    try {        
+    try {
         const games = await db.sequelize.query('SELECT * FROM "all_pc_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
         res.send({ games })
     } catch (error) {
@@ -245,7 +245,7 @@ const showPCGames = async (req, res) => {
 }
 
 const showConsoleGames = async (req, res) => {
-    try {        
+    try {
         const games = await db.sequelize.query('SELECT * FROM "all_console_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
         res.send({ games })
     } catch (error) {
@@ -255,8 +255,8 @@ const showConsoleGames = async (req, res) => {
 }
 
 const showDLCs = async (req, res) => {
-    try {        
-        const dlcs = await db.DLC.findAll({order: [["app_id", "ASC"],["id","ASC"]]});
+    try {
+        const dlcs = await db.DLC.findAll({ order: [["app_id", "ASC"], ["id", "ASC"]] });
         res.send({ games: dlcs })
     } catch (error) {
         console.error(error)
@@ -265,9 +265,9 @@ const showDLCs = async (req, res) => {
 }
 
 const showDLCsByID = async (req, res) => {
-    const id = req.query.id;    
-    try {                
-        const dlcs = await db.DLC.findAll({where: {id}});
+    const id = req.query.id;
+    try {
+        const dlcs = await db.DLC.findAll({ where: { id } });
         res.send({ games: dlcs })
     } catch (error) {
         console.error(error)
@@ -276,10 +276,10 @@ const showDLCsByID = async (req, res) => {
 }
 
 const showCharts = async (req, res) => {
-    const type = req.query.type;    
+    const type = req.query.type;
 
     if (type === 'total') {
-        try {            
+        try {
             const stats = await db.sequelize.query('SELECT * FROM "total_of_games_by_system"', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.total)
@@ -293,7 +293,7 @@ const showCharts = async (req, res) => {
         }
 
     } else if (type === 'finished') {
-        try {            
+        try {
             const stats = await db.sequelize.query('SELECT * FROM "total_of_finished_games_by_system"', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.total)
@@ -306,7 +306,7 @@ const showCharts = async (req, res) => {
             res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     } else if (type === "total_percent") {
-        try {            
+        try {
             const stats = await db.sequelize.query('SELECT * FROM "total_of_games_by_system_percentual"', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.percentual)
@@ -319,7 +319,7 @@ const showCharts = async (req, res) => {
             res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     } else if (type === "finished_percent") {
-        try {            
+        try {
             const stats = await db.sequelize.query('SELECT * FROM "total_of_finished_games_by_system_percentual"', { type: QueryTypes.SELECT })
             const labels = stats.map(i => i.system)
             const values = stats.map(i => i.percentual)
@@ -336,8 +336,8 @@ const showCharts = async (req, res) => {
     }
 }
 
-const showPlayingGames = async (req, res) => {    
-    const games = await db.Playing.findAll({order: [["title","ASC"]]});
+const showPlayingGames = async (req, res) => {
+    const games = await db.Playing.findAll({ order: [["title", "ASC"]] });
     res.send({ games })
 }
 
@@ -379,18 +379,18 @@ const createGames = async (req, res) => {
             q = `INSERT INTO "${table}" (title,finished,system) VALUES ('${title}',${finished},'${system}') RETURNING *`;
         } else if (tableName === 'playing') {
             q = `INSERT INTO "${table}" (app_id, title, started_at) VALUES ('${app_id}','${title}','${now()}') RETURNING *`
-        } 
+        }
         else {
             q = `INSERT INTO "${table}" (app_id,title,finished) VALUES ('${app_id}','${title}',${finished}) RETURNING *`;
         }
 
         try {
-            const [result,metadata] = await db.sequelize.query(q, { type: QueryTypes.INSERT })
+            const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.INSERT })
 
             res.send({ ok: true, result, metadata })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message  }).end();
+            res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     }
 }
@@ -398,7 +398,7 @@ const finishDLC = async (req, res) => {
     const { id, app_id, finished } = req.body
     let q = `UPDATE "DLC" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} AND app_id = '${app_id}' RETURNING *`;
     try {
-        const [result,metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });                
+        const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });
 
         res.send({ dlcs: result[0] });
     } catch (error) {
@@ -443,21 +443,21 @@ const finishGame = async (req, res) => {
             q = `UPDATE "${table}" SET finished = ${finished}, finished_at = '${now()}' WHERE title = '${title}' RETURNING *`;
         }
 
-        try {            
-            const [result,metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });                
+        try {
+            const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });
 
             res.send({ result: result[0] });
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message ||error.process.message }).end();
+            res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     }
 }
 
 const searchGame = async (req, res) => {
     const q = req.query.query;
-    try {                
-        const games = await db.sequelize.query(`SELECT * FROM "all_games_list_api" WHERE title ilike '%${q}%';`, { type: QueryTypes.SELECT });  
+    try {
+        const games = await db.sequelize.query(`SELECT * FROM "all_games_list_api" WHERE title ilike '%${q}%';`, { type: QueryTypes.SELECT });
 
         res.send({ games })
     } catch (error) {
@@ -512,13 +512,13 @@ const updateGame = async (req, res) => {
         }
 
         try {
-            const [result,metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });                            
+            const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });
 
             res.send({ result: result[0] });
 
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message ||error.process.message }).end();
+            res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     }
 }
@@ -563,13 +563,13 @@ const deleteGame = async (req, res) => {
             res.send({ ok: true })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message ||error.process.message }).end();
+            res.status(400).send({ msg: error.message || error.process.message }).end();
         }
     }
 }
 
 const exportToCsv = async (req, res, next) => {
-    let table = req.query.table;    
+    let table = req.query.table;
 
     try {
         let result = await db.sequelize.query(`SELECT * FROM "${table}"`, { type: QueryTypes.SELECT })
@@ -601,14 +601,14 @@ const exportToPDF = async (req, res, next) => {
 
     await browser.close()
 
-    res.contentType("application/pdf");    
+    res.contentType("application/pdf");
 
     return res.send(pdf)
 }
 
 const showReport = async (req, res, next) => {
     const q = queryInTable(req.query.from);
-    
+
     let games = await db.sequelize.query(q, { type: QueryTypes.SELECT });
     games = games.map(g => {
         return { id: g.app_id || g.id, title: g.title, finished: g.finished }
@@ -624,50 +624,106 @@ const showReport = async (req, res, next) => {
 }
 const exportToXls = async (req, res, next) => {
     const q = queryInTable(req.query.from);
-    
+
     let games = await db.sequelize.query(q, { type: QueryTypes.SELECT });
     res.xls('games.xlsx', games);
 }
 
 const createCategory = async (req, res, next) => {
-    const {slugname,name} = req.body;
-    const category = await db.Category.create({slugname,name});
-    res.send({category})
+    const { slugname, name } = req.body;
+    const category = await db.Category.create({ slugname, name });
+    res.send({ category })
 }
 
 const updateCategory = async (req, res, next) => {
-    const {id, slugname, name} = req.body;
-    const result = await db.Category.update({slugname,name}, {where: {id}});
-    const category = await db.Category.findOne({where: {id}})
-    res.send({category})    
+    const { id, slugname, name } = req.body;
+    const result = await db.Category.update({ slugname, name }, { where: { id } });
+    const category = await db.Category.findOne({ where: { id } })
+    res.send({ category })
 }
 
 const addCategoriesToGame = async (req, res, next) => {
-    res.send({ok: true})
+    const { app_id } = req.params;
+    const { table, categories } = req.body;
+    let game;
+
+    try {
+
+        switch (table) {
+            case 'Steam':
+                game = await db.Steam.findOne({ where: { app_id } })
+                break;
+            case 'Origin':
+                game = await db.Origin.findOne({ where: { app_id } })
+                break;
+            case 'Ubisoft':
+                game = await db.Ubisoft.findOne({ where: { app_id } })
+                break;
+            case 'GameCube':
+                game = await db.GameCube.findOne({ where: { app_id } })
+                break;
+            case 'Wii':
+                game = await db.Wii.findOne({ where: { app_id } })
+                break;
+            case 'WiiU':
+                game = await db.WiiU.findOne({ where: { app_id } })
+                break;
+            default:
+                throw new Error('Table is not Defined');
+                break;
+        }
+        if (!game) {
+            throw new Error('Game not Found');
+        }
+
+        if (!categories) {
+            throw new Error('Categories is Empty or Not defined');
+        }
+
+        const categoriesIDS = categories.map(c => c.id)
+        const modelCategories = await db.Category.findAll({ where: { id: categoriesIDS } })
+
+        modelCategories.forEach(async c => {
+            // TODO FIXME not saving app_id
+            // await game.addCategory(c)
+            await db.sequelize.query(`INSERT INTO "GamesCategories" ("category_id","app_id") VALUES (${c.id},'${game.app_id}')`)
+        })
+
+        const updatedCategories = await game.getCategories()
+
+        res.send({ categories: updatedCategories })
+
+    } catch (error) {
+        console.error(error)
+        res.status(400).send({ msg: error.message }).end()
+    }
 }
 
 const updateCategoriesToGame = async (req, res, next) => {
-    res.send({ok: true})
+    const { app_id } = req.params;
+    await db.sequelize.query(`DELETE FROM "GamesCategories" WHERE "app_id" = '${app_id}'`)
+
+    addCategoriesToGame(req, res, next);
 }
 
 const showCategoriesOfGame = async (req, res, next) => {
-    const {app_id} = req.params;
-    const game = await db.Steam.findOne({where:{app_id}})    
+    const { app_id } = req.params;
+    const game = await db.Steam.findOne({ where: { app_id } })
     const categories = await game.getCategories();
-    res.send({categories})
+    res.send({ categories })
 }
 
 const showDLCsOfGame = async (req, res, next) => {
-    const {app_id} = req.params;
-    const game = await db.Steam.findOne({where:{app_id}})    
+    const { app_id } = req.params;
+    const game = await db.Steam.findOne({ where: { app_id } })
     const dlcs = await game.getDlcs()
-    res.send({dlcs})
+    res.send({ dlcs })
 }
 
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
-    showSteamGames,getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
+    showSteamGames, getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, createGames, finishDLC,
-    finishGame, searchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls, 
-    createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame,showDLCsOfGame
+    finishGame, searchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls,
+    createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame
 }

@@ -74,14 +74,14 @@ app.get('/xls', requests.exportToXls)
 
 app.post('/create', requests.createGames);
 app.post('/categories', requests.createCategory);
-app.post('/games/:app_id/categories', requests.addCategoriesToGame);
+app.post('/game/:app_id/categories', requests.addCategoriesToGame);
 app.post('/dlc_finished', requests.finishDLC);
 app.post('/finished', requests.finishGame);
 app.get('/search', requests.searchGame)
 
 app.put('/update', requests.updateGame);
 app.put('/categories', requests.updateCategory);
-app.put('/games/:app_id/categories', requests.updateCategoriesToGame);
+app.put('/game/:app_id/categories', requests.updateCategoriesToGame);
 
 app.delete('/remove', requests.deleteGame);
 
