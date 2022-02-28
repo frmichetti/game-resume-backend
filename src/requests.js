@@ -152,7 +152,9 @@ const showUbisoftGames = async (req, res) => {
 
 const showSteamGames = async (req, res) => {
     try {
-        const games = await db.Steam.findAll({ order: [["title", "ASC"]] });
+        const games = await db.Steam.findAll({ order: [["title", "ASC"]],
+         attributes: ['id', 'app_id', 'title','collection','finished', 'finished_at', 
+         [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']] });
         res.send({ games })
     } catch (error) {
         console.error(error)
