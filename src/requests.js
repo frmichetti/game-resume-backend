@@ -18,22 +18,22 @@ const queryInTable = (tableName) => {
     let q = ""
     switch (tableName) {
         case 'steam':
-            q = `SELECT * FROM "Steam ORDER BY title ASC"`
+            q = `SELECT *, has_dlc(app_id) FROM "Steam ORDER BY title ASC"`
             break;
         case 'origin':
-            q = 'SELECT * FROM "Origin ORDER BY title ASC'
+            q = 'SELECT *, has_dlc(app_id) FROM "Origin ORDER BY title ASC'
             break;
         case 'ubisoft':
-            q = `SELECT * FROM "Ubisoft ORDER BY title ASC`
+            q = `SELECT *, has_dlc(app_id) FROM "Ubisoft ORDER BY title ASC`
             break;
         case 'gamecube':
-            q = `SELECT * FROM "GameCube ORDER BY title ASC`
+            q = `SELECT *, has_dlc(app_id) FROM "GameCube ORDER BY title ASC`
             break;
         case 'wii':
-            q = `SELECT * FROM "Wii" ORDER BY title ASC`
+            q = `SELECT *, has_dlc(app_id) FROM "Wii" ORDER BY title ASC`
             break;
         case 'wiiu':
-            q = `SELECT * FROM "WiiU" ORDER BY title ASC`
+            q = `SELECT *, has_dlc(app_id) FROM "WiiU" ORDER BY title ASC`
             break;
         case 'virtualconsole':
             q = `SELECT * FROM "VirtualConsole" ORDER BY title ASC`
