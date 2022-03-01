@@ -196,7 +196,10 @@ const showWiiGames = async (req, res) => {
 
 const showWiiUGames = async (req, res) => {
     try {
-        const games = await db.WiiU.findAll({ order: [["title", "ASC"]] });
+        const games = await db.WiiU.findAll({ order: [["title", "ASC"]],
+        attributes: ['id', 'app_id', 'title','collection','finished', 'finished_at', 'genuine', 'fisical_disc', 
+         [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']]
+     });
         res.send({ games })
     } catch (error) {
         console.error(error)
