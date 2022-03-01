@@ -258,7 +258,10 @@ const showConsoleGames = async (req, res) => {
 
 const showDLCs = async (req, res) => {
     try {
-        const dlcs = await db.DLC.findAll({ order: [["app_id", "ASC"], ["id", "ASC"]] });
+        const dlcs = await db.DLC.findAll({ order: [["app_id", "ASC"], ["id", "ASC"]],
+        attributes: ['id', 'app_id', 'title','collection','finished', 'finished_at', 
+         [db.sequelize.fn('which_system', db.sequelize.col('app_id')), 'system']]
+     });
         res.send({ games: dlcs })
     } catch (error) {
         console.error(error)
