@@ -131,6 +131,20 @@ const allGamesUnfinishedDetailed = async (parent, args, ctx, info) => {
     return games;
 }
 
+const allConsoleGamesGenres = async (parent, args, ctx, info) => {
+    const fields = ctx.requestedFields.getFields(info, {})
+    const sql = `SELECT ${fields.toString()} FROM "total_of_console_genres" ORDER BY genre ASC`
+    const genres = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
+    return genres;
+}
+
+const allPCGamesGenres = async (parent, args, ctx, info) => {
+    const fields = ctx.requestedFields.getFields(info, {})
+    const sql = `SELECT ${fields.toString()} FROM "total_of_pc_genres" ORDER BY genre ASC`
+    const genres = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
+    return genres;
+}
+
 const getCategory = async (parent, { id }, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, {})
     const sql = `SELECT ${fields.toString()} FROM "Category" WHERE id = '${id}'`
@@ -507,7 +521,7 @@ export {
     hello, allCategories, allWiiUGames, allWiiGames, allGameCubeGames, allVirtualConsoleGames,
     allToBuyGames, allOriginGames, allUbisoftGames, allDLCs, allSteamGames,
     allConsoleGames, allPCGames, allGames, allGamesWithDLCs, allGamesFinished, allGamesFinishedDetailed, allGamesUnfinished,
-    allGamesUnfinishedDetailed,
+    allGamesUnfinishedDetailed, allConsoleGamesGenres, allPCGamesGenres,
     getCategory, getDLCGame, getWiiUGame, getWiiGame, getGameCubeGame,
     getVirtualConsoleGame, getToBuyGame, getOriginGame, getUbisoftGame,
     getDLC, getConsoleFinishedGames, getPCFinishedGames, getStatisticsOfTotalGames,

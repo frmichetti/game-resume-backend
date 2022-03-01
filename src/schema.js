@@ -234,6 +234,10 @@ const typeDefs = `
     labels: [String]
     values: [Float]
     dataset: String
+  }
+  type GenreData {
+    genre: String
+    total: Int
   }  
   type Query {    
     hello: String
@@ -255,6 +259,8 @@ const typeDefs = `
     allGamesFinishedDetailed: [Game!]!
     allGamesUnfinished: [Game!]!
     allGamesUnfinishedDetailed: [Game!]!
+    allConsoleGamesGenres: [GenreData!]!
+    allPCGamesGenres: [GenreData!]!
     getCategory(id: ID!) : Category
     getDLCGame(id: ID!) : DLC
     getWiiUGame(app_id: String!): WiiUGame
@@ -328,6 +334,8 @@ const _resolvers = {
     allGamesFinishedDetailed: resolvers.allGamesFinishedDetailed,
     allGamesUnfinished: resolvers.allGamesUnfinished,
     allGamesUnfinishedDetailed: resolvers.allGamesUnfinishedDetailed,
+    allConsoleGamesGenres: resolvers.allConsoleGamesGenres,
+    allPCGamesGenres: resolvers.allPCGamesGenres,
     getCategory: resolvers.getCategory,
     getDLCGame: resolvers.getDLCGame,
     getWiiUGame: resolvers.getWiiUGame,
