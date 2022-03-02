@@ -475,6 +475,18 @@ const searchGame = async (req, res) => {
     }
 }
 
+const genreSearchGame = async (req, res) => {
+    const q = req.query.query;
+    try {
+        const games = await db.sequelize.query(`select *, which_system(app_id) AS system from "all_games_genres_aggregate" WHERE genre = '${q}' ORDER BY title ASC;`, { type: QueryTypes.SELECT });
+
+        res.send({ games })
+    } catch (error) {
+        console.error(error)
+        res.status(400).send({ msg: error.message || error.process.message }).end();
+    }
+}
+
 const updateGame = async (req, res) => {
 
     const tableName = req.body.table;
@@ -734,6 +746,6 @@ export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, createGames, finishDLC,
-    finishGame, searchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls,
+    finishGame, searchGame, genreSearchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls,
     createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame
 }

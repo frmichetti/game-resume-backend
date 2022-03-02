@@ -261,6 +261,7 @@ const typeDefs = `
     allGamesUnfinishedDetailed: [Game!]!
     allConsoleGamesGenres: [GenreData!]!
     allPCGamesGenres: [GenreData!]!
+    allGamesGenresAggregate: [GenreData!]!
     getCategory(id: ID!) : Category
     getDLCGame(id: ID!) : DLC
     getWiiUGame(app_id: String!): WiiUGame
@@ -336,6 +337,7 @@ const _resolvers = {
     allGamesUnfinishedDetailed: resolvers.allGamesUnfinishedDetailed,
     allConsoleGamesGenres: resolvers.allConsoleGamesGenres,
     allPCGamesGenres: resolvers.allPCGamesGenres,
+    allGamesGenresAggregate: resolvers.allGamesGenresAggregate,
     getCategory: resolvers.getCategory,
     getDLCGame: resolvers.getDLCGame,
     getWiiUGame: resolvers.getWiiUGame,
