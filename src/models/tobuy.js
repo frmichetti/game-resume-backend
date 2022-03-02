@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     finished: DataTypes.BOOLEAN,
     finished_at: DataTypes.DATE,
     genuine: DataTypes.BOOLEAN,
-    system: DataTypes.STRING
+    system: DataTypes.STRING,
+    magnetic_link: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'ToBuy',
