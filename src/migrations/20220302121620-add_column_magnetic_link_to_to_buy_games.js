@@ -6,7 +6,7 @@ module.exports = {
     await queryInterface.addColumn(
       'ToBuy',
       'magnetic_link',
-     Sequelize.STRING
+     Sequelize.TEXT
     );
   },
 

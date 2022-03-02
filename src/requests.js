@@ -351,7 +351,7 @@ const showPlayingGames = async (req, res) => {
 
 const createGames = async (req, res) => {
     const tableName = req.body.table;
-    let table, title, finished, fisical_disc, app_id, system, platform, genuine, collection;
+    let table, title, finished, fisical_disc, app_id, system, platform, genuine, collection, magnetic_link;
 
     table = selectTable(tableName)
 
@@ -363,6 +363,7 @@ const createGames = async (req, res) => {
     platform = req.body.platform;
     genuine = req.body.genuine;
     collection = req.body.collection;
+    magnetic_link = req.body.magnetic_link;
 
     if (table == null) {
         const errorMessage = "Table does not match";
@@ -384,7 +385,7 @@ const createGames = async (req, res) => {
         } else if (tableName === 'virtualconsole') {
             q = `INSERT INTO "${table}" (app_id,title,finished,genuine,platform,system) VALUES ('${app_id}','${title}',${finished},'${genuine}','${platform}','${system}') RETURNING *`;
         } else if (tableName === 'tobuy') {
-            q = `INSERT INTO "${table}" (title,finished,system) VALUES ('${title}',${finished},'${system}') RETURNING *`;
+            q = `INSERT INTO "${table}" (title,finished,system,magnetic_link) VALUES ('${title}',${finished},'${system}','${magnetic_link}') RETURNING *`;
         } else if (tableName === 'playing') {
             q = `INSERT INTO "${table}" (app_id, title, started_at) VALUES ('${app_id}','${title}','${now()}') RETURNING *`
         }
@@ -477,15 +478,16 @@ const searchGame = async (req, res) => {
 const updateGame = async (req, res) => {
 
     const tableName = req.body.table;
-    let table, id, app_id, title, finished, fisical_disc, system, platform;
+    let table, id, app_id, title, finished, fisical_disc, system, platform, magnetic_link;
 
     id = req.body.id;
     app_id = req.body.app_id;
     title = req.body.title;
     finished = req.body.finished;
     fisical_disc = req.body.fisical_disc;
-    system = req.body.system
-    platform = req.body.platform
+    system = req.body.system;
+    platform = req.body.platform;
+    magnetic_link = req.body.magnetic_link;
 
 
     table = selectTable(tableName)
@@ -514,7 +516,7 @@ const updateGame = async (req, res) => {
         } else if (table === 'VirtualConsole') {
             q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, system = '${system}', platform = '${platform}' WHERE id = ${id} RETURNING *`;
         } else if (table === 'ToBuy') {
-            q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, system = '${system}' WHERE id = ${id} RETURNING *`;
+            q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, system = '${system}', magnetic_link = '${magnetic_link}' WHERE id = ${id} RETURNING *`;
         } else {
             q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished} WHERE id = ${id} RETURNING *`;
         }

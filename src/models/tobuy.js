@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     finished_at: DataTypes.DATE,
     genuine: DataTypes.BOOLEAN,
     system: DataTypes.STRING,
-    magnetic_link: DataTypes.STRING
+    magnetic_link: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'ToBuy',
