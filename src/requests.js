@@ -407,9 +407,12 @@ const finishDLC = async (req, res) => {
     const { id, app_id, finished } = req.body
     let q = `UPDATE "DLC" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} AND app_id = '${app_id}' RETURNING *`;
     try {
-        const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });
+        const update = await db.sequelize.query(q, { type: QueryTypes.UPDATE });
+        
+        q = `SELECT * FROM "DLC" WHERE app_id = '${app_id}' ORDER BY title ASC`
+        const result = await db.sequelize.query(q, { type: QueryTypes.SELECT });
 
-        res.send({ dlcs: result[0] });
+        res.send({ dlcs: result });
     } catch (error) {
         console.error(error)
         res.status(400).send({ msg: error.message || error.process.message }).end();
