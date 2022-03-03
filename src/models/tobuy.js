@@ -16,8 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   ToBuy.init({
     title: DataTypes.STRING,
     finished: DataTypes.BOOLEAN,
-    finished_at: DataTypes.DATE,
-    genuine: DataTypes.BOOLEAN,
+    finished_at: DataTypes.DATE,    
     system: DataTypes.STRING,
     magnetic_link: DataTypes.TEXT
   }, {
