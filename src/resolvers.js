@@ -262,7 +262,7 @@ const getStatisticsOfTotalFinishedGames = async (parent, { idx }, ctx, info) => 
 
 const getTotalChart = async (parent, args, ctx, info) => {
     try {
-        const stats = await ctx.orm.sequelize.query(`SELECT * FROM "total_of_games_by_system"`,{ type: QueryTypes.SELECT });
+        const stats = await ctx.orm.sequelize.query(`SELECT system, sum(total) AS total FROM "total_of_games_by_system" GROUP BY system ORDER BY system;`,{ type: QueryTypes.SELECT });
         const labels = stats.map(i => i.system)
         const values = stats.map(i => i.total)
         const dataset = "Total of Games"
