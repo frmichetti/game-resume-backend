@@ -30,18 +30,90 @@ UNION
 SELECT app_id, id, title, finished, finished_at, false, platform, "system", genuine FROM "VirtualConsole";
 
 CREATE or REPLACE VIEW all_games_list_api AS
-SELECT app_id, id, title, finished, finished_at, false AS collection, 'PC' AS platform, 'ORIGIN' AS "system", true AS "genuine" FROM "Origin"
+SELECT "Origin".app_id,
+       "Origin".id,
+       "Origin".title,
+       "Origin".finished,
+       "Origin".finished_at,
+       false          AS collection,
+       'PC'::text     AS platform,
+       'ORIGIN'::text AS system,
+       true           AS genuine
+FROM "Origin"
 UNION
-SELECT app_id, id, title, finished, finished_at, false AS collection, 'PC' AS platform, 'UBISOFT' AS "system", true AS "genuine" FROM "Ubisoft"
+SELECT "Ubisoft".app_id,
+       "Ubisoft".id,
+       "Ubisoft".title,
+       "Ubisoft".finished,
+       "Ubisoft".finished_at,
+       false           AS collection,
+       'PC'::text      AS platform,
+       'UBISOFT'::text AS system,
+       true            AS genuine
+FROM "Ubisoft"
 UNION
-SELECT app_id, id, title, finished, finished_at, collection, 'PC' AS platform, 'STEAM' AS "system", true AS "genuine" FROM "Steam"
+SELECT "Steam".app_id,
+       "Steam".id,
+       "Steam".title,
+       "Steam".finished,
+       "Steam".finished_at,
+       "Steam".collection,
+       'PC'::text    AS platform,
+       'STEAM'::text AS system,
+       true          AS genuine
+FROM "Steam" WHERE collection = false
 UNION
-SELECT app_id, id, title, finished, finished_at, collection, 'CONSOLE' AS platform, 'GAMECUBE' AS "system", genuine FROM "GameCube"
+SELECT "GameCube".app_id,
+       "GameCube".id,
+       "GameCube".title,
+       "GameCube".finished,
+       "GameCube".finished_at,
+       "GameCube".collection,
+       'CONSOLE'::text  AS platform,
+       'GAMECUBE'::text AS system,
+       "GameCube".genuine
+FROM "GameCube" WHERE collection = false
 UNION
-SELECT app_id, id, title, finished, finished_at, collection, 'CONSOLE' AS platform, 'WII' AS "system", genuine FROM "Wii"
+SELECT "Wii".app_id,
+       "Wii".id,
+       "Wii".title,
+       "Wii".finished,
+       "Wii".finished_at,
+       "Wii".collection,
+       'CONSOLE'::text AS platform,
+       'WII'::text     AS system,
+       "Wii".genuine
+FROM "Wii" WHERE collection = false
 UNION
-SELECT app_id, id, title, finished, finished_at, collection, 'CONSOLE' AS platform, 'WIIU' AS "system", genuine FROM "WiiU"
-UNION 
-SELECT app_id, id, title, finished, finished_at, false, platform, "system", genuine FROM "VirtualConsole"
+SELECT "WiiU".app_id,
+       "WiiU".id,
+       "WiiU".title,
+       "WiiU".finished,
+       "WiiU".finished_at,
+       "WiiU".collection,
+       'CONSOLE'::text AS platform,
+       'WIIU'::text    AS system,
+       "WiiU".genuine
+FROM "WiiU" WHERE collection = false
 UNION
-SELECT app_id, id, title, finished, finished_at, collection, '-' AS platform, '-' AS "system", null AS genuine FROM "DLC";
+SELECT "VirtualConsole".app_id,
+       "VirtualConsole".id,
+       "VirtualConsole".title,
+       "VirtualConsole".finished,
+       "VirtualConsole".finished_at,
+       false AS collection,
+       "VirtualConsole".platform,
+       "VirtualConsole".system,
+       "VirtualConsole".genuine
+FROM "VirtualConsole"
+UNION
+SELECT "DLC".app_id,
+       "DLC".id,
+       "DLC".title,
+       "DLC".finished,
+       "DLC".finished_at,
+       "DLC".collection,
+       '-'::text     AS platform,
+       '-'::text     AS system,
+       NULL::boolean AS genuine
+FROM "DLC" WHERE collection = true ORDER BY title
