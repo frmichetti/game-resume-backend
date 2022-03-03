@@ -262,7 +262,7 @@ const getStatisticsOfTotalFinishedGames = async (parent, { idx }, ctx, info) => 
 
 const getTotalChart = async (parent, args, ctx, info) => {
     try {
-        const stats = await ctx.orm.sequelize.query(`SELECT * FROM "total_of_games_by_system_percentual"`,{ type: QueryTypes.SELECT });
+        const stats = await ctx.orm.sequelize.query(`SELECT * FROM "total_of_games_by_system"`,{ type: QueryTypes.SELECT });
         const labels = stats.map(i => i.system)
         const values = stats.map(i => i.total)
         const dataset = "Total of Games"
@@ -275,7 +275,7 @@ const getTotalChart = async (parent, args, ctx, info) => {
 
 const getFinishedChart = async (parent, args, ctx, info) => {
     try {
-        const stats = await ctx.orm.sequelize.query(`SELECT * FROM "total_of_finished_games_by_system_percentual"`,{ type: QueryTypes.SELECT });
+        const stats = await ctx.orm.sequelize.query(`SELECT * FROM "total_of_finished_games_by_system"`,{ type: QueryTypes.SELECT });
         const labels = stats.map(i => i.system)
         const values = stats.map(i => i.total)
         const dataset = "Total of Finished Games"
