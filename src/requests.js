@@ -387,16 +387,32 @@ const createGames = async (req, res) => {
         let q = "";
 
         if (tableName === 'wii' || tableName === 'wiiu' || tableName === 'gamecube') {
-            q = `INSERT INTO "${table}" (app_id,title,finished,collection,genuine,fisical_disc) VALUES ('${app_id}','${title}',${finished},${collection},${genuine},${fisical_disc}) RETURNING *`;
+            if(finished){
+                q = `INSERT INTO "${table}" (app_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES ('${app_id}','${title}',${finished},'${now()}',${collection},${genuine},${fisical_disc}) RETURNING *`;
+            }else {
+                q = `INSERT INTO "${table}" (app_id,title,finished,collection,genuine,fisical_disc) VALUES ('${app_id}','${title}',${finished},${collection},${genuine},${fisical_disc}) RETURNING *`;
+            }            
         } else if (tableName === 'virtualconsole') {
-            q = `INSERT INTO "${table}" (app_id,title,finished,genuine,platform,system) VALUES ('${app_id}','${title}',${finished},'${genuine}','${platform}','${system}') RETURNING *`;
+            if(finished){
+                q = `INSERT INTO "${table}" (app_id,title,finished,finished_at,genuine,platform,system) VALUES ('${app_id}','${title}',${finished},'${now()}','${genuine}','${platform}','${system}') RETURNING *`;
+            }else{
+                q = `INSERT INTO "${table}" (app_id,title,finished,genuine,platform,system) VALUES ('${app_id}','${title}',${finished},'${genuine}','${platform}','${system}') RETURNING *`;
+            }            
         } else if (tableName === 'tobuy') {
-            q = `INSERT INTO "${table}" (title,finished,system,magnetic_link) VALUES ('${title}',${finished},'${system}','${magnetic_link}') RETURNING *`;
+            if(finished){
+                q = `INSERT INTO "${table}" (title,finished,finished_at,system,magnetic_link) VALUES ('${title}',${finished},'${now()}','${system}','${magnetic_link}') RETURNING *`;
+            }else {
+                q = `INSERT INTO "${table}" (title,finished,system,magnetic_link) VALUES ('${title}',${finished},'${system}','${magnetic_link}') RETURNING *`;
+            }            
         } else if (tableName === 'playing') {
             q = `INSERT INTO "${table}" (app_id, title, started_at) VALUES ('${app_id}','${title}','${now()}') RETURNING *`
         }
         else {
-            q = `INSERT INTO "${table}" (app_id,title,finished) VALUES ('${app_id}','${title}',${finished}) RETURNING *`;
+            if(finished){
+                q = `INSERT INTO "${table}" (app_id,title,finished,finished_at) VALUES ('${app_id}','${title}',${finished},'${now()}') RETURNING *`;
+            }else{
+                q = `INSERT INTO "${table}" (app_id,title,finished) VALUES ('${app_id}','${title}',${finished}) RETURNING *`;
+            }            
         }
 
         try {
