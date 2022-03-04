@@ -454,11 +454,26 @@ const finishGame = async (req, res) => {
         let q = "";
 
         if (tableName === 'steam' || tableName === 'Steam') {
-            q = `UPDATE "Steam" SET finished = ${finished}, finished_at = '${now()}' WHERE app_id = '${app_id}' RETURNING *`;
+            if(finished){
+                q = `UPDATE "Steam" SET finished = ${finished}, finished_at = '${now()}' WHERE app_id = '${app_id}' RETURNING *`;
+            }else{
+                q = `UPDATE "Steam" SET finished = ${finished}, finished_at = null WHERE app_id = '${app_id}' RETURNING *`;
+            }
+            
         } else if (tableName === 'playing' || tableName === 'Playing') {
-            q = `UPDATE "Playing" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
+            if(finished){
+                q = `UPDATE "Playing" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
+            }else {
+                q = `UPDATE "Playing" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
+            }
+            
         } else {
-            q = `UPDATE "${table}" SET finished = ${finished}, finished_at = '${now()}' WHERE title = '${title}' RETURNING *`;
+            if(finished){
+                q = `UPDATE "${table}" SET finished = ${finished}, finished_at = '${now()}' WHERE title = '${title}' RETURNING *`;
+            }else {
+                q = `UPDATE "${table}" SET finished = ${finished}, finished_at = null WHERE title = '${title}' RETURNING *`;
+            }
+            
         }
 
         try {
