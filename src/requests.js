@@ -548,13 +548,33 @@ const updateGame = async (req, res) => {
         let q = "";
 
         if (table === 'WiiU' || table === 'Wii' || table === 'GameCube') {
-            q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, fisical_disc = ${fisical_disc} WHERE id = ${id} RETURNING *`;
+            if(finished){
+                q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, finished_at = '${now()}', fisical_disc = ${fisical_disc} WHERE id = ${id} RETURNING *`;
+            }else{
+                q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, finished_at = null, fisical_disc = ${fisical_disc} WHERE id = ${id} RETURNING *`;
+            }
+            
         } else if (table === 'VirtualConsole') {
-            q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, system = '${system}', platform = '${platform}' WHERE id = ${id} RETURNING *`;
+            if(finished){
+                q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, finished_at = '${now()}', system = '${system}', platform = '${platform}' WHERE id = ${id} RETURNING *`;
+            }else{
+                q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, finished_at = null, system = '${system}', platform = '${platform}' WHERE id = ${id} RETURNING *`;
+            }
+            
         } else if (table === 'ToBuy') {
-            q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, system = '${system}', magnetic_link = '${magnetic_link}' WHERE id = ${id} RETURNING *`;
+            if(finished){
+                q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, finished_at = '${now()}', system = '${system}', magnetic_link = '${magnetic_link}' WHERE id = ${id} RETURNING *`;
+            }else{
+                q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, finished_at = null, system = '${system}', magnetic_link = '${magnetic_link}' WHERE id = ${id} RETURNING *`;
+            }
+            
         } else {
-            q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished} WHERE id = ${id} RETURNING *`;
+            if(finished) {
+                q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
+            }else{
+                q = `UPDATE "${table}" SET app_id = '${app_id}',title = '${title}', finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
+            }
+            
         }
 
         try {
