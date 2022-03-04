@@ -30,7 +30,7 @@ UNION
 SELECT app_id, id, title, finished, finished_at, false, platform, "system", genuine FROM "VirtualConsole";
 
 CREATE or REPLACE VIEW all_games_list_api AS
-SELECT "Origin".app_id,
+SELECT * FROM (SELECT "Origin".app_id,
        "Origin".id,
        "Origin".title,
        "Origin".finished,
@@ -116,4 +116,4 @@ SELECT "DLC".app_id,
        '-'::text     AS platform,
        '-'::text     AS system,
        NULL::boolean AS genuine
-FROM "DLC" WHERE collection = true ORDER BY title
+FROM "DLC" WHERE collection = true) tmp ORDER BY title;

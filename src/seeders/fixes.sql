@@ -6,3 +6,5 @@ INSERT INTO "DLC" (app_id,title,finished) VALUES ('ALZJ01','The Champions Ballad
 INSERT INTO "DLC" (app_id,title,finished) VALUES ('ALZJ01','The Master Trials',true);
 INSERT INTO "DLC" (app_id,title,finished) VALUES ('RHDE8P','The House of the Dead 2',true);
 INSERT INTO "DLC" (app_id,title,finished) VALUES ('RHDE8P','The House of the Dead 3',true);
+UPDATE "Wii" SET collection = true WHERE app_id = 'RHDE8P';
+UPDATE "DLC" SET collection = true WHERE app_id = 'RHDE8P';
