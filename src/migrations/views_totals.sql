@@ -5,7 +5,7 @@ GROUP BY all_games.system, finished
 HAVING all_games.finished = true;
 
 CREATE or REPLACE VIEW total_of_games_by_system AS
-SELECT "system", Count(*) AS total
+SELECT "system", finished, Count(*) AS total
 FROM all_games
 GROUP BY all_games.system, finished;
 
