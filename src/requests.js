@@ -361,7 +361,7 @@ const createGames = async (req, res) => {
 
     table = selectTable(tableName)
 
-    title = req.body.title;
+    title = req.body.title.replaceAll("'","''");
     finished = req.body.finished ? req.body.finished : false;
     fisical_disc = req.body.fisical_disc ? req.body.fisical_disc : false;
     app_id = req.body.app_id;
@@ -534,7 +534,7 @@ const updateGame = async (req, res) => {
 
     id = req.body.id;
     app_id = req.body.app_id;
-    title = req.body.title;
+    title = req.body.title.replaceAll("'","''");
     finished = req.body.finished;
     fisical_disc = req.body.fisical_disc;
     system = req.body.system;
