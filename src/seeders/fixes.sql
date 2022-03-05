@@ -11,3 +11,4 @@ UPDATE "DLC" SET collection = true WHERE app_id = 'RHDE8P';
 UPDATE "DLC" set app_id = '108710' WHERE app_id = '202750';
 UPDATE "DLC" set app_id = '212480' WHERE app_id = '229660';
 UPDATE "DLC" set finished_at = now() WHERE finished = true and finished_at is null;
+UPDATE "ToBuy" SET finished_at = '2022-03-05 19:11:55.377000 +00:00' WHERE id = 9;
