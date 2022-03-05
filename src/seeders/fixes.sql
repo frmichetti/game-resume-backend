@@ -10,3 +10,4 @@ UPDATE "Wii" SET collection = true WHERE app_id = 'RHDE8P';
 UPDATE "DLC" SET collection = true WHERE app_id = 'RHDE8P';
 UPDATE "DLC" set app_id = '108710' WHERE app_id = '202750';
 UPDATE "DLC" set app_id = '212480' WHERE app_id = '229660';
+UPDATE "DLC" set finished_at = now() WHERE finished = true and finished_at is null;
