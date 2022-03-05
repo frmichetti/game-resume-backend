@@ -637,7 +637,7 @@ const deleteGame = async (req, res) => {
         }
     } else {
         let q = "";
-        q = `DELETE FROM "${table}" WHERE title = '${title}';`;
+        q = `DELETE FROM "${table}" WHERE id = ${id};`;
 
         try {
             await db.sequelize.query(q, { type: QueryTypes.DELETE });
