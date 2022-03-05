@@ -106,6 +106,9 @@ const showStatistics = async (req, res) => {
         case 'totals':
             q = `SELECT * FROM "total_games_for_dashboard"`
             break;
+        case 'finished_over_system':
+            q = `SELECT * FROM "total_of_finished_by_system_percentual_over_system"`
+            break;    
         default:
             q = 'SELECT 1'
             break;
