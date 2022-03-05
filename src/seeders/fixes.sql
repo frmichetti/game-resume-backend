@@ -8,3 +8,5 @@ INSERT INTO "DLC" (app_id,title,finished) VALUES ('RHDE8P','The House of the Dea
 INSERT INTO "DLC" (app_id,title,finished) VALUES ('RHDE8P','The House of the Dead 3',true);
 UPDATE "Wii" SET collection = true WHERE app_id = 'RHDE8P';
 UPDATE "DLC" SET collection = true WHERE app_id = 'RHDE8P';
+UPDATE "DLC" set app_id = '108710' WHERE app_id = '202750';
+UPDATE "DLC" set app_id = '212480' WHERE app_id = '229660';
