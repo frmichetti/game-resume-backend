@@ -5,6 +5,8 @@
     "database": "mgr_dev",
     "host": "127.0.0.1",
     "dialect": "postgres",
+    "migrationStorage": "sequelize",
+    "seederStorage": "sequelize",
     "define": {
       "timestamps": true,
       "underscored": true
@@ -16,6 +18,8 @@
     "database": "mgr_test",
     "host": "127.0.0.1",
     "dialect": "postgres",
+    "migrationStorage": "sequelize",
+    "seederStorage": "sequelize",
     "define": {
       "timestamps": true,
       "underscored": true
@@ -27,6 +31,8 @@
     "database": "mgr_prod",
     "host": "127.0.0.1",
     "dialect": "postgres",
+    "migrationStorage": "sequelize",
+    "seederStorage": "sequelize",
     "define": {
       "timestamps": true,
       "underscored": true
