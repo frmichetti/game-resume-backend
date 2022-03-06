@@ -805,10 +805,17 @@ const showDLCsOfGame = async (req, res, next) => {
     res.send({ dlcs })
 }
 
+const showGame = async (req, res, next) => {
+    const { app_id } = req.params;
+    const game = await db.sequelize.query(`SELECT * FROM "all_games" WHERE app_id = '${app_id}'`, { type: QueryTypes.SELECT });    
+    res.send({ game: game[0] })
+}
+
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
-    showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, createGames, finishDLC,
+    showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames,
+    showGame, createGames, finishDLC,
     finishGame, searchGame, genreSearchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls,
     createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame
 }

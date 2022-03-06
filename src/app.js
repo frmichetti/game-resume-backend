@@ -50,6 +50,7 @@ app.get('/', requests.showWelcome);
 app.get('/test', requests.showTest);
 app.get('/statistics', requests.showStatistics);
 app.get('/categories', requests.showCategories);
+app.get('/game/:app_id', requests.showGame);
 app.get('/game/:app_id/categories', requests.showCategoriesOfGame);
 app.get('/game/:app_id/dlcs', requests.showDLCsOfGame);
 app.get('/origin', requests.showOriginGames);
