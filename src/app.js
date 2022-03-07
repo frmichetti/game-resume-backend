@@ -27,6 +27,18 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(json2xls.middleware);
 
+function errorHandler(err, req, res, next) {
+  res.status(500);
+  res.render('error', { error: err });
+}
+
+app.use(errorHandler);
+
+process.on('uncaughtException', function (error) {
+  console.log(error.stack);
+  console.log("Node NOT Exiting...");
+});
+
 app.use('/graphql',
   (req, res, next) => {
     req["context"] = {}      
@@ -53,6 +65,7 @@ app.get('/categories', requests.showCategories);
 app.get('/game/:app_id', requests.showGame);
 app.get('/game/:app_id/categories', requests.showCategoriesOfGame);
 app.get('/game/:app_id/dlcs', requests.showDLCsOfGame);
+app.get('/game/:app_id/codes', requests.showCodesOfGame);
 app.get('/origin', requests.showOriginGames);
 app.get('/ubisoft', requests.showUbisoftGames);
 app.get('/steam', requests.showSteamGames);
@@ -78,12 +91,15 @@ app.post('/categories', requests.createCategory);
 app.post('/game/:app_id/categories', requests.addCategoriesToGame);
 app.post('/dlc_finished', requests.finishDLC);
 app.post('/finished', requests.finishGame);
+app.post('/code', requests.saveCode);
+
 app.get('/search', requests.searchGame);
 app.get('/genre_search', requests.genreSearchGame);
 
 app.put('/update', requests.updateGame);
 app.put('/categories', requests.updateCategory);
 app.put('/game/:app_id/categories', requests.updateCategoriesToGame);
+app.put('/code', requests.updateCode);
 
 app.delete('/remove', requests.deleteGame);
 

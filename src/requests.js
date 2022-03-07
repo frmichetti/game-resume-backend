@@ -808,14 +808,34 @@ const showDLCsOfGame = async (req, res, next) => {
 const showGame = async (req, res, next) => {
     const { app_id } = req.params;
     const game = await db.sequelize.query(`SELECT * FROM "all_games" WHERE app_id = '${app_id}'`, { type: QueryTypes.SELECT });    
-    res.send({ game: game[0] })
+    const resp = (game[0]) ? { game: game[0] } : {game: null}
+    res.send(resp)
+}
+
+const showCodesOfGame = async (req, res, next) => {
+    const { app_id } = req.params;
+    const code = await db.CodeAndTip.findOne({ where: { app_id } })    
+    res.send({ code })
+}
+
+const saveCode = async (req, res, next) => {
+    const { app_id, content } = req.body;
+    const code = await db.CodeAndTip.create({app_id,content});
+    res.send({code});
+}
+
+const updateCode = async (req, res, next) => {
+    const { id, app_id, content } = req.body;
+    const result = await db.CodeAndTip.update({ app_id,content }, { where: { id } });
+    const code = await db.CodeAndTip.findOne({ where: { id } })
+    res.send({code});    
 }
 
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames,
-    showGame, createGames, finishDLC,
+    showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode,
     finishGame, searchGame, genreSearchGame, updateGame, deleteGame, exportToCsv, exportToPDF, showReport, exportToXls,
     createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame
 }
