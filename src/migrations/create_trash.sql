@@ -5,7 +5,7 @@ CREATE TABLE "Trash" (
     deleted_at timestamp default now() NOT NULL
 );
 
-
+-- Trigger AFTER DELETE
 CREATE OR REPLACE FUNCTION aft_delete()
   RETURNS trigger AS
 $$
@@ -17,6 +17,7 @@ END;
 $$
 LANGUAGE 'plpgsql';
 
+-- Associate Trigger on Tables
 CREATE TRIGGER delete_entity
   AFTER DELETE
   ON "Category"
@@ -186,4 +187,91 @@ FROM   "Trash" t
      , jsonb_to_record(t.data)
          d(id int, app_id varchar, title varchar, finished boolean, finished_at timestamp, collection boolean, genuine boolean, fisical_disc boolean, created_at timestamp, updated_at timestamp)
 WHERE table_name = 'WiiU';
+
+-- Function to Restore itens from "TRASH"
+create function restore(t_id int) returns boolean
+    language plpgsql
+AS $$
+declare
+       cid int;
+       ctable_name varchar;
+       cdata jsonb;
+    begin
+        select id, table_name, data INTO cid, ctable_name, cdata from "Trash" where id = t_id;
+
+        CASE
+        WHEN ctable_name = 'Category' THEN
+            insert into "Category" (id, slugname, name, created_at, updated_at) VALUES
+                ((cdata->'id')::int,(cdata->>'slugname'), (cdata->>'name'),
+                (cdata->>'created_at')::timestamp,
+                (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'CodeAndTip' THEN
+            insert into "CodeAndTip" (id, app_id, content, created_at, updated_at) values
+                ((cdata->'id')::int,(cdata->>'app_id'),(cdata->>'content'),
+                (cdata->>'created_at')::timestamp,
+                (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'DLC' THEN
+            insert into "DLC" (id, app_id, title, finished, finished_at, collection, created_at, updated_at) VALUES
+                ((cdata->'id')::int, (cdata->>'app_id'), (cdata->>'title'), (cdata->'finished')::boolean,
+                (cdata->>'finished_at')::timestamp, (cdata->'collection')::boolean,
+                (cdata->>'created_at')::timestamp,
+                (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'GameCube' THEN
+            insert into "GameCube" (id, app_id, title, finished, finished_at, collection, genuine, fisical_disc, created_at, updated_at) VALUES
+                ((cdata->'id')::int, (cdata->>'app_id'), (cdata->>'title'), (cdata->'finished')::boolean,
+                (cdata->>'finished_at')::timestamp, (cdata->'collection')::boolean, (cdata->'genuine')::boolean, (cdata->'fisical_disc')::boolean,
+                (cdata->>'created_at')::timestamp,
+                (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'Origin' THEN
+            insert into "Origin" (id, app_id, title, finished, finished_at, created_at, updated_at) VALUES
+                ((cdata->'id')::int, (cdata->>'app_id'), (cdata->>'title'), (cdata->'finished')::boolean,
+                (cdata->>'finished_at')::timestamp,
+                (cdata->>'created_at')::timestamp,
+                (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'Playing' THEN
+            insert into "Playing" (id, app_id, started_at, finished, finished_at, created_at, updated_at, title) VALUES
+            ((cdata->'id')::int, (cdata->>'app_id'),(cdata->>'started_at')::timestamp,(cdata->'finished')::boolean,
+             (cdata->>'finished_at')::timestamp,
+             (cdata->>'created_at')::timestamp,
+             (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'Steam' THEN
+            insert into "Steam" (id, app_id, title, finished, finished_at, collection, created_at, updated_at) VALUES
+                ((cdata->'id')::int, (cdata->>'app_id'), (cdata->>'title'), (cdata->'finished')::boolean,
+                (cdata->>'finished_at')::timestamp, (cdata->'collection')::boolean,
+                (cdata->>'created_at')::timestamp,
+                (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'ToBuy' THEN
+            insert into "ToBuy" (id, title, finished, finished_at, system, created_at, updated_at, magnetic_link) VALUES
+            ((cdata->'id')::int, (cdata->>'title'), (cdata->'finished')::boolean, (cdata->>'finished_at')::timestamp,
+             (cdata->>'system'),(cdata->>'created_at')::timestamp, (cdata->>'updated_at')::timestamp, (cdata->>'magnetic_link'));
+        WHEN ctable_name = 'Ubisoft' THEN
+            insert into "Ubisoft" (id, app_id, title, finished, finished_at, created_at, updated_at) VALUES
+                ((cdata->'id')::int, (cdata->>'app_id'), (cdata->>'title'), (cdata->'finished')::boolean,
+                (cdata->>'finished_at')::timestamp,
+                (cdata->>'created_at')::timestamp,
+                (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'VirtualConsole' THEN
+            insert into "VirtualConsole" (id, app_id, title, finished, finished_at, genuine, platform, system, created_at, updated_at) VALUES
+            ((cdata->'id')::int, (cdata->>'app_id'), (cdata->>'title'), (cdata->'finished')::boolean,
+             (cdata->>'finished_at')::timestamp, (cdata->'genuine')::boolean, (cdata->>'platform'), (cdata->>'system'),
+             (cdata->>'created_at')::timestamp, (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'Wii' THEN
+            insert into "Wii" (id, app_id, title, finished, finished_at, collection, genuine, fisical_disc, created_at, updated_at) VALUES
+                ((cdata->'id')::int, (cdata->>'app_id'), (cdata->>'title'), (cdata->'finished')::boolean,
+                (cdata->>'finished_at')::timestamp, (cdata->'collection')::boolean, (cdata->'genuine')::boolean, (cdata->'fisical_disc')::boolean,
+                (cdata->>'created_at')::timestamp,
+                (cdata->>'updated_at')::timestamp);
+        WHEN ctable_name = 'WiiU' THEN
+            insert into "WiiU" (id, app_id, title, finished, finished_at, collection, genuine, fisical_disc, created_at, updated_at) VALUES
+                ((cdata->'id')::int, (cdata->>'app_id'), (cdata->>'title'), (cdata->'finished')::boolean,
+                (cdata->>'finished_at')::timestamp, (cdata->'collection')::boolean, (cdata->'genuine')::boolean, (cdata->'fisical_disc')::boolean,
+                (cdata->>'created_at')::timestamp,
+                (cdata->>'updated_at')::timestamp);
+        END CASE;
+
+        delete from "Trash" where id = t_id;
+
+          return true;
+        end;
+$$;
 
