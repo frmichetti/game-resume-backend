@@ -189,14 +189,19 @@ FROM   "Trash" t
 WHERE table_name = 'WiiU';
 
 -- Function to Restore itens from "TRASH"
-create function restore(t_id int) returns boolean
+create OR REPLACE function restore(t_id int) returns boolean
     language plpgsql
 AS $$
 declare
        cid int;
        ctable_name varchar;
        cdata jsonb;
-    begin
+    begin        
+
+        IF NOT exists(select 1 from "Trash" where id = t_id) THEN
+            return false;
+        END IF;
+
         select id, table_name, data INTO cid, ctable_name, cdata from "Trash" where id = t_id;
 
         CASE
@@ -267,6 +272,7 @@ declare
                 (cdata->>'finished_at')::timestamp, (cdata->'collection')::boolean, (cdata->'genuine')::boolean, (cdata->'fisical_disc')::boolean,
                 (cdata->>'created_at')::timestamp,
                 (cdata->>'updated_at')::timestamp);
+        ELSE return false;
         END CASE;
 
         delete from "Trash" where id = t_id;

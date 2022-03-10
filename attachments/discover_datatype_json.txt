@@ -1,0 +1,6 @@
+(SELECT
+    json_data.key,
+    jsonb_typeof(json_data.value) AS json_data_type
+FROM "Trash", jsonb_each("Trash".data) AS json_data WHERE table_name='WiiU'
+GROUP BY 1, 2
+ORDER BY 1, 2);
