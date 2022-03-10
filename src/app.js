@@ -34,10 +34,10 @@ function errorHandler(err, req, res, next) {
 
 app.use(errorHandler);
 
-process.on('uncaughtException', function (error) {
+/* process.on('uncaughtException', function (error) {
   console.log(error.stack);
   console.log("Node NOT Exiting...");
-});
+}); */
 
 app.use('/graphql',
   (req, res, next) => {
@@ -85,6 +85,9 @@ app.get('/report', requests.showReport);
 app.get('/csv', requests.exportToCsv);
 app.get('/pdf', requests.exportToPDF);
 app.get('/xls', requests.exportToXls)
+app.get('/search', requests.searchGame);
+app.get('/genre_search', requests.genreSearchGame);
+app.get('/trash', requests.showTrash);
 
 app.post('/create', requests.createGames);
 app.post('/categories', requests.createCategory);
@@ -92,9 +95,7 @@ app.post('/game/:app_id/categories', requests.addCategoriesToGame);
 app.post('/dlc_finished', requests.finishDLC);
 app.post('/finished', requests.finishGame);
 app.post('/code', requests.saveCode);
-
-app.get('/search', requests.searchGame);
-app.get('/genre_search', requests.genreSearchGame);
+app.post('/restore', requests.restore);
 
 app.put('/update', requests.updateGame);
 app.put('/categories', requests.updateCategory);
@@ -102,6 +103,7 @@ app.put('/game/:app_id/categories', requests.updateCategoriesToGame);
 app.put('/code', requests.updateCode);
 
 app.delete('/remove', requests.deleteGame);
+app.delete('/trash', requests.deleteTrash);
 
 
 app.listen(port, () => {
