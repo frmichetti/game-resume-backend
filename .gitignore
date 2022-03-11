@@ -2,3 +2,5 @@ node_modules
 build
 backend.bat
 exports/*.csv
+.idea
+.vscode
