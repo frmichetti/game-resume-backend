@@ -12,12 +12,12 @@ $$
        tablename varchar;
     begin
         SELECT (CASE
-           WHEN exists(select 1 from "GameCube" where app_id = appid) THEN 'GameCube'
-           WHEN exists(select 1 from "Wii" where app_id = appid) THEN 'Wii'
-           WHEN exists(select 1 from "WiiU" where app_id = appid) THEN 'WiiU'
-           WHEN exists(select 1 from "Origin" where app_id = appid) THEN 'Origin'
-           WHEN exists(select 1 from "Ubisoft" where app_id = appid) THEN 'Ubisoft'
-           WHEN exists(select 1 from "Steam" where app_id = appid) THEN 'Steam'
+           WHEN exists(select 1 from "Games" inner join "System" S on S.id = "Games".system_id where system = 'GameCube' AND app_id = appid) THEN 'GameCube'
+           WHEN exists(select 1 from "Games" inner join "System" S on S.id = "Games".system_id where system = 'Wii' AND app_id = appid) THEN 'Wii'
+           WHEN exists(select 1 from "Games" inner join "System" S on S.id = "Games".system_id where system = 'WiiU' AND app_id = appid) THEN 'WiiU'
+           WHEN exists(select 1 from "Games" inner join "System" S on S.id = "Games".system_id where system = 'Origin' AND app_id = appid) THEN 'Origin'
+           WHEN exists(select 1 from "Games" inner join "System" S on S.id = "Games".system_id where system = 'Ubisoft' AND app_id = appid) THEN 'Ubisoft'
+           WHEN exists(select 1 from "Games" inner join "System" S on S.id = "Games".system_id where system = 'Steam' AND app_id = appid) THEN 'Steam'
            ELSE 'Not Found'
        END) INTO tablename ;
 

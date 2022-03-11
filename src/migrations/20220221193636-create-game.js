@@ -1,5 +1,5 @@
 const DataTypes = require('sequelize/lib/data-types');
-const System = require('../models/system');
+
 
 'use strict';
 module.exports = {
@@ -14,14 +14,15 @@ module.exports = {
       app_id: {
         type: Sequelize.STRING,
         allowNull: true,
+        unique: true
       },
       system_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {          
-          model: "System",          
-          key: 'id',              
-          deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE          
+        references: {
+          model: "System",
+          key: 'id',
+          deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
       },
       title: {

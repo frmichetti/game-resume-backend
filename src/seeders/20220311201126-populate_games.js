@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const sql = fs.readFileSync(path.resolve(__dirname, 'drop_all_games_tables.sql'), 'utf8');
+const sql = fs.readFileSync(path.resolve(__dirname, 'Games.sql'), 'utf8');
 
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -10,6 +10,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-      
+    
   }
 };

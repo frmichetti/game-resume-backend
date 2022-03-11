@@ -1,3 +1,5 @@
+const DataTypes = require('sequelize/lib/data-types');
+
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -23,12 +25,15 @@ module.exports = {
       genuine: {
         type: Sequelize.BOOLEAN
       },
-      platform: {
-        type: Sequelize.STRING
-      },
-      system: {
-        type: Sequelize.STRING
-      },
+      system_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {          
+          model: "System",          
+          key: 'id',              
+          deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE          
+        }
+      },      
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
