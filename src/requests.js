@@ -233,7 +233,14 @@ const showGameCubeGames = async (req, res) => {
 
 const showVirtualConsoleGames = async (req, res) => {
     try {
-        const games = await db.VirtualConsole.findAll({ order: [["title", "ASC"]] });
+        const games = await db.VirtualConsole.findAll({ 
+            order: [["title", "ASC"]],
+            attributes: ["id", "app_id", "title","finished","finished_at", "genuine",
+            [db.sequelize.fn('which_platform', db.sequelize.col('system_id')), 'platform'],
+            [db.sequelize.fn('which_system', db.sequelize.col('system_id')), 'system']
+        ]
+
+     });
         res.send({ games })
     } catch (error) {
         console.error(error)
