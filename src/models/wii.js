@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     finished_at: DataTypes.DATE,
     collection: DataTypes.BOOLEAN,
     genuine: DataTypes.BOOLEAN,
-    fisical_disc: DataTypes.BOOLEAN
+    fisical_disc: DataTypes.BOOLEAN,
+    system_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Wii',

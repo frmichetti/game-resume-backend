@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     app_id: DataTypes.STRING,
     title: DataTypes.STRING,
     finished: DataTypes.BOOLEAN,
-    finished_at: DataTypes.DATE
+    finished_at: DataTypes.DATE,
+    system_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Ubisoft',

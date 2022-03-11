@@ -20,8 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     finished: DataTypes.BOOLEAN,
     finished_at: DataTypes.DATE,
     genuine: DataTypes.BOOLEAN,
-    platform: DataTypes.STRING,
-    system: DataTypes.STRING
+    system_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'VirtualConsole',

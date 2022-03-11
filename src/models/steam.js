@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     finished: DataTypes.BOOLEAN,
     finished_at: DataTypes.DATE,
-    collection: DataTypes.BOOLEAN
+    collection: DataTypes.BOOLEAN,
+    system_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Steam',
