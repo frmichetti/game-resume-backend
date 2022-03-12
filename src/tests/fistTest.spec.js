@@ -1,5 +1,5 @@
-import { category_schema } from '../schema/category_schema'
+import * as schemas from '../schema/validation_schema'
 
 test('it should be ok', () => { 
-    expect(category_schema).not.toBeNull();
+    expect(schemas.category_schema).not.toBeNull();
 })

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1647117755432" clover="3.2.0">
-  <project timestamp="1647117755432" name="All files">
+<coverage generated="1647118171969" clover="3.2.0">
+  <project timestamp="1647118171969" name="All files">
     <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="2" coveredelements="2" complexity="0" loc="2" ncloc="2" packages="1" files="1" classes="1"/>
     <file name="category_schema.js" path="C:\DEV\game-resume-backend\src\schema\category_schema.js">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
