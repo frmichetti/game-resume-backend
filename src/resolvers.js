@@ -313,7 +313,13 @@ const getPercentFinishedChart = async (parent, args, ctx, info) => {
 
 const getFinishedBySystem = async (parent, { system }, ctx, info) => {
     try {
-        const games = await ctx.orm.sequelize.query(`SELECT * FROM "all_games" WHERE finished = true AND system ilike '%${system}%' ORDER BY title ASC`,{ type: QueryTypes.SELECT });
+        let q = ''
+        if (system === 'VC') {
+            q = `SELECT * FROM "all_games" WHERE finished = true AND system IN ('NES','Nintendo 64','Mega Drive','Super Nintendo','Wii') AND platform ilike '%VirtualConsole%' ORDER BY title ASC`
+        } else {
+            q = `SELECT * FROM "all_games" WHERE finished = true AND system ilike '%${system}%' ORDER BY title ASC`
+        }
+        const games = await ctx.orm.sequelize.query(q,{ type: QueryTypes.SELECT });
         return games;
     } catch (error) {
         console.error(error);
