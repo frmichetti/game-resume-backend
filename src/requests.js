@@ -2,6 +2,8 @@ import getMessage from './getMessage';
 import db from './models/index';
 import axios from 'axios';
 
+import {category_schema} from './schema/category_schema';
+
 const { QueryTypes } = require('sequelize');
 
 
@@ -811,7 +813,17 @@ const exportToXls = async (req, res, next) => {
 }
 
 const createCategory = async (req, res, next) => {
-    const { slugname, name } = req.body;
+    const { slugname, name } = req.body;    
+    /* FIX ME VALIDATION
+    const {error} = category_schema.validate({ slugname, name })
+
+    if(!error){
+        const category = await db.Category.create({ slugname, name });
+        res.send({ category })
+    } else {
+        res.status(400).send({error: validation.error})
+    }   
+     */
     const category = await db.Category.create({ slugname, name });
     res.send({ category })
 }
