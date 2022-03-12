@@ -423,6 +423,8 @@ const createGames = async (req, res) => {
             }
         } else if (tableName === 'playing') {
             q = `INSERT INTO "${table}" (app_id, title, started_at) VALUES ('${app_id}','${title}','${now()}') RETURNING *`
+        } else if (tableName === 'dlcs') {
+            q = `INSERT INTO "${table}" (app_id, title, finished, collection) VALUES ('${app_id}', '${title}', ${finished}, ${collection}) RETURNING *`
         }
 
         try {
@@ -486,6 +488,18 @@ const finishGame = async (req, res) => {
                 q = `UPDATE "Playing" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
             }
 
+        } else if (tableName === 'dlcs' || tableName === 'DLCS') {
+            if (finished) {
+                q = `UPDATE "DLC" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
+            } else {
+                q = `UPDATE "DLC" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
+            }
+        } else if (tableName === 'tobuy' || tableName === 'ToBuy') {
+            if (finished) {
+                q = `UPDATE "ToBuy" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
+            } else {
+                q = `UPDATE "ToBuy" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
+            }
         } else {
             if (finished) {
                 q = `UPDATE "Games" SET finished = ${finished}, finished_at = '${now()}' WHERE app_id = '${app_id}' RETURNING *`;
@@ -533,7 +547,7 @@ const genreSearchGame = async (req, res) => {
 const updateGame = async (req, res) => {
 
     const tableName = req.body.table;
-    let table, id, app_id, title, finished, finished_at, fisical_disc, system, system_id, platform, collection, genuine, magnetic_link;
+    let table, id, app_id, title, finished, finished_at, fisical_disc, system, system_id, collection, genuine, magnetic_link;
 
     id = req.body.id;
     app_id = req.body.app_id;
@@ -545,7 +559,6 @@ const updateGame = async (req, res) => {
     fisical_disc = req.body.fisical_disc;
     system = req.body.system;
     system_id = req.body.system_id;
-    platform = req.body.platform;
     magnetic_link = req.body.magnetic_link;
 
 
@@ -579,9 +592,9 @@ const updateGame = async (req, res) => {
 
         } else if (table === 'VirtualConsole') {
             if (finished) {
-                q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = '${finished_at}', system = '${system}', platform = '${platform}' WHERE id = ${id} RETURNING *`;
+                q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = '${finished_at}' WHERE id = ${id} RETURNING *`;
             } else {
-                q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = null, system = '${system}', platform = '${platform}' WHERE id = ${id} RETURNING *`;
+                q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
             }
 
         } else if (table === 'ToBuy') {
@@ -591,6 +604,12 @@ const updateGame = async (req, res) => {
                 q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, finished_at = null, system = '${system}', magnetic_link = '${magnetic_link}' WHERE id = ${id} RETURNING *`;
             }
 
+        } else if (table === 'DLC') {
+            if (finished) {
+                q = `UPDATE "${table}" SET app_id = '${app_id}', title = '${title}', finished = ${finished}, finished_at = '${finished_at}', collection = ${collection} WHERE id = ${id} RETURNING *`;
+            } else {
+                q = `UPDATE "${table}" SET app_id = '${app_id}', title = '${title}', finished = ${finished}, finished_at = null, collection = '${collection}' WHERE id = ${id} RETURNING *`;
+            }
         }
 
         try {
@@ -635,6 +654,32 @@ const deleteGame = async (req, res) => {
             console.error(error)
             res.status(400).send({ msg: error.message || error.process.message }).end();
         }
+    } else if (table === 'DLC') {
+        let q = "";
+        q = `DELETE FROM "DLC" WHERE id = ${id};`;
+
+        try {
+            await db.sequelize.query(q, { type: QueryTypes.DELETE });
+
+            res.send({ ok: true })
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ msg: error.message || error.process.message }).end();
+        }
+
+    } else if (table === 'ToBuy') {
+        let q = "";
+        q = `DELETE FROM "ToBuy" WHERE id = ${id};`;
+
+        try {
+            await db.sequelize.query(q, { type: QueryTypes.DELETE });
+
+            res.send({ ok: true })
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ msg: error.message || error.process.message }).end();
+        }
+
     } else {
         let q = "";
         q = `DELETE FROM "Games" WHERE id = ${id};`;
@@ -653,8 +698,33 @@ const deleteGame = async (req, res) => {
 const exportToCsv = async (req, res, next) => {
     let table = req.query.table;
 
+    let sql;
+    switch (table) {
+        case "gamecube":
+            sql = `SELECT * FROM "all_games" WHERE system = 'GameCube'`
+            break;
+        case "wii":
+            sql = `SELECT * FROM "all_games" WHERE system = 'Wii'`
+            break;
+        case "wiiu":
+            sql = `SELECT * FROM "all_games" WHERE system = 'WiiU'`
+            break;
+        case "origin":
+            sql = `SELECT * FROM "all_games" WHERE system = 'Origin'`
+            break;
+        case "steam":
+            sql = `SELECT * FROM "all_games" WHERE system = 'Steam'`
+            break;
+        case "ubisoft":
+            sql = `SELECT * FROM "all_games" WHERE system = 'Ubisoft'`
+            break;
+        default:
+            throw new Error('Incorrect table')
+            break;
+    }
+
     try {
-        let result = await db.sequelize.query(`SELECT * FROM "${table}"`, { type: QueryTypes.SELECT })
+        let result = await db.sequelize.query(sql, { type: QueryTypes.SELECT })
         let { filename, csv } = ExportData.tocsv(result, Object.keys(result[0]));
         res.header('Content-Type', 'text/csv');
         res.attachment(filename);
@@ -733,22 +803,22 @@ const addCategoriesToGame = async (req, res, next) => {
 
         switch (table) {
             case 'Steam':
-                game = await db.Steam.findOne({ where: { app_id } })
+                game = await db.Game.findOne({ where: { app_id } })
                 break;
             case 'Origin':
-                game = await db.Origin.findOne({ where: { app_id } })
+                game = await db.Game.findOne({ where: { app_id } })
                 break;
             case 'Ubisoft':
-                game = await db.Ubisoft.findOne({ where: { app_id } })
+                game = await db.Game.findOne({ where: { app_id } })
                 break;
             case 'GameCube':
-                game = await db.GameCube.findOne({ where: { app_id } })
+                game = await db.Game.findOne({ where: { app_id } })
                 break;
             case 'Wii':
-                game = await db.Wii.findOne({ where: { app_id } })
+                game = await db.Game.findOne({ where: { app_id } })
                 break;
             case 'WiiU':
-                game = await db.WiiU.findOne({ where: { app_id } })
+                game = await db.Game.findOne({ where: { app_id } })
                 break;
             default:
                 throw new Error('Table is not Defined');
