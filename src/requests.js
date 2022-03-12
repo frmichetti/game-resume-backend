@@ -744,6 +744,9 @@ const exportToCsv = async (req, res, next) => {
         case "Ubisoft":
             sql = `SELECT * FROM "all_games" WHERE system = 'Ubisoft'`
             break;
+        case "VirtualConsole":
+            sql = `SELECT * FROM "all_games" WHERE platform ilike '%VirtualConsole%'`
+            break;
         default:
             throw new Error('Incorrect table')
             break;
