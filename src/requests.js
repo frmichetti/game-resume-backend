@@ -157,7 +157,7 @@ const showSteamGames = async (req, res) => {
     try {
         const games = await db.Game.findAll({
             order: [["title", "ASC"]],
-            attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at',
+            attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                 [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 2 }
         });
         res.send({ games })
@@ -193,7 +193,7 @@ const showWiiGames = async (req, res) => {
     try {
         const games = await db.Game.findAll({
             order: [["title", "ASC"]],
-            attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc',
+            attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                 [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 5 }
         });
         res.send({ games })
@@ -207,7 +207,7 @@ const showWiiUGames = async (req, res) => {
     try {
         const games = await db.Game.findAll({
             order: [["title", "ASC"]],
-            attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc',
+            attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                 [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 6 }
         });
         res.send({ games })
@@ -221,7 +221,7 @@ const showGameCubeGames = async (req, res) => {
     try {
         const games = await db.Game.findAll({
             order: [["title", "ASC"]],
-            attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc',
+            attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                 [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 4 }
         });
         res.send({ games })
@@ -235,7 +235,7 @@ const showVirtualConsoleGames = async (req, res) => {
     try {
         const games = await db.VirtualConsole.findAll({
             order: [["title", "ASC"]],
-            attributes: ["id", "app_id", "title", "finished", "finished_at", "genuine",
+            attributes: ["id", "app_id", "title", "finished", "finished_at", "genuine", 'system_id',
                 [db.sequelize.fn('which_platform', db.sequelize.col('system_id')), 'platform'],
                 [db.sequelize.fn('which_system', db.sequelize.col('system_id')), 'system']
             ]
@@ -500,6 +500,12 @@ const finishGame = async (req, res) => {
             } else {
                 q = `UPDATE "ToBuy" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
             }
+        } else if (tableName === 'virtualconsole' || tableName === 'VirtualConsole') {
+            if (finished) {
+                q = `UPDATE "VirtualConsole" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
+            } else {
+                q = `UPDATE "VirtualConsole" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
+            }
         } else {
             if (finished) {
                 if (app_id) {
@@ -599,9 +605,9 @@ const updateGame = async (req, res) => {
 
         } else if (table === 'VirtualConsole') {
             if (finished) {
-                q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = '${finished_at}' WHERE id = ${id} RETURNING *`;
+                q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = '${finished_at}', genuine = ${genuine} WHERE id = ${id} RETURNING *`;
             } else {
-                q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
+                q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = null, genuine = ${genuine} WHERE id = ${id} RETURNING *`;
             }
 
         } else if (table === 'ToBuy') {
@@ -677,6 +683,19 @@ const deleteGame = async (req, res) => {
     } else if (table === 'ToBuy') {
         let q = "";
         q = `DELETE FROM "ToBuy" WHERE id = ${id};`;
+
+        try {
+            await db.sequelize.query(q, { type: QueryTypes.DELETE });
+
+            res.send({ ok: true })
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ msg: error.message || error.process.message }).end();
+        }
+
+    } else if (table === 'VirtualConsole') {
+        let q = "";
+        q = `DELETE FROM "VirtualConsole" WHERE id = ${id};`;
 
         try {
             await db.sequelize.query(q, { type: QueryTypes.DELETE });
