@@ -459,8 +459,8 @@ const finishGame = async (req, res) => {
     let table, title, finished, app_id, id;
 
     id = req.body.id;
-    title = req.body.title;
     app_id = req.body.app_id;
+    title = req.body.title;
     finished = req.body.finished;
 
     table = selectTable(tableName)
@@ -502,11 +502,18 @@ const finishGame = async (req, res) => {
             }
         } else {
             if (finished) {
-                q = `UPDATE "Games" SET finished = ${finished}, finished_at = '${now()}' WHERE app_id = '${app_id}' RETURNING *`;
+                if (app_id) {
+                    q = `UPDATE "Games" SET finished = ${finished}, finished_at = '${now()}' WHERE app_id = '${app_id}' RETURNING *`;
+                } else {
+                    q = `UPDATE "Games" SET finished = ${finished}, finished_at = '${now()}' WHERE id = '${id}' RETURNING *`;
+                }
             } else {
-                q = `UPDATE "Games" SET finished = ${finished}, finished_at = null WHERE app_id = '${app_id}' RETURNING *`;
+                if (app_id) {
+                    q = `UPDATE "Games" SET finished = ${finished}, finished_at = null WHERE app_id = '${app_id}' RETURNING *`;
+                } else {
+                    q = `UPDATE "Games" SET finished = ${finished}, finished_at = null WHERE id = '${id}' RETURNING *`;
+                }
             }
-
         }
 
         try {
@@ -700,22 +707,22 @@ const exportToCsv = async (req, res, next) => {
 
     let sql;
     switch (table) {
-        case "gamecube":
+        case "GameCube":
             sql = `SELECT * FROM "all_games" WHERE system = 'GameCube'`
             break;
-        case "wii":
+        case "Wii":
             sql = `SELECT * FROM "all_games" WHERE system = 'Wii'`
             break;
-        case "wiiu":
+        case "WiiU":
             sql = `SELECT * FROM "all_games" WHERE system = 'WiiU'`
             break;
-        case "origin":
+        case "Origin":
             sql = `SELECT * FROM "all_games" WHERE system = 'Origin'`
             break;
-        case "steam":
+        case "Steam":
             sql = `SELECT * FROM "all_games" WHERE system = 'Steam'`
             break;
-        case "ubisoft":
+        case "Ubisoft":
             sql = `SELECT * FROM "all_games" WHERE system = 'Ubisoft'`
             break;
         default:
