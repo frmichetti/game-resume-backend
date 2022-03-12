@@ -9,6 +9,7 @@ module.exports = {
         'title',
         {
           type: Sequelize.DataTypes.STRING,
+          allowNull: false
         },
         { transaction }
       );

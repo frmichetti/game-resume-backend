@@ -315,7 +315,7 @@ const getFinishedBySystem = async (parent, { system }, ctx, info) => {
     try {
         let q = ''
         if (system === 'VC') {
-            q = `SELECT * FROM "all_games" WHERE finished = true AND system IN ('NES','Nintendo 64','Mega Drive','Super Nintendo','Wii') AND platform ilike '%VirtualConsole%' ORDER BY title ASC`
+            q = `SELECT * FROM "all_games" WHERE finished = true AND platform ilike '%VirtualConsole%' ORDER BY title ASC`
         } else {
             q = `SELECT * FROM "all_games" WHERE finished = true AND system ilike '%${system}%' ORDER BY title ASC`
         }

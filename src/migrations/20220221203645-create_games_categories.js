@@ -1,3 +1,5 @@
+const DataTypes = require('sequelize/lib/data-types');
+
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -9,7 +11,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       app_id: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       category_id: {
         type: Sequelize.INTEGER,
@@ -17,11 +20,13 @@ module.exports = {
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: DataTypes.NOW
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: DataTypes.NOW
       }
     });
   },
