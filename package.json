@@ -10,7 +10,8 @@
     "seed": "npx sequelize db:seed:all",
     "start": "nodemon --exec babel-node src/app.js",
     "build": "babel src --out-dir build",
-    "serve": "node build/app.js"
+    "serve": "node build/app.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "graphql": "^15.7.2",
     "graphql-fields": "^2.0.3",
     "html-pdf": "^3.0.1",
+    "jest-cli": "^27.5.1",
     "joi": "^17.6.0",
     "json2csv": "^5.0.6",
     "json2xls": "^0.1.2",
