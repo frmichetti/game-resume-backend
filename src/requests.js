@@ -380,14 +380,13 @@ const showPlayingGames = async (req, res) => {
 
 const createGames = async (req, res) => {
     const tableName = req.body.table;
-    let table, title, finished, finished_at, fisical_disc, app_id, system, system_id, genuine, collection, magnetic_link;
-
-    table = selectTable(tableName)
+    let table, title, finished, finished_at, fisical_disc, id, app_id, system, system_id, genuine, collection, magnetic_link;
 
     title = req.body.title.replaceAll("'", "''");
     finished = req.body.finished ? req.body.finished : false;
     finished_at = req.body.finished_at ? req.body.finished_at : now();
     fisical_disc = req.body.fisical_disc ? req.body.fisical_disc : false;
+    id = req.body.id;
     app_id = req.body.app_id;
     system = req.body.system;
     system_id = req.body.system_id;
@@ -395,18 +394,39 @@ const createGames = async (req, res) => {
     collection = req.body.collection;
     magnetic_link = req.body.magnetic_link;
 
+    table = selectTable(tableName);
+    
     if (table == null) {
         const errorMessage = "Table does not match";
         res.statusMessage = errorMessage;
         res.status(400).send({ msg: errorMessage }).end();
-    } else if (title == null || title == '' || title == undefined) {
-        const errorMessage = "Game Title is Empty";
-        res.statusMessage = errorMessage;
-        res.status(400).send({ msg: errorMessage }).end();
-    } else if (finished == null) {
-        const errorMessage = "Finished is not Defined";
-        res.statusMessage = errorMessage;
-        res.status(400).send({ msg: errorMessage }).end();
+    }
+    
+    let validation;
+
+    switch (table) {
+        case 'Games':
+             validation = schemas.game_schema.validate({ app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc })    
+        break;
+        case 'ToBuy':
+            validation = schemas.tobuy_schema.validate({title, finished, genuine, system})
+        break;
+        case 'VirtualConsole':
+            validation = schemas.virtualconsole_schema.validate({app_id, system_id, title, finished, genuine})
+        break;    
+        case 'DLC':
+            validation = schemas.dlc_schema.validate({app_id, title, finished, collection})
+        break;
+        case 'Playing':
+            validation = schemas.playing_schema.validate({id, app_id, title})
+        break;
+        default:
+            throw new Error('NOT Implemented YET')
+            break;
+    }
+
+    if (validation.error) {
+        res.status(400).send({ error: validation.error.message })
     } else {
         let q = "";
 
