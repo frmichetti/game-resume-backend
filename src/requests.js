@@ -176,7 +176,7 @@ const showSteamGames = async (req, res) => {
 
 const getSteamGames = async (req, res) => {
     try {
-        const response = await axios.get(`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=4E1711643EDB18164E58D14FC3B11FD3&steamid=76561198179840806&format=json&include_appinfo=true`);
+        const response = await axios.get(`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_KEY}&steamid=${process.env.STEAM_ID}&format=json&include_appinfo=true`);
         const games = response.data.response.games;
 
         res.send({ games })
