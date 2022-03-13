@@ -111,7 +111,8 @@ app.get('/search', requests.searchGame);
 app.get('/genre_search', requests.genreSearchGame);
 app.get('/trash', requests.showTrash);
 
-app.post('/load_games', upload.single('sheet'), requests.processXLSToJson)
+app.post('/load_games', upload.single('sheet'), requests.processXLSToJson);
+app.post('/import_data', requests.importData);
 app.post('/create', requests.createGames);
 app.post('/categories', requests.createCategory);
 app.post('/game/:app_id/categories', requests.addCategoriesToGame);

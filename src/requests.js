@@ -968,7 +968,7 @@ const showTrash = async (req, res, next) => {
 
 const processXLSToJson = async (req, res) => {
     const workbook = new Excel.Workbook();
-    const payload = []
+    const games = []
     const mapGames = new Map();    
     
     let newGame = {        
@@ -1005,10 +1005,16 @@ const processXLSToJson = async (req, res) => {
             });
 
             
-            mapGames.forEach(i => payload.push(i));
+            mapGames.forEach(i => games.push(i));
 
-            res.send({payload})
+            res.send({games})
         });
+}
+
+const importData = async (req, res) => {
+    const games = req.body.games;
+    await db.Game.bulkCreate(games, { ignoreDuplicates: true })  
+    res.send({success: true})
 }
 
 
@@ -1018,5 +1024,5 @@ export {
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames,
     showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
     finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
-    createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, processXLSToJson
+    createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, processXLSToJson, importData
 }
