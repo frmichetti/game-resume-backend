@@ -5,3 +5,4 @@ exports/*.csv
 .idea
 .vscode
 uploads/*.xlsx
+.env
