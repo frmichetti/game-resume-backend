@@ -24,8 +24,7 @@ export const game_schema = Joi.object().keys({
         .required(),
     finished: Joi.boolean()
         .required(),
-    finished_at: Joi.date()
-        .less('now'),
+    finished_at: Joi.date(),
     collection: Joi.boolean()
         .required(),
     genuine: Joi.boolean()

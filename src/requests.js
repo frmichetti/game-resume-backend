@@ -608,18 +608,39 @@ const updateGame = async (req, res) => {
         const errorMessage = "Table does not match";
         res.statusMessage = errorMessage;
         res.status(400).send({ msg: errorMessage }).end();
-    } else if (title == null || title == '' || title == undefined) {
-        const errorMessage = "Game Title is Empty";
-        res.statusMessage = errorMessage;
-        res.status(400).send({ msg: errorMessage }).end();
-    } else if (finished == null) {
-        const errorMessage = "Finished is not Defined";
-        res.statusMessage = errorMessage;
-        res.status(400).send({ msg: errorMessage }).end();
-    } else if (id == null) {
+    }
+    
+    if (id == null) {
         const errorMessage = "ID is required";
         res.statusMessage = errorMessage;
         res.status(400).send({ msg: errorMessage }).end();
+    }
+
+    let validation;
+
+    switch (table) {
+        case 'Games':
+             validation = schemas.game_schema.validate({ app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc })    
+        break;
+        case 'ToBuy':
+            validation = schemas.tobuy_schema.validate({title, finished, genuine, system, magnetic_link})
+        break;
+        case 'VirtualConsole':
+            validation = schemas.virtualconsole_schema.validate({app_id, system_id, title, finished, genuine})
+        break;    
+        case 'DLC':
+            validation = schemas.dlc_schema.validate({app_id, title, finished, collection})
+        break;
+        case 'Playing':
+            validation = schemas.playing_schema.validate({id, app_id, title})
+        break;
+        default:
+            throw new Error('NOT Implemented YET')
+            break;
+    }
+
+    if (validation.error) {
+        res.status(400).send({ error: validation.error.message })
     } else {
         let q = "";
 
