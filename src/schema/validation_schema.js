@@ -44,7 +44,9 @@ export const tobuy_schema = Joi.object().keys({
         .required(),
     system: Joi.string()
         .min(2)
-        .required()
+        .required(),
+    magnetic_link: Joi.string()
+        .min(10)
 });
 
 export const virtualconsole_schema = Joi.object().keys({

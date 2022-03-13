@@ -409,7 +409,7 @@ const createGames = async (req, res) => {
              validation = schemas.game_schema.validate({ app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc })    
         break;
         case 'ToBuy':
-            validation = schemas.tobuy_schema.validate({title, finished, genuine, system})
+            validation = schemas.tobuy_schema.validate({title, finished, genuine, system, magnetic_link})
         break;
         case 'VirtualConsole':
             validation = schemas.virtualconsole_schema.validate({app_id, system_id, title, finished, genuine})
