@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import express from 'express';
 import * as requests from './requests';
 
@@ -78,7 +80,7 @@ app.use('/graphql',
 
 //Here we are configuring express to use body-parser as middle-ware.
 
-const port = 4000;
+const port = process.env.PORT;
 
 app.get('/', requests.showWelcome);
 app.get('/test', requests.showTest);
