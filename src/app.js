@@ -56,10 +56,10 @@ function errorHandler(err, req, res, next) {
 
 app.use(errorHandler);
 
-/* process.on('uncaughtException', function (error) {
+  process.on('uncaughtException', function (error) {
   console.log(error.stack);
   console.log("Node NOT Exiting...");
-}); */
+}); 
 
 app.use('/graphql',
   (req, res, next) => {
