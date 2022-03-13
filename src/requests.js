@@ -903,16 +903,14 @@ const updateCategoriesToGame = async (req, res, next) => {
 
 const showCategoriesOfGame = async (req, res, next) => {
     const { app_id } = req.params;
-    const game = await db.Steam.findOne({ where: { app_id } })
-    const categories = await game.getCategories();
-    res.send({ categories })
+    const game = await db.Game.findOne({ where: { app_id } , include: {model: db.Category, as: 'categories'}})    
+    res.send({ game })
 }
 
 const showDLCsOfGame = async (req, res, next) => {
     const { app_id } = req.params;
-    const game = await db.Steam.findOne({ where: { app_id } })
-    const dlcs = await game.getDlcs()
-    res.send({ dlcs })
+    const game = await db.Game.findOne({ where: { app_id } , include: {model: db.DLC, as: 'dlcs' }})    
+    res.send({ game })
 }
 
 const showGame = async (req, res, next) => {
