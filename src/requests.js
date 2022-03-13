@@ -12,6 +12,11 @@ const ejs = require('ejs')
 const path = require('path')
 const puppeteer = require('puppeteer')
 
+import lodash, { map } from 'lodash';
+
+const Excel = require('exceljs');
+const fs = require('fs');
+
 const now = () => {
     return new Date().toISOString().slice(0, 19).replace('T', ' ');
 }
@@ -961,11 +966,57 @@ const showTrash = async (req, res, next) => {
     res.send({ trash });
 }
 
+const processXLSToJson = async (req, res) => {
+    const workbook = new Excel.Workbook();
+    const payload = []
+    const mapGames = new Map();    
+    
+    let newGame = {        
+        app_id: "",
+        system_id: null,
+        title: "",
+        finished: null,
+        finished_at: null,
+        genuine: null,
+        collection: null,
+        fisical_disc: null        
+    }
+
+    
+
+    workbook.xlsx.readFile(`./uploads/${req.file.originalname}`)
+        .then(async () => {
+            let worksheet = workbook.getWorksheet('Games');
+            // Iterate over all rows that have values in a worksheet
+            worksheet.eachRow((row, rowNumber) => {
+
+                if (rowNumber > 1) {
+                    newGame.app_id = row.values[1];
+                    newGame.system_id = row.values[2];
+                    newGame.title = row.values[3];
+                    newGame.finished = row.values[4];
+                    newGame.finished_at = row.values[5] ? new Date(row.values[5]) : null;
+                    newGame.genuine = row.values[6];
+                    newGame.collection = row.values[7];
+                    newGame.fisical_disc = row.values[8];
+
+                    mapGames.set(newGame.app_id, Object.assign({}, newGame))
+                }
+            });
+
+            
+            mapGames.forEach(i => payload.push(i));
+
+            res.send({payload})
+        });
+}
+
+
 export {
     showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
     showSteamGames, getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames,
     showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
     finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
-    createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame
+    createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, processXLSToJson
 }

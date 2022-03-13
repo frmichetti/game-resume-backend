@@ -13,6 +13,28 @@ import { RequestedFiels } from './RequestedFields';
 
 const json2xls = require('json2xls');
 
+const multer = require('multer')
+// Configuração de armazenamento
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    // Extração da extensão do arquivo original:
+    const extension = file.originalname.split('.')[1];
+    const originalName = file.originalname.split('.')[0];
+
+    // Cria um código randômico que será o nome do arquivo
+    const novoNomeArquivo = require('crypto')
+      .randomBytes(64)
+      .toString('hex');
+
+    // Indica o novo nome do arquivo:
+    cb(null, `${originalName}.${extension}`)
+  }
+});
+const upload = multer({ storage })
+
 process.env.TZ = 'America/Sao_Paulo';
 
 
@@ -89,6 +111,7 @@ app.get('/search', requests.searchGame);
 app.get('/genre_search', requests.genreSearchGame);
 app.get('/trash', requests.showTrash);
 
+app.post('/load_games', upload.single('sheet'), requests.processXLSToJson)
 app.post('/create', requests.createGames);
 app.post('/categories', requests.createCategory);
 app.post('/game/:app_id/categories', requests.addCategoriesToGame);

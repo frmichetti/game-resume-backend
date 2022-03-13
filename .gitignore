@@ -4,3 +4,4 @@ backend.bat
 exports/*.csv
 .idea
 .vscode
+uploads/*.xlsx
