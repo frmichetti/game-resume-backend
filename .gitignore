@@ -6,3 +6,4 @@ exports/*.csv
 .vscode
 uploads/*.xlsx
 .env
+coverage/*
