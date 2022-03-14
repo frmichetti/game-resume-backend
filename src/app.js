@@ -61,15 +61,15 @@ function errorHandler(err, req, res, next) {
 
 app.use(errorHandler);
 
-  process.on('uncaughtException', function (error) {
+/*process.on('uncaughtException', function (error) {
   console.log(error.stack);
   console.log("Node NOT Exiting...");
-}); 
+});*/
 
 app.use('/graphql',
   (req, res, next) => {
-    req["context"] = {}      
-    req["context"].orm = db;  
+    req["context"] = {}
+    req["context"].orm = db;
     req["context"].dataloaders = dataLoaderFactory.getLoaders();
     req["context"].requestedFields = requestedFields;
     next();
@@ -120,7 +120,7 @@ app.get('/trash', requests.showTrash);
 app.post('/load_games', upload.single('sheet'), requests.processXLSToJson);
 app.post('/import_data', requests.importData);
 app.post('/create', requests.createGames);
-app.post('/categories', requests.createCategory);
+app.post('/categories', middleware(schemas.category_schema, 'body'), requests.createCategory);
 app.post('/game/:app_id/categories', requests.addCategoriesToGame);
 app.post('/dlc_finished', requests.finishDLC);
 app.post('/finished', requests.finishGame);
@@ -128,7 +128,7 @@ app.post('/code', requests.saveCode);
 app.post('/restore', requests.restore);
 
 app.put('/update', requests.updateGame);
-app.put('/categories', requests.updateCategory);
+app.put('/categories', middleware(schemas.category_schema, 'body'), requests.updateCategory);
 app.put('/game/:app_id/categories', requests.updateCategoriesToGame);
 app.put('/code', requests.updateCode);
 

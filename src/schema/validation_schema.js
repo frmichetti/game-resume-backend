@@ -1,6 +1,10 @@
 const Joi = require('joi');
 
 export const category_schema = Joi.object().keys({
+    id: Joi.number()
+        .integer()
+        .greater(0)
+        .optional(),
     slugname: Joi.string()
         .alphanum()
         .min(3)
@@ -86,7 +90,7 @@ export const playing_schema = Joi.object().keys({
     id: Joi.number()
         .greater(0)
         .required(),
-    app_id: Joi.string()        
+    app_id: Joi.string()
         .min(3)
         .max(30),
     title: Joi.string()

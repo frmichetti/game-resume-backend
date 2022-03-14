@@ -862,15 +862,8 @@ const exportToXls = async (req, res, next) => {
 
 const createCategory = async (req, res, next) => {
     const { slugname, name } = req.body;
-
-    const { error } = schemas.category_schema.validate({ slugname, name })
-
-    if (!error) {
-        const category = await db.Category.create({ slugname, name });
-        res.send({ category })
-    } else {
-        res.status(400).send({ error: error.message })
-    }
+    const category = await db.Category.create({ slugname, name });
+    res.send({ category })
 }
 
 const updateCategory = async (req, res, next) => {
