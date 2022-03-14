@@ -12,11 +12,18 @@ export const category_schema = Joi.object().keys({
 });
 
 export const game_schema = Joi.object().keys({
+    table: Joi.string()
+        .required(),
+    id: Joi.number()
+        .integer()
+        .greater(0)
+        .optional(),    
     app_id: Joi.string()
         .alphanum()
         .min(3)
         .max(30),
     system_id: Joi.number()
+        .integer()
         .greater(0)
         .required(),
     title: Joi.string()
@@ -24,7 +31,9 @@ export const game_schema = Joi.object().keys({
         .required(),
     finished: Joi.boolean()
         .required(),
-    finished_at: Joi.date(),
+    finished_at: Joi.date()
+        .allow(null)
+        .optional(),
     collection: Joi.boolean()
         .required(),
     genuine: Joi.boolean()

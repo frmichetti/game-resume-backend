@@ -13,6 +13,9 @@ import schema from './schema';
 import { DataLoaderFactory } from './dataloader';
 import { RequestedFiels } from './RequestedFields';
 
+const middleware = require('./middleware/validation_middleware');
+import * as schemas from './schema/validation_schema'
+
 const json2xls = require('json2xls');
 
 const multer = require('multer')
@@ -116,7 +119,7 @@ app.get('/trash', requests.showTrash);
 
 app.post('/load_games', upload.single('sheet'), requests.processXLSToJson);
 app.post('/import_data', requests.importData);
-app.post('/create', requests.createGames);
+app.post('/create', middleware(schemas.game_schema, 'body'), requests.createGames);
 app.post('/categories', requests.createCategory);
 app.post('/game/:app_id/categories', requests.addCategoriesToGame);
 app.post('/dlc_finished', requests.finishDLC);
@@ -124,7 +127,7 @@ app.post('/finished', requests.finishGame);
 app.post('/code', requests.saveCode);
 app.post('/restore', requests.restore);
 
-app.put('/update', requests.updateGame);
+app.put('/update', middleware(schemas.game_schema, 'body'), requests.updateGame);
 app.put('/categories', requests.updateCategory);
 app.put('/game/:app_id/categories', requests.updateCategoriesToGame);
 app.put('/code', requests.updateCode);
