@@ -954,6 +954,12 @@ const showDLCsOfGame = async (req, res, next) => {
     res.send({ game })
 }
 
+const showSystemOfGame = async (req, res, next) => {
+    const { app_id } = req.params;
+    const game = await db.Game.findOne({ where: { app_id } , include: {model: db.System }})    
+    res.send({ game })
+}
+
 const showGame = async (req, res, next) => {
     const { app_id } = req.params;
     const game = await db.sequelize.query(`SELECT * FROM "all_games" WHERE app_id = '${app_id}'`, { type: QueryTypes.SELECT });
@@ -1063,5 +1069,5 @@ export {
     showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames,
     showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
     finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
-    createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, processXLSToJson, importData
+    createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, processXLSToJson, importData
 }
