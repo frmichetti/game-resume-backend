@@ -279,8 +279,7 @@ describe('Query Util', () => {
 						{ table: 'Games', column: 'id', as: 'game_id' },
 						{ table: 'Games', column: 'app_id', as: 'game_app_id' },
 						{ table: 'System', column: 'id', as: 'system_id' },
-						{ table: 'CodeAndTip', column: 'id', as: 'code_id' },
-					],
+						{ table: 'CodeAndTip', column: 'id', as: 'code_id' }],
 				};
 				const rows = await select('Playing', options, connection);
 				expect(rows).not.toBeNull;
@@ -288,58 +287,52 @@ describe('Query Util', () => {
 			},
 			DEFAULT_TIMEOUT
 		);
-		/*
-				it(
-					'should return all rows when multiple options join, selects and where is specified',
-					async done => {
-						const options = {
-							join: [
-								{ target: 'students s', on: 'user_id = s.id', type: 'LEFT JOIN' },
-								{ target: 'advisors a', on: 's.advisor_id = a.id', type: 'LEFT JOIN' },
-								{ target: 'classes c', on: 's.class_id = c.id', type: 'LEFT JOIN' },
-							],
-							select: [
-								{ table: 'u', column: 'id', as: 'user_id' },
-								{ table: 's', column: 'id', as: 'student_id' },
-								{ table: 'a', column: 'id', as: 'advisor_id' },
-								{ table: 'c', column: 'id', as: 'class_id' },
-							],
-							where: 'u.id > 0',
-						};
-						const { rows } = await select('users as u', options, connection);
-						expect(rows).not.toBeNull;
-						expect(rows.length).toEqual(5);
-						done();
-					},
-					DEFAULT_TIMEOUT
-				);
-		
-				it(
-					'should return all rows when multiple options join, selects, where, limit and offset is specified',
-					async done => {
-						const options = {
-							join: [
-								{ target: 'students s', on: 'user_id = s.id', type: 'LEFT JOIN' },
-								{ target: 'advisors a', on: 's.advisor_id = a.id', type: 'LEFT JOIN' },
-								{ target: 'classes c', on: 's.class_id = c.id', type: 'LEFT JOIN' },
-							],
-							select: [
-								{ table: 'u', column: 'id', as: 'user_id' },
-								{ table: 's', column: 'id', as: 'student_id' },
-								{ table: 'a', column: 'id', as: 'advisor_id' },
-								{ table: 'c', column: 'id', as: 'class_id' },
-							],
-							where: 'u.id > 0',
-							limit: 3,
-							offset: 2,
-						};
-						const { rows } = await select('users as u', options, connection);
-						expect(rows).not.toBeNull;
-						expect(rows.length).toEqual(3);
-						done();
-					},
-					DEFAULT_TIMEOUT
-				);*/
+
+		it(
+			'should return all rows when multiple options join, selects and where is specified',
+			async () => {
+				const options = {
+					join: [
+						{ target: 'Games', on: '"Playing".app_id = "Games".app_id', type: 'INNER JOIN' },
+						{ target: 'System', on: '"Games".system_id = "System".id', type: 'INNER JOIN' },
+						{ target: 'CodeAndTip', on: '"Playing".app_id = "CodeAndTip".app_id', type: 'LEFT JOIN' }],
+					select: [
+						{ table: 'Games', column: 'id', as: 'game_id' },
+						{ table: 'Games', column: 'app_id', as: 'game_app_id' },
+						{ table: 'System', column: 'id', as: 'system_id' },
+						{ table: 'CodeAndTip', column: 'id', as: 'code_id' }],
+					where: '"Games".id > 0',
+				};
+				const rows = await select('Playing', options, connection);
+				expect(rows).not.toBeNull;
+				expect(rows.length).toEqual(5);
+			},
+			DEFAULT_TIMEOUT
+		);
+
+		it(
+			'should return all rows when multiple options join, selects, where, limit and offset is specified',
+			async () => {
+				const options = {
+					join: [
+						{ target: 'Games', on: '"Playing".app_id = "Games".app_id', type: 'INNER JOIN' },
+						{ target: 'System', on: '"Games".system_id = "System".id', type: 'INNER JOIN' },
+						{ target: 'CodeAndTip', on: '"Playing".app_id = "CodeAndTip".app_id', type: 'LEFT JOIN' }],
+					select: [
+						{ table: 'Games', column: 'id', as: 'game_id' },
+						{ table: 'Games', column: 'app_id', as: 'game_app_id' },
+						{ table: 'System', column: 'id', as: 'system_id' },
+						{ table: 'CodeAndTip', column: 'id', as: 'code_id' }],
+					where: '"Games".id > 0',
+					limit: 3,
+					offset: 2,
+				};
+				const rows = await select('Playing', options, connection);
+				expect(rows).not.toBeNull;
+				expect(rows.length).toEqual(3);
+			},
+			DEFAULT_TIMEOUT
+		);
 	});
 	/*
 		describe('exclude', () => {
