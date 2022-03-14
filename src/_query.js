@@ -1,5 +1,5 @@
 /** @format */
-
+const { QueryTypes } = require('sequelize');
 const _ = require('lodash');
 
 /**
@@ -47,7 +47,7 @@ const batchInsert = async (tableName, popData, connection) => {
   queryString = queryString.replace('{values}', dataValues);
   queryString = queryString.replace('{keys}', keys.toString());
 
-  return connection.query(queryString);
+  return connection.query(queryString, { type: QueryTypes.INSERT });
 };
 
 const insert = async (tableName, data, connection) => {
@@ -87,7 +87,7 @@ const insert = async (tableName, data, connection) => {
   queryString = queryString.replace('{values}', dataValues);
   queryString = queryString.replace('{keys}', keys.toString());
 
-  return connection.query(queryString);
+  return connection.query(queryString, { type: QueryTypes.INSERT });
 };
 
 const update = async (tableName, data, connection) => {
@@ -113,7 +113,7 @@ const update = async (tableName, data, connection) => {
   queryString = queryString.replace('{pairs}', dataValues);
   queryString = queryString.replace('{id}', id);
 
-  return connection.query(queryString);
+  return connection.query(queryString, { type: QueryTypes.UPDATE });
 };
 
 const insertOrUpdate = async (tableName, data, connection) => {
@@ -162,7 +162,7 @@ const select = async (tableName, options, connection) => {
     queryString = `${queryString} LIMIT ${limit}`;
   }
 
-  return connection.query(queryString);
+  return connection.query(queryString, { type: QueryTypes.SELECT });
 };
 
 const exclude = async (tableName, options, connection) => {
@@ -179,7 +179,7 @@ const exclude = async (tableName, options, connection) => {
     queryString = queryString.replace('WHERE {conditions}', '');
   }
 
-  return connection.query(queryString);
+  return connection.query(queryString, { type: QueryTypes.DELETE });
 };
 
 module.exports = { batchInsert, insert, update, insertOrUpdate, select, exclude };
