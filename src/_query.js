@@ -51,7 +51,7 @@ const batchInsert = async (tableName, popData, connection) => {
 };
 
 const insert = async (tableName, data, connection) => {
-  let queryString = `INSERT INTO {table} ({keys}) VALUES {values} RETURNING *;`;
+  let queryString = `INSERT INTO "{table}" ({keys}) VALUES {values} RETURNING *;`;
   let keys = [];
   let values = [];
   let dataValues = '';
@@ -92,7 +92,7 @@ const insert = async (tableName, data, connection) => {
 
 const update = async (tableName, data, connection) => {
   const { id } = data;
-  let queryString = `UPDATE {table} SET {pairs} WHERE id = {id} RETURNING *;`;
+  let queryString = `UPDATE "{table}" SET {pairs} WHERE id = {id} RETURNING *;`;
   let pairs = [];
   let dataValues;
 
@@ -128,7 +128,7 @@ const insertOrUpdate = async (tableName, data, connection) => {
 
 const select = async (tableName, options, connection) => {
   const { select, limit, offset, join, where } = options;
-  let queryString = `SELECT {fields} FROM {table}`;
+  let queryString = `SELECT {fields} FROM "{table}"`;
 
   queryString = queryString.replace('{table}', tableName);
 
@@ -136,7 +136,7 @@ const select = async (tableName, options, connection) => {
     const selects = [];
     select.forEach(s => {
       const { table, column, as } = s;
-      selects.push(`${table}.${column} as ${as || column}`);
+      selects.push(`"${table}".${column} as ${as || column}`);
     });
     queryString = queryString.replace('{fields}', selects.join(', '));
   } else {
@@ -148,7 +148,7 @@ const select = async (tableName, options, connection) => {
       const { on, type, target } = j;
       const [k, v] = on.split('=');
       const joinType = type || 'INNER JOIN';
-      queryString = `${queryString} ${joinType} ${target} ON '${k.trim()}' = '${v.trim()}'`;
+      queryString = `${queryString} ${joinType} "${target}" ON ${k.trim()} = ${v.trim()}`;
     });
   }
 
@@ -166,7 +166,7 @@ const select = async (tableName, options, connection) => {
 };
 
 const exclude = async (tableName, options, connection) => {
-  let queryString = `DELETE FROM {table} WHERE {conditions} RETURNING *`;
+  let queryString = `DELETE FROM "{table}" WHERE {conditions} RETURNING *`;
   const { id, literal } = options;
 
   queryString = queryString.replace('{table}', tableName);
