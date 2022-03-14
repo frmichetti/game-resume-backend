@@ -13,7 +13,8 @@ import schema from './schema';
 import { DataLoaderFactory } from './dataloader';
 import { RequestedFiels } from './RequestedFields';
 
-const morgan = require('morgan')
+const morgan = require('morgan');
+const errorHandler = require('errorhandler');
 
 const middleware = require('./middleware/validation_middleware');
 import * as schemas from './schema/validation_schema'
@@ -52,23 +53,24 @@ const requestedFields = new RequestedFiels();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 app.use(express.static('public'));
 app.use(json2xls.middleware);
+app.use(errorHandler({ log: errorNotification }));
+app.use(morgan(':method :url :status :response-time ms - :res[content-length]'));
 
-function errorHandler(err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err });
+function errorNotification(err, str, req) {
+  var title = 'Error in ' + req.method + ' ' + req.url
+
+  notifier.notify({
+    title: title,
+    message: str
+  })
 }
 
-app.use(errorHandler);
-
-app.use(morgan(':method :url :status :response-time ms - :res[content-length]'))
-
-/*process.on('uncaughtException', function (error) {
+process.on('uncaughtException', function (error) {
   console.log(error.stack);
-  console.log("Node NOT Exiting...");
-});*/
+  console.log("uncaughtException Node NOT Exiting...");
+});
 
 app.use('/graphql',
   (req, res, next) => {
