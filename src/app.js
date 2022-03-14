@@ -89,7 +89,7 @@ app.use('/graphql',
 
 //Here we are configuring express to use body-parser as middle-ware.
 
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 
 app.get('/', requests.showWelcome);
 app.get('/test', requests.showTest);
