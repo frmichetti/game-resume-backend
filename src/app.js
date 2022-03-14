@@ -13,6 +13,8 @@ import schema from './schema';
 import { DataLoaderFactory } from './dataloader';
 import { RequestedFiels } from './RequestedFields';
 
+const morgan = require('morgan')
+
 const middleware = require('./middleware/validation_middleware');
 import * as schemas from './schema/validation_schema'
 
@@ -60,6 +62,8 @@ function errorHandler(err, req, res, next) {
 }
 
 app.use(errorHandler);
+
+app.use(morgan(':method :url :status :response-time ms - :res[content-length]'))
 
 /*process.on('uncaughtException', function (error) {
   console.log(error.stack);
