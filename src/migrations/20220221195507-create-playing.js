@@ -22,7 +22,7 @@ module.exports = {
       started_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: Sequelize.fn('now')
       },
       finished: {
         type: Sequelize.BOOLEAN,        
@@ -35,12 +35,12 @@ module.exports = {
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: DataTypes.NOW
+        defaultValue: Sequelize.fn('now')
       },
       updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: DataTypes.NOW
+        defaultValue: Sequelize.fn('now')
       }
     });
   },

@@ -964,8 +964,8 @@ const showGame = async (req, res, next) => {
 
 const showCodesOfGame = async (req, res, next) => {
     const { app_id } = req.params;
-    const code = await db.CodeAndTip.findOne({ where: { app_id } })
-    res.send({ code })
+    const game = await db.Game.findOne({ where: { app_id }, include: {model: db.CodeAndTip} })
+    res.send({ game })
 }
 
 const saveCode = async (req, res, next) => {
