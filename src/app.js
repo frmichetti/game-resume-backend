@@ -100,6 +100,7 @@ app.get('/game/:app_id/categories', requests.showCategoriesOfGame);
 app.get('/game/:app_id/dlcs', requests.showDLCsOfGame);
 app.get('/game/:app_id/codes', requests.showCodesOfGame);
 app.get('/game/:app_id/system', requests.showSystemOfGame);
+app.get('/game/:app_id/playing', requests.showPlayTimesOfGame);
 app.get('/origin', requests.showOriginGames);
 app.get('/ubisoft', requests.showUbisoftGames);
 app.get('/steam', requests.showSteamGames);
