@@ -90,8 +90,9 @@ export const requests = db => {
         }
     }
 
-    const showWelcome = (req, res) => {
-        res.send({ message: getMessage() })
+
+    const showWelcome = async (req, res) => {
+        res.status(200).send({ message: getMessage() })
     }
 
     const showTest = async (req, res) => {
