@@ -10,7 +10,7 @@ const _ = require('lodash');
  * @returns {*}
  */
 const batchInsert = async (tableName, popData, connection) => {
-  let queryString = `INSERT INTO {table} ({keys}) VALUES {values} RETURNING *;`;
+  let queryString = `INSERT INTO "{table}" ({keys}) VALUES {values} RETURNING *;`;
   let keys = [];
   let values = [];
   let dataValues = '';
@@ -23,7 +23,7 @@ const batchInsert = async (tableName, popData, connection) => {
   keys = [].concat(...keys);
   keys = _.uniq(keys);
 
-  insertAt = (str, index, value) => {
+  const insertAt = (str, index, value) => {
     return str.substr(0, index) + value + str.substr(index);
   };
 
@@ -33,6 +33,8 @@ const batchInsert = async (tableName, popData, connection) => {
         item[idx] = "'" + v + "'";
       } else if (v instanceof Date) {
         item[idx] = "'" + v.toISOString() + "'";
+      } else if (v == null || v == undefined) {
+        item[idx] = 'null';
       }
     });
 

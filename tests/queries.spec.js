@@ -334,69 +334,81 @@ describe('Query Util', () => {
 			DEFAULT_TIMEOUT
 		);
 	});
-	/*
-		describe('exclude', () => {
-			it('should generate a delete statement and execute when no options is provided', async () => {
-				const data = {
-					name: 'Felipe Rodrigues Michetti',
-					email: 'felipe.michetti@teste.com.br',
+
+	describe('exclude', () => {
+		it('should generate a delete statement and execute when no options is provided', async () => {
+			const data = {
+				app_id: '208650',
+				title: 'Title',
+				finished: true,
+				started_at: new Date(),
+				finished_at: new Date(),
+				created_at: new Date(),
+				updated_at: new Date(),
+			};
+
+			let [rows, metadata] = await insert('Playing', data, connection);
+			expect(rows).not.toBeNull;
+			expect(rows.length).toEqual(1);
+
+			(rows = await exclude('Playing', {}, connection));
+			expect(rows).not.toBeNull;
+			expect(rows.length).toEqual(1);
+		}, DEFAULT_TIMEOUT);
+
+		it('should generate a delete statement and execute when literal condition is provided', async () => {
+			const data = [
+				{
+					app_id: '208650',
+					title: 'Title 1',
+					finished: true,
+					started_at: new Date(),
+					finished_at: new Date(),
 					created_at: new Date(),
 					updated_at: new Date(),
-				};
-	
-				let { rows } = await insert('users', data, connection);
-				expect(rows).not.toBeNull;
-				expect(rows.length).toEqual(1);
-	
-				({ rows } = await exclude('users', {}, connection));
-				expect(rows).not.toBeNull;
-				expect(rows.length).toEqual(1);
-			});
-	
-			it('should generate a delete statement and execute when literal condition is provided', async () => {
-				const data = [
-					{
-						name: 'Felipe Rodrigues Michetti',
-						email: 'felipe.michetti@teste.com.br',
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-					{
-						name: 'Felipe Rodrigues Michetti 2',
-						email: 'felipe.michetti@teste.com.br2',
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-				];
-	
-				let { rows } = await batchInsert('users', data, connection);
-				expect(rows).not.toBeNull;
-				expect(rows.length).toEqual(2);
-	
-				const conditions = { literal: 'id > 0' };
-				({ rows } = await exclude('users', conditions, connection));
-				expect(rows).not.toBeNull;
-				expect(rows.length).toEqual(2);
-			});
-	
-			it('should generate a delete statement and execute when id condition is provided', async () => {
-				const data = [
-					{
-						name: 'Felipe Rodrigues Michetti',
-						email: 'felipe.michetti@teste.com.br',
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-				];
-	
-				let { rows } = await batchInsert('users', data, connection);
-				expect(rows).not.toBeNull;
-				expect(rows.length).toEqual(1);
-	
-				const conditions = { id: rows[0].id };
-				({ rows } = await exclude('users', conditions, connection));
-				expect(rows).not.toBeNull;
-				expect(rows.length).toEqual(1);
-			});
-		});*/
+				},
+				{
+					app_id: '208650',
+					title: 'Title 1',
+					finished: false,
+					started_at: new Date(),
+					finished_at: null,
+					created_at: new Date(),
+					updated_at: new Date(),
+				},
+			];
+
+			let [rows, metadata] = await batchInsert('Playing', data, connection);
+			expect(rows).not.toBeNull;
+			expect(rows.length).toEqual(2);
+
+			const conditions = { literal: 'id > 0' };
+			(rows = await exclude('Playing', conditions, connection));
+			expect(rows).not.toBeNull;
+			expect(rows.length).toEqual(2);
+		}, DEFAULT_TIMEOUT);
+
+		it('should generate a delete statement and execute when id condition is provided', async () => {
+			const data = [
+				{
+					app_id: '208650',
+					title: 'Title 1',
+					finished: true,
+					started_at: new Date(),
+					finished_at: new Date(),
+					created_at: new Date(),
+					updated_at: new Date(),
+				},
+			];
+
+			let [rows, metadata] = await batchInsert('Playing', data, connection);
+			expect(rows).not.toBeNull;
+			expect(rows.length).toEqual(1);
+
+			const conditions = { id: rows[0].id };
+			(rows = await exclude('Playing', conditions, connection));
+			expect(rows).not.toBeNull;
+			expect(rows.length).toEqual(1);
+		}, DEFAULT_TIMEOUT);
+	});
 });
