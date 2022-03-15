@@ -1,5 +1,6 @@
 /** @format */
 import * as db from '../src/models/index';
+import { v4 as uuidv4 } from 'uuid';
 
 const DEFAULT_TIMEOUT = 50000;
 const { clearTables } = require('./dbclear');
@@ -16,198 +17,160 @@ const _cleanFn = async () => {
 describe('Query Util', () => {
 	beforeEach(_cleanFn);
 	afterEach(_cleanFn);
-	/*
-		describe('batchInsert', () => {
-			it('should generate a single insert statement and insert data', async () => {
-				let data1 = [
-					{ name: 'Português', created_at: new Date(), updated_at: new Date() },
-					{
-						name: 'Matemática',
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-					{ name: 'História', created_at: new Date(), updated_at: new Date() },
-					{
-						name: 'Geografia',
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-				];
-	
-				await batchInsert('disciplines', data1, connection);
-	
-				let query2 = "(select id from disciplines where name = '{name}' limit 1)";
-	
-				let data2 = [
-					{
-						name: 'Módulo de Português',
-						discipline_id: query2.replace('{name}', 'Português'),
-						position: 1,
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-					{
-						name: 'Módulo de Matemática',
-						discipline_id: query2.replace('{name}', 'Matemática'),
-						position: 2,
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-					{
-						name: 'Módulo de História',
-						discipline_id: query2.replace('{name}', 'História'),
-						position: 3,
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-					{
-						name: 'Módulo de Geografia',
-						discipline_id: query2.replace('{name}', 'Geografia'),
-						position: 4,
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-				];
-	
-				await batchInsert('modules', data2, connection);
-	
-				let query3 = "(select id from modules where name = '{name}' limit 1)";
-	
-				let data3 = [
-					{
-						name: 'Revisão de Português',
-						code: 'REVPORT',
-						module_id: query3.replace('{name}', 'Módulo de Português'),
-						position: 1,
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-				];
-	
-				const { rows } = await batchInsert('sections', data3, connection);
-				expect(rows).not.toBeNull;
-				expect(rows.length).toBeGreaterThanOrEqual(1);
-			});
-			
-			it('should generate a batch insert statement and insert data', async () => {
-				let data1 = [
-					{ name: 'Português', created_at: new Date(), updated_at: new Date() },
-					{
-						name: 'Matemática',
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-					{ name: 'História', created_at: new Date(), updated_at: new Date() },
-					{
-						name: 'Geografia',
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-				];
-	
-				await batchInsert('disciplines', data1, connection);
-	
-				let query = "(select id from disciplines where name = '{name}' limit 1)";
-	
-				let data2 = [
-					{
-						name: 'Módulo de Português',
-						discipline_id: query.replace('{name}', 'Português'),
-						position: 1,
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-					{
-						name: 'Módulo de Matemática',
-						discipline_id: query.replace('{name}', 'Matemática'),
-						position: 2,
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-					{
-						name: 'Módulo de História',
-						discipline_id: query.replace('{name}', 'História'),
-						position: 3,
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-					{
-						name: 'Módulo de Geografia',
-						discipline_id: query.replace('{name}', 'Geografia'),
-						position: 4,
-						created_at: new Date(),
-						updated_at: new Date(),
-					},
-				];
-	
-				const { rows } = await batchInsert('modules', data2, connection);
-				expect(rows).not.toBeNull;
-				expect(rows.length).toBeGreaterThanOrEqual(1);
-			});
-		});
-	
-		describe('insert', () => {
-			it('should generate a insert statement and execute', async () => {
-				const data = {
-					name: 'Felipe Rodrigues Michetti',
-					email: 'frmichetti@gmail.com',
+
+	describe('batchInsert', () => {
+		it('should generate a single insert statement and insert data', async () => {
+			let data1 = [
+				{
+					app_id: `237110`,
+					title: `Title`,
+					started_at: new Date(),
+					finished: true,
+					finished_at: new Date(),
 					created_at: new Date(),
 					updated_at: new Date(),
-				};
-	
-				const { rows } = await insert('users', data, connection);
-				expect(rows).not.toBeNull;
-				expect(rows.length).toEqual(1);
-			});
-		});
-	
-		describe('update', () => {
-			it('should generate a update statement and execute', async () => {
-				let data = {
-					name: 'Felipe Rodrigues Michetti',
-					email: 'frmichetti@gmail.com',
+				},
+			];
+
+
+
+			let [rows, metadata] = await batchInsert('Playing', data1, connection);
+			expect(rows).not.toBeNull;
+			expect(rows.length).toBeGreaterThanOrEqual(1);
+
+			let query2 = `(select id from "System" where system = '{system}' limit 1)`;
+
+			let data2 = [
+				{
+					app_id: uuidv4(),
+					system_id: query2.replace('{system}', 'Origin'),
+					title: "Teste 1",
+					finished: false,
+					finished_at: null,
+					collection: false,
+					genuine: true,
+					fisical_disc: false,
 					created_at: new Date(),
 					updated_at: new Date(),
-				};
-				const res = await insert('users', data, connection);
-	
-				data.id = res.rows[0].id;
-				const { rows } = await update('users', data, connection);
-				expect(rows).not.toBeNull;
-				expect(rows.length).toEqual(1);
-			});
-		});
-	
-		describe('insertOrUpdate', () => {
-			it('should generate a update statement and execute', async () => {
-				let data = {
-					name: 'Felipe Rodrigues Michetti',
-					email: 'frmichetti@gmail.com',
+				},
+				{
+					app_id: uuidv4(),
+					system_id: query2.replace('{system}', 'Origin'),
+					title: "Teste 2",
+					finished: false,
+					finished_at: null,
+					collection: false,
+					genuine: true,
+					fisical_disc: false,
 					created_at: new Date(),
 					updated_at: new Date(),
-				};
-				const res = await insertOrUpdate('users', data, connection);
-	
-				data.id = res.rows[0].id;
-				const { rows } = await insertOrUpdate('users', data, connection);
-				expect(rows).not.toBeNull;
-				expect(rows.length).toEqual(1);
-			});
-	
-			it('should generate a insert statement and execute', async () => {
-				const data = {
-					name: 'Felipe Rodrigues Michetti',
-					email: 'frmichetti@gmail.com',
+				},
+				{
+					app_id: uuidv4(),
+					system_id: query2.replace('{system}', 'Origin'),
+					title: "Teste 3",
+					finished: false,
+					finished_at: null,
+					collection: false,
+					genuine: true,
+					fisical_disc: false,
 					created_at: new Date(),
 					updated_at: new Date(),
-				};
-	
-				const { rows } = await insertOrUpdate('users', data, connection);
-				expect(rows).not.toBeNull;
-				expect(rows.length).toBeGreaterThanOrEqual(1);
-			});
-		});
-	*/
+				},
+				{
+					app_id: uuidv4(),
+					system_id: query2.replace('{system}', 'Origin'),
+					title: "Teste 4",
+					finished: false,
+					finished_at: null,
+					collection: false,
+					genuine: true,
+					fisical_disc: false,
+					created_at: new Date(),
+					updated_at: new Date(),
+				},
+			];
+
+			[rows, metadata] = await batchInsert('Games', data2, connection);
+			expect(rows).not.toBeNull;
+			expect(rows.length).toBeGreaterThanOrEqual(1);
+		}, DEFAULT_TIMEOUT);
+	});
+
+	describe('insert', () => {
+		it('should generate a insert statement and execute', async () => {
+			const data = {
+				app_id: `237110`,
+				title: `Title`,
+				started_at: new Date(),
+				finished: true,
+				finished_at: new Date(),
+				created_at: new Date(),
+				updated_at: new Date(),
+			};
+
+			const [rows, metadata] = await insert('Playing', data, connection);
+			expect(rows).not.toBeNull;
+			expect(rows.length).toEqual(1);
+		}, DEFAULT_TIMEOUT);
+	});
+
+	describe('update', () => {
+		it('should generate a update statement and execute', async () => {
+			let data = {
+				app_id: `237110`,
+				title: `Title`,
+				started_at: new Date(),
+				finished: true,
+				finished_at: new Date(),
+				created_at: new Date(),
+				updated_at: new Date(),
+			};
+			const [res, meta] = await insert('Playing', data, connection);
+
+			data.id = res[0].id;
+			const [rows, metadata] = await update('Playing', data, connection);
+			expect(rows).not.toBeNull;
+			expect(rows.length).toEqual(1);
+		}, DEFAULT_TIMEOUT);
+	});
+
+	describe('insertOrUpdate', () => {
+		it('should generate a update statement and execute', async () => {
+			let data = {
+				app_id: `237110`,
+				title: `Title`,
+				started_at: new Date(),
+				finished: true,
+				finished_at: new Date(),
+				created_at: new Date(),
+				updated_at: new Date(),
+			};
+			const [res, meta] = await insertOrUpdate('Playing', data, connection);
+
+			data.id = res[0].id;
+			const [rows, metadata] = await insertOrUpdate('Playing', data, connection);
+			expect(rows).not.toBeNull;
+			expect(rows.length).toEqual(1);
+		}, DEFAULT_TIMEOUT);
+
+		it('should generate a insert statement and execute', async () => {
+			const data = {
+				app_id: `237110`,
+				title: `Title`,
+				started_at: new Date(),
+				finished: true,
+				finished_at: new Date(),
+				created_at: new Date(),
+				updated_at: new Date(),
+			};
+
+			const [rows, metadata] = await insertOrUpdate('Playing', data, connection);
+			expect(rows).not.toBeNull;
+			expect(rows.length).toBeGreaterThanOrEqual(1);
+		}, DEFAULT_TIMEOUT);
+	});
+
 	describe('select', () => {
 		beforeEach(() => {
 			const promises = [1, 2, 3, 4, 5].map(n =>
