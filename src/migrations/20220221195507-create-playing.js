@@ -12,7 +12,12 @@ module.exports = {
       },
       app_id: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
+        references: {          
+          model: "Games",          
+          key: 'app_id',              
+          deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE          
+        }              
       },
       started_at: {
         type: Sequelize.DATE,
