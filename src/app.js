@@ -1,7 +1,7 @@
 import 'dotenv/config'
 
 import express from 'express';
-import * as requests from './requests';
+const { requests } = require('./requests');
 
 import db from './models/index';
 import cors from 'cors';
@@ -91,56 +91,56 @@ app.use('/graphql',
 
 const port = process.env.PORT || 4000;
 
-app.get('/', requests.showWelcome);
-app.get('/test', requests.showTest);
-app.get('/statistics', requests.showStatistics);
-app.get('/categories', requests.showCategories);
-app.get('/game/:app_id', requests.showGame);
-app.get('/game/:app_id/categories', requests.showCategoriesOfGame);
-app.get('/game/:app_id/dlcs', requests.showDLCsOfGame);
-app.get('/game/:app_id/codes', requests.showCodesOfGame);
-app.get('/game/:app_id/system', requests.showSystemOfGame);
-app.get('/game/:app_id/playing', requests.showPlayTimesOfGame);
-app.get('/origin', requests.showOriginGames);
-app.get('/ubisoft', requests.showUbisoftGames);
-app.get('/steam', requests.showSteamGames);
-app.get('/steam_api', requests.getSteamGames);
-app.get('/all', requests.showAllGames);
-app.get('/gamecube', requests.showGameCubeGames);
-app.get('/virtualconsole', requests.showVirtualConsoleGames);
-app.get('/tobuy', requests.showToBuyGames);
-app.get('/wii', requests.showWiiGames);
-app.get('/wiiu', requests.showWiiUGames);
-app.get('/pc', requests.showPCGames);
-app.get('/console', requests.showConsoleGames);
-app.get('/dlcs', requests.showDLCs);
-app.get('/charts', requests.showCharts);
-app.get('/playing', requests.showPlayingGames);
-app.get('/report', requests.showReport);
-app.get('/csv', requests.exportToCsv);
-app.get('/pdf', requests.exportToPDF);
-app.get('/xls', requests.exportToXls)
-app.get('/search', requests.searchGame);
-app.get('/genre_search', requests.genreSearchGame);
-app.get('/trash', requests.showTrash);
+app.get('/', requests(db).showWelcome);
+app.get('/test', requests(db).showTest);
+app.get('/statistics', requests(db).showStatistics);
+app.get('/categories', requests(db).showCategories);
+app.get('/game/:app_id', requests(db).showGame);
+app.get('/game/:app_id/categories', requests(db).showCategoriesOfGame);
+app.get('/game/:app_id/dlcs', requests(db).showDLCsOfGame);
+app.get('/game/:app_id/codes', requests(db).showCodesOfGame);
+app.get('/game/:app_id/system', requests(db).showSystemOfGame);
+app.get('/game/:app_id/playing', requests(db).showPlayTimesOfGame);
+app.get('/origin', requests(db).showOriginGames);
+app.get('/ubisoft', requests(db).showUbisoftGames);
+app.get('/steam', requests(db).showSteamGames);
+app.get('/steam_api', requests(db).getSteamGames);
+app.get('/all', requests(db).showAllGames);
+app.get('/gamecube', requests(db).showGameCubeGames);
+app.get('/virtualconsole', requests(db).showVirtualConsoleGames);
+app.get('/tobuy', requests(db).showToBuyGames);
+app.get('/wii', requests(db).showWiiGames);
+app.get('/wiiu', requests(db).showWiiUGames);
+app.get('/pc', requests(db).showPCGames);
+app.get('/console', requests(db).showConsoleGames);
+app.get('/dlcs', requests(db).showDLCs);
+app.get('/charts', requests(db).showCharts);
+app.get('/playing', requests(db).showPlayingGames);
+app.get('/report', requests(db).showReport);
+app.get('/csv', requests(db).exportToCsv);
+app.get('/pdf', requests(db).exportToPDF);
+app.get('/xls', requests(db).exportToXls)
+app.get('/search', requests(db).searchGame);
+app.get('/genre_search', requests(db).genreSearchGame);
+app.get('/trash', requests(db).showTrash);
 
-app.post('/load_games', upload.single('sheet'), requests.processXLSToJson);
-app.post('/import_data', requests.importData);
-app.post('/create', requests.createGames);
-app.post('/categories', middleware(schemas.category_schema, 'body'), requests.createCategory);
-app.post('/game/:app_id/categories', requests.addCategoriesToGame);
-app.post('/dlc_finished', requests.finishDLC);
-app.post('/finished', requests.finishGame);
-app.post('/code', requests.saveCode);
-app.post('/restore', requests.restore);
+app.post('/load_games', upload.single('sheet'), requests(db).processXLSToJson);
+app.post('/import_data', requests(db).importData);
+app.post('/create', requests(db).createGames);
+app.post('/categories', middleware(schemas.category_schema, 'body'), requests(db).createCategory);
+app.post('/game/:app_id/categories', requests(db).addCategoriesToGame);
+app.post('/dlc_finished', requests(db).finishDLC);
+app.post('/finished', requests(db).finishGame);
+app.post('/code', requests(db).saveCode);
+app.post('/restore', requests(db).restore);
 
-app.put('/update', requests.updateGame);
-app.put('/categories', middleware(schemas.category_schema, 'body'), requests.updateCategory);
-app.put('/game/:app_id/categories', requests.updateCategoriesToGame);
-app.put('/code', requests.updateCode);
+app.put('/update', requests(db).updateGame);
+app.put('/categories', middleware(schemas.category_schema, 'body'), requests(db).updateCategory);
+app.put('/game/:app_id/categories', requests(db).updateCategoriesToGame);
+app.put('/code', requests(db).updateCode);
 
-app.delete('/remove', requests.deleteGame);
-app.delete('/trash', requests.deleteTrash);
+app.delete('/remove', requests(db).deleteGame);
+app.delete('/trash', requests(db).deleteTrash);
 
 
 app.listen(port, () => {
