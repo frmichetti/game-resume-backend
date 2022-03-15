@@ -101,7 +101,7 @@ export const requests = db => {
             res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -135,30 +135,30 @@ export const requests = db => {
     const showCategories = async (req, res) => {
         try {
             const categories = await db.Category.findAll({ order: [["name", "ASC"]] });
-            res.status(200).send({ categories })
+            res.status(200).send({ "categories": categories })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
     const showOriginGames = async (req, res) => {
         try {
             const games = await db.Game.findAll({ order: [["title", "ASC"]], where: { system_id: 1 } });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
     const showUbisoftGames = async (req, res) => {
         try {
             const games = await db.Game.findAll({ order: [["title", "ASC"]], where: { system_id: 3 } });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -169,10 +169,10 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                     [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 2 }
             });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -181,20 +181,20 @@ export const requests = db => {
             const response = await axios.get(`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_KEY}&steamid=${process.env.STEAM_ID}&format=json&include_appinfo=true`);
             const games = response.data.response.games;
 
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
     const showAllGames = async (req, res) => {
         try {
             const games = await db.sequelize.query('SELECT * FROM "all_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -205,10 +205,10 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                     [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 5 }
             });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -219,10 +219,10 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                     [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 6 }
             });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -233,10 +233,10 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                     [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 4 }
             });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -250,10 +250,10 @@ export const requests = db => {
                 ]
 
             });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -261,10 +261,10 @@ export const requests = db => {
     const showToBuyGames = async (req, res) => {
         try {
             const games = await db.ToBuy.findAll({ order: [["title", "ASC"]] });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -272,20 +272,20 @@ export const requests = db => {
     const showPCGames = async (req, res) => {
         try {
             const games = await db.sequelize.query('SELECT * FROM "all_pc_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
     const showConsoleGames = async (req, res) => {
         try {
             const games = await db.sequelize.query('SELECT * FROM "all_console_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -296,21 +296,21 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at',
                     [db.sequelize.fn('which_system', db.sequelize.col('app_id')), 'system']]
             });
-            res.send({ games: dlcs })
+            res.send({ "games": dlcs })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
     const showDLCsByID = async (req, res) => {
-        const id = req.query.id;
         try {
+            const id = req.query.id;
             const dlcs = await db.DLC.findAll({ where: { id } });
-            res.send({ games: dlcs })
+            res.send({ "games": dlcs })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -328,7 +328,7 @@ export const requests = db => {
 
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
 
         } else if (type === 'finished') {
@@ -342,7 +342,7 @@ export const requests = db => {
 
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
         } else if (type === "total_percent") {
             try {
@@ -355,7 +355,7 @@ export const requests = db => {
 
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
         } else if (type === "finished_percent") {
             try {
@@ -368,7 +368,7 @@ export const requests = db => {
 
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
         } else {
             res.status(400).send({ msg: "unknow type" });
@@ -377,7 +377,7 @@ export const requests = db => {
 
     const showPlayingGames = async (req, res) => {
         const games = await db.Playing.findAll({ order: [["title", "ASC"]] });
-        res.send({ games })
+        res.send({ "games": games })
     }
 
     const createGames = async (req, res) => {
@@ -462,7 +462,7 @@ export const requests = db => {
                 res.send({ ok: true, result, metadata })
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
         }
     }
@@ -479,7 +479,7 @@ export const requests = db => {
             res.send({ dlcs: result });
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -558,7 +558,7 @@ export const requests = db => {
                 res.send({ result: result[0] });
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
         }
     }
@@ -568,10 +568,10 @@ export const requests = db => {
         try {
             const games = await db.sequelize.query(`SELECT * FROM "all_games_list_api" WHERE title ilike '%${q}%';`, { type: QueryTypes.SELECT });
 
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -580,10 +580,10 @@ export const requests = db => {
         try {
             const games = await db.sequelize.query(`select *, which_system(app_id) AS system from "all_games_genres_aggregate" WHERE genre = '${q}' ORDER BY title ASC;`, { type: QueryTypes.SELECT });
 
-            res.send({ games })
+            res.send({ "games": games })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -683,7 +683,7 @@ export const requests = db => {
 
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
         }
     }
@@ -717,7 +717,7 @@ export const requests = db => {
                 res.send({ ok: true })
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
         } else if (table === 'DLC') {
             let q = "";
@@ -729,7 +729,7 @@ export const requests = db => {
                 res.send({ ok: true })
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
 
         } else if (table === 'ToBuy') {
@@ -742,7 +742,7 @@ export const requests = db => {
                 res.send({ ok: true })
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
 
         } else if (table === 'VirtualConsole') {
@@ -755,7 +755,7 @@ export const requests = db => {
                 res.send({ ok: true })
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
 
         } else {
@@ -768,7 +768,7 @@ export const requests = db => {
                 res.send({ ok: true })
             } catch (error) {
                 console.error(error)
-                res.status(400).send({ msg: error.message || error.process.message });
+                res.status(400).send({ "msg": error.message || error.process.message });
             }
         }
     }
@@ -813,7 +813,7 @@ export const requests = db => {
 
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -1055,7 +1055,7 @@ export const requests = db => {
 
                 mapGames.forEach(i => games.push(i));
 
-                res.send({ games })
+                res.send({ "games": games })
             });
     }
 
@@ -1069,7 +1069,7 @@ export const requests = db => {
     return {
         showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
         showSteamGames, getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
-        showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames,
+        showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, showDLCsByID,
         showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
         finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
         createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData
