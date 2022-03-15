@@ -1,5 +1,5 @@
 
-import * as db from '../../models/index';
+import * as db from '../../src/models/index';
 import { v4 as uuidv4 } from 'uuid';
 
 

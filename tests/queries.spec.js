@@ -1,5 +1,5 @@
 /** @format */
-import * as db from '../models/index';
+import * as db from '../src/models/index';
 
 const DEFAULT_TIMEOUT = 50000;
 const { clearTables } = require('./dbclear');
@@ -7,7 +7,7 @@ const { clearTables } = require('./dbclear');
 
 let connection = db.sequelize;
 
-const { batchInsert, insert, update, insertOrUpdate, select, exclude } = require('../_query');
+const { batchInsert, insert, update, insertOrUpdate, select, exclude } = require('../src/_query');
 
 const _cleanFn = async () => {
 	return await clearTables(connection, ['Playing']);
