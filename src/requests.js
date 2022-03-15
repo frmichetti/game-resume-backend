@@ -92,13 +92,13 @@ export const requests = db => {
 
 
     const showWelcome = async (req, res) => {
-        res.status(200).send({ message: getMessage() })
+        res.status(200).send({ "message": getMessage() })
     }
 
     const showTest = async (req, res) => {
         try {
             const games = await db.Game.findAll();
-            res.status(200).send({ games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ msg: error.message || error.process.message });
