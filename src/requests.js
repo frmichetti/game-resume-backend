@@ -106,30 +106,29 @@ export const requests = db => {
     }
 
     const showStatistics = async (req, res) => {
-
-        let q = ""
-
-        switch (req.query.from) {
-            case 'finished':
-                q = 'SELECT * FROM "total_finished_games_for_dashboard"'
-                break;
-            case 'totals':
-                q = `SELECT * FROM "total_games_for_dashboard"`
-                break;
-            case 'finished_over_system':
-                q = `SELECT * FROM "total_of_finished_by_system_percentual_over_system"`
-                break;
-            default:
-                q = 'SELECT 1'
-                break;
-        }
-
         try {
+            let q = ""
+
+            switch (req.query.from) {
+                case 'finished':
+                    q = 'SELECT * FROM "total_finished_games_for_dashboard"'
+                    break;
+                case 'totals':
+                    q = `SELECT * FROM "total_games_for_dashboard"`
+                    break;
+                case 'finished_over_system':
+                    q = `SELECT * FROM "total_of_finished_by_system_percentual_over_system"`
+                    break;
+                default:
+                    q = 'SELECT 1'
+                    break;
+            }
+
             const result = await db.sequelize.query(q, { type: QueryTypes.SELECT });
-            res.status(200).send({ result })
+            res.status(200).send({ "result": result })
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message || error.process.message });
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
