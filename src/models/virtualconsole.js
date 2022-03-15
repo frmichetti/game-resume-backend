@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'VirtualConsole',
-    tableName: 'VirtualConsole'
+    tableName: 'VirtualConsole',
+    underscored: true
   });
   return VirtualConsole;
 };

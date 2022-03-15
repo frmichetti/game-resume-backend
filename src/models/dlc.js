@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'DLC',
     tableName: 'DLC',
+    underscored: true
   });
   return DLC;
 };
