@@ -46,6 +46,9 @@ export const tobuy_schema = Joi.object().keys({
         .required(),
     finished: Joi.boolean()
         .required(),
+    finished_at: Joi.date()
+        .allow(null)
+        .optional(),
     genuine: Joi.boolean()
         .required(),
     system: Joi.string()
@@ -82,18 +85,27 @@ export const dlc_schema = Joi.object().keys({
         .required(),
     finished: Joi.boolean()
         .required(),
+    finished_at: Joi.date()
+        .allow(null)
+        .optional(),
     collection: Joi.boolean()
         .required(),
 });
 
 export const playing_schema = Joi.object().keys({
-    id: Joi.number()
-        .greater(0)
-        .required(),
     app_id: Joi.string()
         .min(3)
         .max(30),
     title: Joi.string()
         .min(3)
         .required(),
+    started_at: Joi.date()
+        .allow(null)
+        .optional(),
+    finished: Joi.boolean()
+        .allow(null)
+        .optional(),
+    finished_at: Joi.date()
+        .allow(null)
+        .optional(),
 });

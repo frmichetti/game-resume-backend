@@ -367,15 +367,16 @@ export const requests = db => {
     const createGames = async (req, res) => {
         try {
             const tableName = req.body.table;
-            let table, id, app_id, system_id, title, finished, finished_at, fisical_disc, genuine, collection, system, magnetic_link;
+            let table, id, app_id, system_id, title, finished, finished_at, fisical_disc, genuine, collection, system, magnetic_link, started_at;
 
             title = req.body.title ? req.body.title.replaceAll("'", "''") : null;
             finished = req.body.finished ? req.body.finished : false;
             finished_at = req.body.finished_at ? req.body.finished_at : now();
+            started_at = req.body.finished_at ? req.body.finished_at : now();
             fisical_disc = req.body.fisical_disc ? req.body.fisical_disc : false;
 
             // Not working on Tests: 
-            // ({ id, app_id, system_id, genuine, collection, magnetic_link }) = req.body;
+            // ({ id, app_id, system, system_id, genuine, collection, magnetic_link }) = req.body;
 
             id = req.body.id;
             app_id = req.body.app_id;
@@ -383,6 +384,7 @@ export const requests = db => {
             genuine = req.body.genuine;
             collection = req.body.collection;
             magnetic_link = req.body.magnetic_link;
+            system = req.body.system
 
             table = selectTable(tableName);
 
@@ -391,22 +393,23 @@ export const requests = db => {
             }
 
             let validation;
+            let q = "";
 
             switch (table) {
                 case 'Games':
                     validation = schemas.game_schema.validate({ app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc })
                     break;
                 case 'ToBuy':
-                    validation = schemas.tobuy_schema.validate({ title, finished, genuine, system, magnetic_link })
+                    validation = schemas.tobuy_schema.validate({ title, finished, finished_at, genuine, system, magnetic_link })
                     break;
                 case 'VirtualConsole':
                     validation = schemas.virtualconsole_schema.validate({ app_id, system_id, title, finished, genuine })
                     break;
                 case 'DLC':
-                    validation = schemas.dlc_schema.validate({ app_id, title, finished, collection })
+                    validation = schemas.dlc_schema.validate({ app_id, title, finished, finished_at, collection })
                     break;
                 case 'Playing':
-                    validation = schemas.playing_schema.validate({ id, app_id, title })
+                    validation = schemas.playing_schema.validate({ app_id, title, started_at, finished, finished_at })
                     break;
                 default:
                     throw new Error('NOT Implemented YET')
@@ -416,7 +419,6 @@ export const requests = db => {
             if (validation.error) {
                 throw new Error(validation.error.message);
             } else {
-                let q = "";
 
                 if (tableName === 'virtualconsole') {
                     if (finished) {
@@ -431,9 +433,18 @@ export const requests = db => {
                         q = `INSERT INTO "${table}" (title,finished,system,magnetic_link) VALUES ('${title}',${finished},'${system}','${magnetic_link}') RETURNING *`;
                     }
                 } else if (tableName === 'playing') {
-                    q = `INSERT INTO "${table}" (app_id, title, started_at) VALUES ('${app_id}','${title}','${now()}') RETURNING *`
+                    if (finished) {
+                        q = `INSERT INTO "${table}" (app_id, title, started_at, finished, finished_at) VALUES ('${app_id}','${title}','${started_at}', ${finished}, '${finished_at}') RETURNING *`
+                    } else {
+                        q = `INSERT INTO "${table}" (app_id, title, started_at, finished) VALUES ('${app_id}','${title}','${started_at}', ${finished}) RETURNING *`
+                    }
+
                 } else if (tableName === 'dlcs') {
-                    q = `INSERT INTO "${table}" (app_id, title, finished, collection) VALUES ('${app_id}', '${title}', ${finished}, ${collection}) RETURNING *`
+                    if (finished) {
+                        q = `INSERT INTO "${table}" (app_id, title, finished, finished_at, collection) VALUES ('${app_id}', '${title}', ${finished},'${finished_at}', ${collection}) RETURNING *`
+                    } else {
+                        q = `INSERT INTO "${table}" (app_id, title, finished, collection) VALUES ('${app_id}', '${title}', ${finished}, ${collection}) RETURNING *`
+                    }
                 } else {
                     if (finished) {
                         q = `INSERT INTO "${table}" (app_id,system_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES ('${app_id}',${system_id},'${title}',${finished},'${finished_at}',${collection},${genuine},${fisical_disc}) RETURNING *`;
