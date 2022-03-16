@@ -653,42 +653,42 @@ describe('requests', () => {
         describe('success', () => {
             it('update a valid Steam Game not Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 2` }, connection.sequelize);
-                req.body = { table: 'steam', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'steam', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid Steam Game Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 2` }, connection.sequelize);
-                req.body = { table: 'steam', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'steam', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid Origin Game not Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 1` }, connection.sequelize);
-                req.body = { table: 'origin', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 1, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'origin', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 1, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid Origin Game Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 1` }, connection.sequelize);
-                req.body = { table: 'origin', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 1, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'origin', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 1, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid Ubisoft Game not Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 3` }, connection.sequelize);
-                req.body = { table: 'ubisoft', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 3, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'ubisoft', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 3, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid Ubisoft Game Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 3` }, connection.sequelize);
-                req.body = { table: 'ubisoft', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 3, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'ubisoft', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 3, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
@@ -696,14 +696,14 @@ describe('requests', () => {
 
             it('update a valid GameCube Game not Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 4` }, connection.sequelize);
-                req.body = { table: 'gamecube', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 4, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'gamecube', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 4, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid GameCube Game Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 4` }, connection.sequelize);
-                req.body = { table: 'gamecube', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 4, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'gamecube', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 4, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
@@ -711,56 +711,56 @@ describe('requests', () => {
 
             it('update a valid Wii Game not Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 5` }, connection.sequelize);
-                req.body = { table: 'wii', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 5, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'wii', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 5, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid Wii Game Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 5` }, connection.sequelize);
-                req.body = { table: 'wii', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 5, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'wii', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 5, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid WiiU Game not Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 6` }, connection.sequelize);
-                req.body = { table: 'wiiu', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 6, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'wiiu', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 6, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid WiiU Game Finished', async () => {
                 const rows = await select('Games', { where: `"Games".system_id = 6` }, connection.sequelize);
-                req.body = { table: 'wiiu', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 6, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'wiiu', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 6, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid Virtual Console Game not Finished', async () => {
                 const rows = await select('VirtualConsole', { where: `"VirtualConsole".system_id = 7` }, connection.sequelize);
-                req.body = { table: 'virtualconsole', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 7, title: 'Test 3' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, genuine: true };
+                req.body = { table: 'virtualconsole', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 7, title: 'Test 3' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, genuine: true };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid Virtual Console Game Finished', async () => {
                 const rows = await select('VirtualConsole', { where: `"VirtualConsole".system_id = 7` }, connection.sequelize);
-                req.body = { table: 'virtualconsole', id: rows[0].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 7, title: 'Test 3' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), genuine: true };
+                req.body = { table: 'virtualconsole', id: rows[rows.length -1].id, app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 7, title: 'Test 3' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), genuine: true };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid To Buy Game not Finished', async () => {
                 const rows = await select('ToBuy', {}, connection.sequelize);
-                req.body = { table: 'tobuy', id: rows[0].id, title: 'Test 4' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, genuine: false, system: 'Test System', magnetic_link: 'XXXXXXXXXXXXXX' };
+                req.body = { table: 'tobuy', id: rows[rows.length - 1].id, title: 'Test 4' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, genuine: false, system: 'Test System', magnetic_link: 'XXXXXXXXXXXXXX' };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid To Buy Game Finished', async () => {
                 const rows = await select('ToBuy', {}, connection.sequelize);
-                req.body = { table: 'tobuy', id: rows[0].id, title: 'Test 4' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), genuine: false, system: 'Test System', magnetic_link: 'XXXXXXXXXXXXXX' };
+                req.body = { table: 'tobuy', id: rows[rows.length - 1].id, title: 'Test 4' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), genuine: false, system: 'Test System', magnetic_link: 'XXXXXXXXXXXXXX' };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
@@ -810,14 +810,14 @@ describe('requests', () => {
             }, DEFAULT_TIMEOUT);
 
             it('update a valid DLC not Finished', async () => {
-                const rows = await select('DLC', {}, connection.sequelize);
+                const rows = await select('DLC', { where: `app_id = '12210'` }, connection.sequelize);
                 req.body = { table: 'dlcs', id: rows[0].id, app_id: '12210', title: 'Test 6' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('update a valid DLC Finished', async () => {
-                const rows = await select('DLC', {}, connection.sequelize);
+                const rows = await select('DLC', { where: `app_id = '12210'` }, connection.sequelize);
                 req.body = { table: 'dlcs', id: rows[0].id, app_id: '12210', title: 'Test 6' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false };
                 await requests(connection).updateGame(req, res)
                 expect(res.status.calledWith(200)).toBeTruthy()
