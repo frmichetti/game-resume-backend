@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 const sinon = require('sinon');
 
 const { requests } = require('../src/requests');
+const { batchInsert, insert, update, insertOrUpdate, select, exclude } = require('../src/_query');
+const { clearTables } = require('./dbclear');
 
 const DEFAULT_TIMEOUT = 50000;
 const connection = db;
@@ -407,7 +409,142 @@ describe('requests', () => {
             await requests(connection).finishDLC(req, res)
             expect(res.status.calledWith(200)).toBeTruthy()
         }, DEFAULT_TIMEOUT);
+    });
 
+    describe('finishGame', () => {
+        describe('errors', () => {
+            it('error if no params is provided', async () => {
+                req.body = {}
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(400)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('error if table is not provided', async () => {
+                req.body = { table: null }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(400)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('error if finished is not provided', async () => {
+                req.body = { table: 'playing', finished: null }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(400)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('error if id is not provided', async () => {
+                req.body = { table: 'playing', finished: true, id: null }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(400)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+        });
+
+        describe('success', () => {
+            beforeEach(async () => {
+                let data1 = [
+                    {
+                        app_id: `237110`,
+                        title: `Title`,
+                        started_at: new Date(),
+                        finished: true,
+                        finished_at: new Date(),
+                        created_at: new Date(),
+                        updated_at: new Date(),
+                    },
+                ];
+
+                await batchInsert('Playing', data1, connection.sequelize);
+            });
+
+            afterEach(async () => {
+                await clearTables(connection.sequelize, ['Playing']);
+            });
+
+
+            it('should update Playing sets finished', async () => {
+                const rows = await select('Playing', {}, connection.sequelize);
+                req.body = { table: 'playing', finished: true, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update Playing unset finished', async () => {
+                const rows = await select('Playing', {}, connection.sequelize);
+                req.body = { table: 'playing', finished: false, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update DLC sets finished', async () => {
+                const rows = await select('DLC', {}, connection.sequelize);
+                req.body = { table: 'dlcs', finished: true, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update DLC unset finished', async () => {
+                const rows = await select('DLC', {}, connection.sequelize);
+                req.body = { table: 'dlcs', finished: false, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update ToBuy sets finished', async () => {
+                const rows = await select('ToBuy', {}, connection.sequelize);
+                req.body = { table: 'tobuy', finished: true, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update ToBuy unset finished', async () => {
+                const rows = await select('ToBuy', {}, connection.sequelize);
+                req.body = { table: 'tobuy', finished: false, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update VirtualConsole sets finished', async () => {
+                const rows = await select('VirtualConsole', {}, connection.sequelize);
+                req.body = { table: 'virtualconsole', finished: true, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update VirtualConsole unset finished', async () => {
+                const rows = await select('VirtualConsole', {}, connection.sequelize);
+                req.body = { table: 'virtualconsole', finished: false, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update Games sets finished without app_id', async () => {
+                const rows = await select('Games', {}, connection.sequelize);
+                req.body = { table: 'steam', finished: true, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update Games unset finished without app_id', async () => {
+                const rows = await select('Games', {}, connection.sequelize);
+                req.body = { table: 'steam', finished: false, id: rows[0].id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+
+            it('should update Games sets finished with app_id', async () => {
+                const rows = await select('Games', {}, connection.sequelize);
+                req.body = { table: 'steam', finished: true, id: rows[0].id, app_id: rows[0].app_id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+
+            it('should update Games unset finished with app_id', async () => {
+                const rows = await select('Games', {}, connection.sequelize);
+                req.body = { table: 'steam', finished: false, id: rows[0].id, app_id: rows[0].app_id }
+                await requests(connection).finishGame(req, res)
+                expect(res.status.calledWith(200)).toBeTruthy()
+            }, DEFAULT_TIMEOUT);
+        });
     });
 
 });

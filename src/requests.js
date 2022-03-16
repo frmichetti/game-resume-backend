@@ -480,83 +480,88 @@ export const requests = db => {
     }
 
     const finishGame = async (req, res) => {
-
-        const tableName = req.body.table;
-        let table, title, finished, app_id, id;
-
-        id = req.body.id;
-        app_id = req.body.app_id;
-        title = req.body.title;
-        finished = req.body.finished;
-
-        table = selectTable(tableName)
-
-        if (table == null) {
-            const errorMessage = "Table does not match";
-            res.statusMessage = errorMessage;
-            res.status(400).send({ msg: errorMessage });
-        } else if (title == null || title == '' || title == undefined) {
-            const errorMessage = "Game Title is Empty";
-            res.statusMessage = errorMessage;
-            res.status(400).send({ msg: errorMessage });
-        } else if (finished == null) {
-            const errorMessage = "Finished is not Defined";
-            res.statusMessage = errorMessage;
-            res.status(400).send({ msg: errorMessage });
-        } else {
-
+        try {
+            const tableName = req.body.table;
+            let table;
             let q = "";
 
-            if (tableName === 'playing' || tableName === 'Playing') {
-                if (finished) {
-                    q = `UPDATE "Playing" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
-                } else {
-                    q = `UPDATE "Playing" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
-                }
+            const { id, app_id, finished } = req.body;
 
-            } else if (tableName === 'dlcs' || tableName === 'DLCS') {
-                if (finished) {
-                    q = `UPDATE "DLC" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
-                } else {
-                    q = `UPDATE "DLC" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
-                }
-            } else if (tableName === 'tobuy' || tableName === 'ToBuy') {
-                if (finished) {
-                    q = `UPDATE "ToBuy" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
-                } else {
-                    q = `UPDATE "ToBuy" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
-                }
-            } else if (tableName === 'virtualconsole' || tableName === 'VirtualConsole') {
-                if (finished) {
-                    q = `UPDATE "VirtualConsole" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
-                } else {
-                    q = `UPDATE "VirtualConsole" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
-                }
+            table = selectTable(tableName)
+
+            if (table == null) {
+                throw new Error("Table does not match")
+            } else if (finished == null) {
+                throw new Error("Finished is not Defined")
+            } else if (id == null) {
+                throw new Error("ID is not defined")
             } else {
-                if (finished) {
-                    if (app_id) {
-                        q = `UPDATE "Games" SET finished = ${finished}, finished_at = '${now()}' WHERE app_id = '${app_id}' RETURNING *`;
+
+                if (tableName === 'playing' || tableName === 'Playing') {
+                    q = `SELECT 1 FROM "Playing" WHERE id = ${id}`
+                    const r = await db.sequelize.query(q, { type: QueryTypes.SELECT });
+                    if (r.length < 1) throw new Error(`Playing with ID: ${id} not found`);
+                    if (finished) {
+                        q = `UPDATE "Playing" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
                     } else {
-                        q = `UPDATE "Games" SET finished = ${finished}, finished_at = '${now()}' WHERE id = '${id}' RETURNING *`;
+                        q = `UPDATE "Playing" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
+                    }
+
+                } else if (tableName === 'dlcs' || tableName === 'DLCS') {
+                    q = `SELECT 1 FROM "DLC" WHERE id = ${id}`
+                    const r = await db.sequelize.query(q, { type: QueryTypes.SELECT });
+                    if (r.length < 1) throw new Error(`DLC with ID: ${id} not found`);
+                    if (finished) {
+                        q = `UPDATE "DLC" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
+                    } else {
+                        q = `UPDATE "DLC" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
+                    }
+                } else if (tableName === 'tobuy' || tableName === 'ToBuy') {
+                    q = `SELECT 1 FROM "ToBuy" WHERE id = ${id}`
+                    const r = await db.sequelize.query(q, { type: QueryTypes.SELECT });
+                    if (r.length < 1) throw new Error(`ToBuy with ID: ${id} not found`);
+                    if (finished) {
+                        q = `UPDATE "ToBuy" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
+                    } else {
+                        q = `UPDATE "ToBuy" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
+                    }
+                } else if (tableName === 'virtualconsole' || tableName === 'VirtualConsole') {
+                    q = `SELECT 1 FROM "VirtualConsole" WHERE id = ${id}`
+                    const r = await db.sequelize.query(q, { type: QueryTypes.SELECT });
+                    if (r.length < 1) throw new Error(`VirtualConsole with ID: ${id} not found`);
+                    if (finished) {
+                        q = `UPDATE "VirtualConsole" SET finished = ${finished}, finished_at = '${now()}' WHERE id = ${id} RETURNING *`;
+                    } else {
+                        q = `UPDATE "VirtualConsole" SET finished = ${finished}, finished_at = null WHERE id = ${id} RETURNING *`;
                     }
                 } else {
-                    if (app_id) {
-                        q = `UPDATE "Games" SET finished = ${finished}, finished_at = null WHERE app_id = '${app_id}' RETURNING *`;
+                    q = `SELECT 1 FROM "Games" WHERE id = ${id} OR app_id = '${app_id}'`
+                    const r = await db.sequelize.query(q, { type: QueryTypes.SELECT });
+                    if (r.length < 1) throw new Error(`Games with ID: ${id} or AppId: ${app_id} not found`);
+                    if (finished) {
+                        if (app_id) {
+                            q = `UPDATE "Games" SET finished = ${finished}, finished_at = '${now()}' WHERE app_id = '${app_id}' RETURNING *`;
+                        } else {
+                            q = `UPDATE "Games" SET finished = ${finished}, finished_at = '${now()}' WHERE id = '${id}' RETURNING *`;
+                        }
                     } else {
-                        q = `UPDATE "Games" SET finished = ${finished}, finished_at = null WHERE id = '${id}' RETURNING *`;
+                        if (app_id) {
+                            q = `UPDATE "Games" SET finished = ${finished}, finished_at = null WHERE app_id = '${app_id}' RETURNING *`;
+                        } else {
+                            q = `UPDATE "Games" SET finished = ${finished}, finished_at = null WHERE id = '${id}' RETURNING *`;
+                        }
                     }
                 }
             }
 
-            try {
-                const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });
+            const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });
 
-                res.status(200).send({ "result": result[0] });
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
-            }
+            res.status(200).send({ "result": result[0] });
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
+
     }
 
     const searchGame = async (req, res) => {
