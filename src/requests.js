@@ -23,7 +23,7 @@ export const requests = db => {
         return new Date().toISOString().slice(0, 19).replace('T', ' ');
     }
 
-    const queryInTable = (tableName) => {
+    const queryInTable = tableName => {
         let q = ""
         switch (tableName) {
             case 'steam':
@@ -63,7 +63,7 @@ export const requests = db => {
         return q;
     }
 
-    const selectTable = (tableName) => {
+    const selectTable = tableName => {
         switch (tableName) {
             case "wiiu":
                 return "Games"
@@ -145,7 +145,7 @@ export const requests = db => {
     const showOriginGames = async (req, res) => {
         try {
             const games = await db.Game.findAll({ order: [["title", "ASC"]], where: { system_id: 1 } });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -155,7 +155,7 @@ export const requests = db => {
     const showUbisoftGames = async (req, res) => {
         try {
             const games = await db.Game.findAll({ order: [["title", "ASC"]], where: { system_id: 3 } });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -169,7 +169,7 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                     [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 2 }
             });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -181,7 +181,7 @@ export const requests = db => {
             const response = await axios.get(`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_KEY}&steamid=${process.env.STEAM_ID}&format=json&include_appinfo=true`);
             const games = response.data.response.games;
 
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -191,7 +191,7 @@ export const requests = db => {
     const showAllGames = async (req, res) => {
         try {
             const games = await db.sequelize.query('SELECT * FROM "all_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -205,7 +205,7 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                     [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 5 }
             });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -219,7 +219,7 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                     [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 6 }
             });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -233,7 +233,7 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at', 'genuine', 'fisical_disc', 'system_id',
                     [db.sequelize.fn('has_dlc', db.sequelize.col('app_id')), 'has_dlc']], where: { system_id: 4 }
             });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -250,7 +250,7 @@ export const requests = db => {
                 ]
 
             });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -261,7 +261,7 @@ export const requests = db => {
     const showToBuyGames = async (req, res) => {
         try {
             const games = await db.ToBuy.findAll({ order: [["title", "ASC"]] });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -272,7 +272,7 @@ export const requests = db => {
     const showPCGames = async (req, res) => {
         try {
             const games = await db.sequelize.query('SELECT * FROM "all_pc_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -282,7 +282,7 @@ export const requests = db => {
     const showConsoleGames = async (req, res) => {
         try {
             const games = await db.sequelize.query('SELECT * FROM "all_console_games" ORDER BY title ASC', { type: QueryTypes.SELECT });
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -296,7 +296,7 @@ export const requests = db => {
                 attributes: ['id', 'app_id', 'title', 'collection', 'finished', 'finished_at',
                     [db.sequelize.fn('which_system', db.sequelize.col('app_id')), 'system']]
             });
-            res.send({ "games": dlcs })
+            res.status(200).send({ "games": dlcs })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -307,7 +307,7 @@ export const requests = db => {
         try {
             const id = req.query.id;
             const dlcs = await db.DLC.findAll({ where: { id } });
-            res.send({ "games": dlcs })
+            res.status(200).send({ "games": dlcs })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -315,155 +315,140 @@ export const requests = db => {
     }
 
     const showCharts = async (req, res) => {
-        const type = req.query.type;
-
-        if (type === 'total') {
-            try {
-                const stats = await db.sequelize.query('SELECT * FROM "total_of_games_by_system"', { type: QueryTypes.SELECT })
-                const labels = stats.map(i => i.system)
-                const values = stats.map(i => i.total)
-                const dataset = "Total of Games"
-
-                res.send({ stats, labels, values, dataset })
-
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
+        try {
+            const type = req.query.type;
+            let stats, labels, values, dataset;
+            switch (type) {
+                case 'total':
+                    stats = await db.sequelize.query('SELECT * FROM "total_of_games_by_system"', { type: QueryTypes.SELECT })
+                    labels = stats.map(i => i.system)
+                    values = stats.map(i => i.total)
+                    dataset = "Total of Games"
+                    break;
+                case 'finished':
+                    stats = await db.sequelize.query('SELECT * FROM "total_of_finished_games_by_system"', { type: QueryTypes.SELECT })
+                    labels = stats.map(i => i.system)
+                    values = stats.map(i => i.total)
+                    dataset = "Total of Finished Games"
+                    break;
+                case 'total_percent':
+                    stats = await db.sequelize.query('SELECT * FROM "total_of_games_by_system_percentual"', { type: QueryTypes.SELECT })
+                    labels = stats.map(i => i.system)
+                    values = stats.map(i => i.percentual)
+                    dataset = "Percent of Total Games"
+                    break;
+                case 'finished_percent':
+                    stats = await db.sequelize.query('SELECT * FROM "total_of_finished_games_by_system_percentual"', { type: QueryTypes.SELECT })
+                    labels = stats.map(i => i.system)
+                    values = stats.map(i => i.percentual)
+                    dataset = "Percent of Finished Games"
+                    break;
+                default:
+                    throw new Error('unknow type')
+                    break;
             }
-
-        } else if (type === 'finished') {
-            try {
-                const stats = await db.sequelize.query('SELECT * FROM "total_of_finished_games_by_system"', { type: QueryTypes.SELECT })
-                const labels = stats.map(i => i.system)
-                const values = stats.map(i => i.total)
-                const dataset = "Total of Finished Games"
-
-                res.send({ stats, labels, values, dataset })
-
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
-            }
-        } else if (type === "total_percent") {
-            try {
-                const stats = await db.sequelize.query('SELECT * FROM "total_of_games_by_system_percentual"', { type: QueryTypes.SELECT })
-                const labels = stats.map(i => i.system)
-                const values = stats.map(i => i.percentual)
-                const dataset = "Percent of Total Games"
-
-                res.send({ stats, labels, values, dataset })
-
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
-            }
-        } else if (type === "finished_percent") {
-            try {
-                const stats = await db.sequelize.query('SELECT * FROM "total_of_finished_games_by_system_percentual"', { type: QueryTypes.SELECT })
-                const labels = stats.map(i => i.system)
-                const values = stats.map(i => i.percentual)
-                const dataset = "Percent of Finished Games"
-
-                res.send({ stats, labels, values, dataset })
-
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
-            }
-        } else {
-            res.status(400).send({ msg: "unknow type" });
+            res.status(200).send({ stats, labels, values, dataset })
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
     const showPlayingGames = async (req, res) => {
-        const games = await db.Playing.findAll({ order: [["title", "ASC"]] });
-        res.send({ "games": games })
+        try {
+            const games = await db.Playing.findAll({ order: [["title", "ASC"]] });
+            res.status(200).send({ "games": games })
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message || error.process.message });
+        }
     }
 
     const createGames = async (req, res) => {
-        const tableName = req.body.table;
-        let table, title, finished, finished_at, fisical_disc, id, app_id, system, system_id, genuine, collection, magnetic_link;
+        try {
+            const tableName = req.body.table;
+            let table, id, app_id, system_id, title, finished, finished_at, fisical_disc, genuine, collection, system, magnetic_link;
 
-        title = req.body.title.replaceAll("'", "''");
-        finished = req.body.finished ? req.body.finished : false;
-        finished_at = req.body.finished_at ? req.body.finished_at : now();
-        fisical_disc = req.body.fisical_disc ? req.body.fisical_disc : false;
-        id = req.body.id;
-        app_id = req.body.app_id;
-        system = req.body.system;
-        system_id = req.body.system_id;
-        genuine = req.body.genuine;
-        collection = req.body.collection;
-        magnetic_link = req.body.magnetic_link;
+            title = req.body.title ? req.body.title.replaceAll("'", "''") : null;
+            finished = req.body.finished ? req.body.finished : false;
+            finished_at = req.body.finished_at ? req.body.finished_at : now();
+            fisical_disc = req.body.fisical_disc ? req.body.fisical_disc : false;
 
-        table = selectTable(tableName);
+            // Not working on Tests: 
+            // ({ id, app_id, system_id, genuine, collection, magnetic_link }) = req.body;
 
-        if (table == null) {
-            const errorMessage = "Table does not match";
-            res.statusMessage = errorMessage;
-            res.status(400).send({ msg: errorMessage });
-        }
+            id = req.body.id;
+            app_id = req.body.app_id;
+            system_id = req.body.system_id;
+            genuine = req.body.genuine;
+            collection = req.body.collection;
+            magnetic_link = req.body.magnetic_link;
 
-        let validation;
+            table = selectTable(tableName);
 
-        switch (table) {
-            case 'Games':
-                validation = schemas.game_schema.validate({ app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc })
-                break;
-            case 'ToBuy':
-                validation = schemas.tobuy_schema.validate({ title, finished, genuine, system, magnetic_link })
-                break;
-            case 'VirtualConsole':
-                validation = schemas.virtualconsole_schema.validate({ app_id, system_id, title, finished, genuine })
-                break;
-            case 'DLC':
-                validation = schemas.dlc_schema.validate({ app_id, title, finished, collection })
-                break;
-            case 'Playing':
-                validation = schemas.playing_schema.validate({ id, app_id, title })
-                break;
-            default:
-                throw new Error('NOT Implemented YET')
-                break;
-        }
-
-        if (validation.error) {
-            res.status(400).send({ error: validation.error.message })
-        } else {
-            let q = "";
-
-            if (tableName === 'wii' || tableName === 'wiiu' || tableName === 'gamecube' || tableName === 'origin' || tableName === 'steam' || tableName === 'ubisoft') {
-                if (finished) {
-                    q = `INSERT INTO "${table}" (app_id,system_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES ('${app_id}',${system_id},'${title}',${finished},'${finished_at}',${collection},${genuine},${fisical_disc}) RETURNING *`;
-                } else {
-                    q = `INSERT INTO "${table}" (app_id,system_id,title,finished,collection,genuine,fisical_disc) VALUES ('${app_id}',${system_id},'${title}',${finished},${collection},${genuine},${fisical_disc}) RETURNING *`;
-                }
-            } else if (tableName === 'virtualconsole') {
-                if (finished) {
-                    q = `INSERT INTO "${table}" (app_id,title,finished,finished_at,genuine,system_id) VALUES ('${app_id}','${title}',${finished},'${finished_at}','${genuine}',${system_id}) RETURNING *`;
-                } else {
-                    q = `INSERT INTO "${table}" (app_id,title,finished,genuine,system_id) VALUES ('${app_id}','${title}',${finished},'${genuine}',${system_id}) RETURNING *`;
-                }
-            } else if (tableName === 'tobuy') {
-                if (finished) {
-                    q = `INSERT INTO "${table}" (title,finished,finished_at,system,magnetic_link) VALUES ('${title}',${finished},'${finished_at}','${system}','${magnetic_link}') RETURNING *`;
-                } else {
-                    q = `INSERT INTO "${table}" (title,finished,system,magnetic_link) VALUES ('${title}',${finished},'${system}','${magnetic_link}') RETURNING *`;
-                }
-            } else if (tableName === 'playing') {
-                q = `INSERT INTO "${table}" (app_id, title, started_at) VALUES ('${app_id}','${title}','${now()}') RETURNING *`
-            } else if (tableName === 'dlcs') {
-                q = `INSERT INTO "${table}" (app_id, title, finished, collection) VALUES ('${app_id}', '${title}', ${finished}, ${collection}) RETURNING *`
+            if (table == null || table == undefined) {
+                throw new Error('Table does not match')
             }
 
-            try {
-                const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.INSERT })
+            let validation;
 
-                res.send({ ok: true, result, metadata })
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
+            switch (table) {
+                case 'Games':
+                    validation = schemas.game_schema.validate({ app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc })
+                    break;
+                case 'ToBuy':
+                    validation = schemas.tobuy_schema.validate({ title, finished, genuine, system, magnetic_link })
+                    break;
+                case 'VirtualConsole':
+                    validation = schemas.virtualconsole_schema.validate({ app_id, system_id, title, finished, genuine })
+                    break;
+                case 'DLC':
+                    validation = schemas.dlc_schema.validate({ app_id, title, finished, collection })
+                    break;
+                case 'Playing':
+                    validation = schemas.playing_schema.validate({ id, app_id, title })
+                    break;
+                default:
+                    throw new Error('NOT Implemented YET')
+                    break;
             }
+
+            if (validation.error) {
+                throw new Error(validation.error.message);
+            } else {
+                let q = "";
+
+                if (tableName === 'virtualconsole') {
+                    if (finished) {
+                        q = `INSERT INTO "${table}" (app_id,title,finished,finished_at,genuine,system_id) VALUES ('${app_id}','${title}',${finished},'${finished_at}','${genuine}',${system_id}) RETURNING *`;
+                    } else {
+                        q = `INSERT INTO "${table}" (app_id,title,finished,genuine,system_id) VALUES ('${app_id}','${title}',${finished},'${genuine}',${system_id}) RETURNING *`;
+                    }
+                } else if (tableName === 'tobuy') {
+                    if (finished) {
+                        q = `INSERT INTO "${table}" (title,finished,finished_at,system,magnetic_link) VALUES ('${title}',${finished},'${finished_at}','${system}','${magnetic_link}') RETURNING *`;
+                    } else {
+                        q = `INSERT INTO "${table}" (title,finished,system,magnetic_link) VALUES ('${title}',${finished},'${system}','${magnetic_link}') RETURNING *`;
+                    }
+                } else if (tableName === 'playing') {
+                    q = `INSERT INTO "${table}" (app_id, title, started_at) VALUES ('${app_id}','${title}','${now()}') RETURNING *`
+                } else if (tableName === 'dlcs') {
+                    q = `INSERT INTO "${table}" (app_id, title, finished, collection) VALUES ('${app_id}', '${title}', ${finished}, ${collection}) RETURNING *`
+                } else {
+                    if (finished) {
+                        q = `INSERT INTO "${table}" (app_id,system_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES ('${app_id}',${system_id},'${title}',${finished},'${finished_at}',${collection},${genuine},${fisical_disc}) RETURNING *`;
+                    } else {
+                        q = `INSERT INTO "${table}" (app_id,system_id,title,finished,collection,genuine,fisical_disc) VALUES ('${app_id}',${system_id},'${title}',${finished},${collection},${genuine},${fisical_disc}) RETURNING *`;
+                    }
+                }
+
+            }
+            const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.INSERT })
+
+            res.status(201).send({ "success": true, "result": result, "metadata": metadata })
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 
@@ -476,7 +461,7 @@ export const requests = db => {
             q = `SELECT * FROM "DLC" WHERE app_id = '${app_id}' ORDER BY title ASC`
             const result = await db.sequelize.query(q, { type: QueryTypes.SELECT });
 
-            res.send({ dlcs: result });
+            res.send({ "dlcs": result });
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });

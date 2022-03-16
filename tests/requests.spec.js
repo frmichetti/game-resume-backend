@@ -1,4 +1,5 @@
 
+import 'dotenv/config'
 import db from '../src/models/index';
 
 const sinon = require('sinon');
@@ -9,143 +10,191 @@ const DEFAULT_TIMEOUT = 50000;
 const connection = db;
 
 let req = {}
-const res = {};
-res.status = sinon.stub().returns(res);
-res.json = sinon.stub().returns(res);
-res.send = sinon.stub().returns(res);
+let res = {};
+
+const mockResponse = () => {
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns(res);
+    res.send = sinon.stub().returns(res);
+    return res;
+};
 
 describe('requests', () => {
-    it('showWelcome', () => {
-        requests(connection).showWelcome(req, res)
+    beforeEach(() => {
+        res = mockResponse();
+    })
+
+    it('showWelcome', async () => {
+        await requests(connection).showWelcome(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showTest', () => {
-        requests(connection).showTest(req, res)
+    it('showTest', async () => {
+        await requests(connection).showTest(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
     describe('showStatistics', () => {
-        it('cause error with no param query', () => {
-            requests(connection).showStatistics(req, res)
+        it('cause error with no param query', async () => {
+            await requests(connection).showStatistics(req, res)
             expect(res.status.calledWith(400)).toBeTruthy()
         }, DEFAULT_TIMEOUT);
 
-        it('return total_finished_games_for_dashboard', () => {
+        it('return total_finished_games_for_dashboard', async () => {
             req.query = { from: 'finished' }
-            requests(connection).showStatistics(req, res)
+            await requests(connection).showStatistics(req, res)
             expect(res.status.calledWith(200)).toBeTruthy()
         }, DEFAULT_TIMEOUT);
 
-        it('return total_games_for_dashboard', () => {
+        it('return total_games_for_dashboard', async () => {
             req.query = { from: 'totals' }
-            requests(connection).showStatistics(req, res)
+            await requests(connection).showStatistics(req, res)
             expect(res.status.calledWith(200)).toBeTruthy()
         }, DEFAULT_TIMEOUT);
 
 
-        it('return total_of_finished_by_system_percentual_over_system', () => {
+        it('return total_of_finished_by_system_percentual_over_system', async () => {
             req.query = { from: 'finished_over_system' }
-            requests(connection).showStatistics(req, res)
+            await requests(connection).showStatistics(req, res)
             expect(res.status.calledWith(200)).toBeTruthy()
         }, DEFAULT_TIMEOUT);
     });
 
-    it('showCategories', () => {
-        requests(connection).showCategories(req, res)
+    it('showCategories', async () => {
+        await requests(connection).showCategories(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showOriginGames', () => {
-        requests(connection).showOriginGames(req, res)
+    it('showOriginGames', async () => {
+        await requests(connection).showOriginGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showUbisoftGames', () => {
-        requests(connection).showUbisoftGames(req, res)
+    it('showUbisoftGames', async () => {
+        await requests(connection).showUbisoftGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showSteamGames', () => {
-        requests(connection).showSteamGames(req, res)
+    it('showSteamGames', async () => {
+        await requests(connection).showSteamGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
     describe('getSteamGames from STEAM API', () => {
-        it('on Sucess', () => {
-            requests(connection).getSteamGames(req, res)
+        it('on Sucess', async () => {
+            await requests(connection).getSteamGames(req, res)
             expect(res.status.calledWith(200)).toBeTruthy()
         }, DEFAULT_TIMEOUT);
 
-        it('on Error', () => {
+        it('on Error', async () => {
             process.env.STEAM_KEY = "";
             process.env.STEAM_ID = "";
-            requests(connection).getSteamGames(req, res)
+            await requests(connection).getSteamGames(req, res)
             expect(res.status.calledWith(400)).toBeTruthy()
         }, DEFAULT_TIMEOUT);
     });
 
-    it('showAllGames', () => {
-        requests(connection).showAllGames(req, res)
+    it('showAllGames', async () => {
+        await requests(connection).showAllGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showWiiGames', () => {
-        requests(connection).showWiiGames(req, res)
+    it('showWiiGames', async () => {
+        await requests(connection).showWiiGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showWiiUGames', () => {
-        requests(connection).showWiiUGames(req, res)
+    it('showWiiUGames', async () => {
+        await requests(connection).showWiiUGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showGameCubeGames', () => {
-        requests(connection).showGameCubeGames(req, res)
+    it('showGameCubeGames', async () => {
+        await requests(connection).showGameCubeGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showVirtualConsoleGames', () => {
-        requests(connection).showVirtualConsoleGames(req, res)
+    it('showVirtualConsoleGames', async () => {
+        await requests(connection).showVirtualConsoleGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showToBuyGames', () => {
-        requests(connection).showToBuyGames(req, res)
+    it('showToBuyGames', async () => {
+        await requests(connection).showToBuyGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showPCGames', () => {
-        requests(connection).showPCGames(req, res)
+    it('showPCGames', async () => {
+        await requests(connection).showPCGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showConsoleGames', () => {
-        requests(connection).showConsoleGames(req, res)
+    it('showConsoleGames', async () => {
+        await requests(connection).showConsoleGames(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
-    it('showDLCs', () => {
-        requests(connection).showDLCs(req, res)
+    it('showDLCs', async () => {
+        await requests(connection).showDLCs(req, res)
         expect(res.status.calledWith(200)).toBeTruthy()
     }, DEFAULT_TIMEOUT);
 
     describe('showDLCsById', () => {
-        it('on success', () => {
+        it('on success', async () => {
             req.query = { id: 1 }
-            requests(connection).showDLCsByID(req, res)
+            await requests(connection).showDLCsByID(req, res)
             expect(res.status.calledWith(200)).toBeTruthy()
         }, DEFAULT_TIMEOUT);
 
-        it('on error', () => {            
-            requests(connection).showDLCsByID(req, res)
+        it('on error', async () => {
+            req.query = {}
+            await requests(connection).showDLCsByID(req, res)
             expect(res.status.calledWith(400)).toBeTruthy()
         }, DEFAULT_TIMEOUT);
     });
 
+    describe('showCharts', () => {
+        it('on error', async () => {
+            await requests(connection).showCharts(req, res)
+            expect(res.status.calledWith(400)).toBeTruthy()
+        }, DEFAULT_TIMEOUT);
 
+        it('when total', async () => {
+            req.query = { type: 'total' }
+            await requests(connection).showCharts(req, res)
+            expect(res.status.calledWith(200)).toBeTruthy()
+        }, DEFAULT_TIMEOUT);
 
+        it('when finished', async () => {
+            req.query = { type: 'finished' }
+            await requests(connection).showCharts(req, res)
+            expect(res.status.calledWith(200)).toBeTruthy()
+        }, DEFAULT_TIMEOUT);
 
+        it('when total_percent', async () => {
+            req.query = { type: 'total_percent' }
+            await requests(connection).showCharts(req, res)
+            expect(res.status.calledWith(200)).toBeTruthy()
+        }, DEFAULT_TIMEOUT);
 
+        it('when finished_percent', async () => {
+            req.query = { type: 'finished_percent' }
+            await requests(connection).showCharts(req, res)
+            expect(res.status.calledWith(200)).toBeTruthy()
+        }, DEFAULT_TIMEOUT);
+    });
+
+    it('showPlayingGames', async () => {
+        await requests(connection).showPlayingGames(req, res)
+        expect(res.status.calledWith(200)).toBeTruthy()
+    }, DEFAULT_TIMEOUT);
+
+    describe('Create Games', () => {
+        it('error if no table is provided', async () => {
+            await requests(connection).createGames(req, res)
+            expect(res.status.calledWith(400)).toBeTruthy()
+        }, DEFAULT_TIMEOUT)
+    });
 
 });

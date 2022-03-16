@@ -11,7 +11,7 @@
     "start": "nodemon --exec babel-node src/app.js",
     "build": "babel src --out-dir build",
     "serve": "node build/app.js",
-    "test": "jest --runInBand --detectOpenHandles --silent"
+    "test": "jest --runInBand --detectOpenHandles --silent --forceExit"
   },
   "keywords": [],
   "author": "",
