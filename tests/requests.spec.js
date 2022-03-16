@@ -283,63 +283,63 @@ describe('requests', () => {
             }, DEFAULT_TIMEOUT);
 
             it('create a valid Origin Game not Finished', async () => {
-                req.body = { table: 'origin', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'origin', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 1, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('create a valid Origin Game Finished', async () => {
-                req.body = { table: 'origin', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'origin', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 1, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('create a valid Ubisoft Game not Finished', async () => {
-                req.body = { table: 'ubisoft', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'ubisoft', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 3, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('create a valid Ubisoft Game Finished', async () => {
-                req.body = { table: 'ubisoft', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'ubisoft', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 3, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
 
             it('create a valid GameCube Game not Finished', async () => {
-                req.body = { table: 'gamecube', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'gamecube', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 4, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('create a valid GameCube Game Finished', async () => {
-                req.body = { table: 'gamecube', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'gamecube', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 4, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
 
             it('create a valid Wii Game not Finished', async () => {
-                req.body = { table: 'wii', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'wii', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 5, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('create a valid Wii Game Finished', async () => {
-                req.body = { table: 'wii', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'wii', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 5, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('create a valid WiiU Game not Finished', async () => {
-                req.body = { table: 'wiiu', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'wiiu', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 6, title: 'Test 1' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
             it('create a valid WiiU Game Finished', async () => {
-                req.body = { table: 'wiiu', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 2, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
+                req.body = { table: 'wiiu', app_id: 'TT' + getRandomArbitrary(9999, 99999), system_id: 6, title: 'Test 2' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false, genuine: false, fisical_disc: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
@@ -368,31 +368,46 @@ describe('requests', () => {
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
-            it('create a valid To Playing not Finished', async () => {
+            it('create a valid Playing not Finished', async () => {
                 req.body = { table: 'playing', app_id: 'GUGE69', title: 'Test 5' + getRandomArbitrary(9999, 99999), started_at: now(), finished: false, finished_at: null };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
-            it('create a valid To Playing Finished', async () => {
+            it('create a valid Playing Finished', async () => {
                 req.body = { table: 'playing', app_id: 'GUGE69', title: 'Test 5' + getRandomArbitrary(9999, 99999), started_at: now(), finished: true, finished_at: now() };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
-            it('create a valid To DLC not Finished', async () => {
+            it('create a valid DLC not Finished', async () => {
                 req.body = { table: 'dlcs', app_id: '12210', title: 'Test 6' + getRandomArbitrary(9999, 99999), finished: false, finished_at: null, collection: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
-            it('create a valid To DLC Finished', async () => {
+            it('create a valid DLC Finished', async () => {
                 req.body = { table: 'dlcs', app_id: '12210', title: 'Test 6' + getRandomArbitrary(9999, 99999), finished: true, finished_at: now(), collection: false };
                 await requests(connection).createGames(req, res)
                 expect(res.status.calledWith(201)).toBeTruthy()
             }, DEFAULT_TIMEOUT);
 
         });
+    });
+
+    describe('finishDLC', () => {
+        it('error if no params is provided', async () => {
+            req.body = {}
+            await requests(connection).finishDLC(req, res)
+            expect(res.status.calledWith(400)).toBeTruthy()
+        }, DEFAULT_TIMEOUT);
+
+        it('success', async () => {
+            req.body = { id: 1, app_id: '12210', finished: true }
+            await requests(connection).finishDLC(req, res)
+            expect(res.status.calledWith(200)).toBeTruthy()
+        }, DEFAULT_TIMEOUT);
+
     });
 
 });
