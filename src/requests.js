@@ -565,11 +565,16 @@ export const requests = db => {
     }
 
     const searchGame = async (req, res) => {
-        const q = req.query.query;
         try {
+            const q = req.query.query;
+
+            if (q == null || q == undefined) {
+                throw new Error('Query Param is undefined')
+            }
+
             const games = await db.sequelize.query(`SELECT * FROM "all_games_list_api" WHERE title ilike '%${q}%';`, { type: QueryTypes.SELECT });
 
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -577,11 +582,15 @@ export const requests = db => {
     }
 
     const genreSearchGame = async (req, res) => {
-        const q = req.query.query;
         try {
+            const q = req.query.query;
+
+            if (q == null || q == undefined) {
+                throw new Error('Query Param is undefined')
+            }
             const games = await db.sequelize.query(`select *, which_system(app_id) AS system from "all_games_genres_aggregate" WHERE genre = '${q}' ORDER BY title ASC;`, { type: QueryTypes.SELECT });
 
-            res.send({ "games": games })
+            res.status(200).send({ "games": games })
         } catch (error) {
             console.error(error)
             res.status(400).send({ "msg": error.message || error.process.message });
@@ -589,104 +598,98 @@ export const requests = db => {
     }
 
     const updateGame = async (req, res) => {
+        try {
+            const tableName = req.body.table;
+            let table, id, app_id, title, finished, finished_at, fisical_disc, system, system_id, collection, genuine, magnetic_link;
 
-        const tableName = req.body.table;
-        let table, id, app_id, title, finished, finished_at, fisical_disc, system, system_id, collection, genuine, magnetic_link;
-
-        id = req.body.id;
-        app_id = req.body.app_id;
-        title = req.body.title.replaceAll("'", "''");
-        finished = req.body.finished;
-        finished_at = req.body.finished_at ? req.body.finished_at : now();
-        collection = req.body.collection;
-        genuine = req.body.genuine;
-        fisical_disc = req.body.fisical_disc;
-        system = req.body.system;
-        system_id = req.body.system_id;
-        magnetic_link = req.body.magnetic_link;
+            id = req.body.id;
+            app_id = req.body.app_id;
+            title = req.body.title.replaceAll("'", "''");
+            finished = req.body.finished;
+            finished_at = req.body.finished_at ? req.body.finished_at : now();
+            collection = req.body.collection;
+            genuine = req.body.genuine;
+            fisical_disc = req.body.fisical_disc;
+            system = req.body.system;
+            system_id = req.body.system_id;
+            magnetic_link = req.body.magnetic_link;
 
 
-        table = selectTable(tableName)
+            table = selectTable(tableName)
 
-        if (table == null) {
-            const errorMessage = "Table does not match";
-            res.statusMessage = errorMessage;
-            res.status(400).send({ msg: errorMessage });
-        }
+            if (table == null) {
+                throw new Error("Table does not match")
+            }
 
-        if (id == null) {
-            const errorMessage = "ID is required";
-            res.statusMessage = errorMessage;
-            res.status(400).send({ msg: errorMessage });
-        }
+            if (id == null) {
+                throw new Error("ID is required")
+            }
 
-        let validation;
-
-        switch (table) {
-            case 'Games':
-                validation = schemas.game_schema.validate({ app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc })
-                break;
-            case 'ToBuy':
-                validation = schemas.tobuy_schema.validate({ title, finished, genuine, system, magnetic_link })
-                break;
-            case 'VirtualConsole':
-                validation = schemas.virtualconsole_schema.validate({ app_id, system_id, title, finished, genuine })
-                break;
-            case 'DLC':
-                validation = schemas.dlc_schema.validate({ app_id, title, finished, collection })
-                break;
-            case 'Playing':
-                validation = schemas.playing_schema.validate({ id, app_id, title })
-                break;
-            default:
-                throw new Error('NOT Implemented YET')
-                break;
-        }
-
-        if (validation.error) {
-            res.status(400).send({ error: validation.error.message })
-        } else {
+            let validation;
             let q = "";
 
-            if (table === 'Games') {
-                if (finished) {
-                    q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = '${finished_at}', collection = ${collection}, genuine = ${genuine}, fisical_disc = ${fisical_disc} WHERE id = ${id} RETURNING *`;
-                } else {
-                    q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = null, collection = ${collection}, genuine = ${genuine}, fisical_disc = ${fisical_disc} WHERE id = ${id} RETURNING *`;
-                }
-
-            } else if (table === 'VirtualConsole') {
-                if (finished) {
-                    q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = '${finished_at}', genuine = ${genuine} WHERE id = ${id} RETURNING *`;
-                } else {
-                    q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = null, genuine = ${genuine} WHERE id = ${id} RETURNING *`;
-                }
-
-            } else if (table === 'ToBuy') {
-                if (finished) {
-                    q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, finished_at = '${finished_at}', system = '${system}', magnetic_link = '${magnetic_link}' WHERE id = ${id} RETURNING *`;
-                } else {
-                    q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, finished_at = null, system = '${system}', magnetic_link = '${magnetic_link}' WHERE id = ${id} RETURNING *`;
-                }
-
-            } else if (table === 'DLC') {
-                if (finished) {
-                    q = `UPDATE "${table}" SET app_id = '${app_id}', title = '${title}', finished = ${finished}, finished_at = '${finished_at}', collection = ${collection} WHERE id = ${id} RETURNING *`;
-                } else {
-                    q = `UPDATE "${table}" SET app_id = '${app_id}', title = '${title}', finished = ${finished}, finished_at = null, collection = '${collection}' WHERE id = ${id} RETURNING *`;
-                }
+            switch (table) {
+                case 'Games':
+                    validation = schemas.game_schema.validate({ app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc })
+                    break;
+                case 'ToBuy':
+                    validation = schemas.tobuy_schema.validate({ title, finished, genuine, system, magnetic_link })
+                    break;
+                case 'VirtualConsole':
+                    validation = schemas.virtualconsole_schema.validate({ app_id, system_id, title, finished, genuine })
+                    break;
+                case 'DLC':
+                    validation = schemas.dlc_schema.validate({ app_id, title, finished, collection })
+                    break;
+                case 'Playing':
+                    validation = schemas.playing_schema.validate({ app_id, title })
+                    break;
+                default:
+                    throw new Error('NOT Implemented YET')
+                    break;
             }
 
-            try {
+            if (validation.error) {
+                throw new Error(validation.error.message)
+            } else {
+
+                if (table === 'Games') {
+                    if (finished) {
+                        q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = '${finished_at}', collection = ${collection}, genuine = ${genuine}, fisical_disc = ${fisical_disc} WHERE id = ${id} RETURNING *`;
+                    } else {
+                        q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = null, collection = ${collection}, genuine = ${genuine}, fisical_disc = ${fisical_disc} WHERE id = ${id} RETURNING *`;
+                    }
+
+                } else if (table === 'VirtualConsole') {
+                    if (finished) {
+                        q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = '${finished_at}', genuine = ${genuine} WHERE id = ${id} RETURNING *`;
+                    } else {
+                        q = `UPDATE "${table}" SET app_id = '${app_id}', system_id = ${system_id}, title = '${title}', finished = ${finished}, finished_at = null, genuine = ${genuine} WHERE id = ${id} RETURNING *`;
+                    }
+
+                } else if (table === 'ToBuy') {
+                    if (finished) {
+                        q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, finished_at = '${finished_at}', system = '${system}', magnetic_link = '${magnetic_link}' WHERE id = ${id} RETURNING *`;
+                    } else {
+                        q = `UPDATE "${table}" SET title = '${title}', finished = ${finished}, finished_at = null, system = '${system}', magnetic_link = '${magnetic_link}' WHERE id = ${id} RETURNING *`;
+                    }
+
+                } else if (table === 'DLC') {
+                    if (finished) {
+                        q = `UPDATE "${table}" SET app_id = '${app_id}', title = '${title}', finished = ${finished}, finished_at = '${finished_at}', collection = ${collection} WHERE id = ${id} RETURNING *`;
+                    } else {
+                        q = `UPDATE "${table}" SET app_id = '${app_id}', title = '${title}', finished = ${finished}, finished_at = null, collection = '${collection}' WHERE id = ${id} RETURNING *`;
+                    }
+                }
                 const [result, metadata] = await db.sequelize.query(q, { type: QueryTypes.UPDATE });
 
-                res.send({ result: result[0] });
-
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
+                res.status(200).send({ "result": result[0] });
             }
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
+
     }
 
 
