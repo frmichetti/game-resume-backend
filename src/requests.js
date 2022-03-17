@@ -694,86 +694,47 @@ export const requests = db => {
 
 
     const deleteGame = async (req, res) => {
+        try {
+            const tableName = req.body.table;
 
-        const tableName = req.body.table;
-        const title = req.body.title;
-        const id = req.body.id;
+            const id = req.body.id;
 
-        let table;
+            let table;
 
-        table = selectTable(tableName)
+            table = selectTable(tableName)
 
-        if (table == null) {
-            const errorMessage = "Table does not match";
-            res.statusMessage = errorMessage;
-            res.status(400).send({ msg: errorMessage });
-        } else if (title == null || title == '' || title == undefined) {
-            const errorMessage = "Game Title is Empty";
-            res.statusMessage = errorMessage;
-            res.status(400).send({ msg: errorMessage });
-        } else if (table === 'Playing') {
-            let q = "";
-            q = `DELETE FROM "Playing" WHERE id = ${id};`;
-
-            try {
-                await db.sequelize.query(q, { type: QueryTypes.DELETE });
-
-                res.send({ ok: true })
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
-            }
-        } else if (table === 'DLC') {
-            let q = "";
-            q = `DELETE FROM "DLC" WHERE id = ${id};`;
-
-            try {
-                await db.sequelize.query(q, { type: QueryTypes.DELETE });
-
-                res.send({ ok: true })
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
+            if (table == null) {
+                throw new Error("Table does not match");
             }
 
-        } else if (table === 'ToBuy') {
+            if (id == null || id == undefined) {
+                throw new Error("ID is not defined");
+            }
             let q = "";
-            q = `DELETE FROM "ToBuy" WHERE id = ${id};`;
-
-            try {
-                await db.sequelize.query(q, { type: QueryTypes.DELETE });
-
-                res.send({ ok: true })
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
+            switch (table) {
+                case 'Playing':
+                    q = `DELETE FROM "Playing" WHERE id = ${id};`;
+                    break;
+                case 'DLC':
+                    q = `DELETE FROM "DLC" WHERE id = ${id};`;
+                    break;
+                case 'ToBuy':
+                    q = `DELETE FROM "ToBuy" WHERE id = ${id};`;
+                    break;
+                case 'VirtualConsole':
+                    q = `DELETE FROM "VirtualConsole" WHERE id = ${id};`;
+                    break;
+                default:
+                    q = `DELETE FROM "Games" WHERE id = ${id};`;
+                    break;
             }
 
-        } else if (table === 'VirtualConsole') {
-            let q = "";
-            q = `DELETE FROM "VirtualConsole" WHERE id = ${id};`;
+            await db.sequelize.query(q, { type: QueryTypes.DELETE });
 
-            try {
-                await db.sequelize.query(q, { type: QueryTypes.DELETE });
-
-                res.send({ ok: true })
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
-            }
-
-        } else {
-            let q = "";
-            q = `DELETE FROM "Games" WHERE id = ${id};`;
-
-            try {
-                await db.sequelize.query(q, { type: QueryTypes.DELETE });
-
-                res.send({ ok: true })
-            } catch (error) {
-                console.error(error)
-                res.status(400).send({ "msg": error.message || error.process.message });
-            }
+            res.status(200).send({ "success": true })
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message || error.process.message });
         }
     }
 

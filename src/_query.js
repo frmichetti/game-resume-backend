@@ -74,6 +74,8 @@ const insert = async (tableName, data, connection) => {
         item[idx] = "'" + v + "'";
       } else if (v instanceof Date) {
         item[idx] = "'" + v.toISOString() + "'";
+      } else if (v == null || v == undefined) {
+        item[idx] = 'null';
       }
     });
 
