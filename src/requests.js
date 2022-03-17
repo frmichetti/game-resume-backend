@@ -830,14 +830,14 @@ export const requests = db => {
     const createCategory = async (req, res) => {
         const { slugname, name } = req.body;
         const category = await db.Category.create({ slugname, name });
-        res.send({ category })
+        res.status(200).send({ "category": category })
     }
 
     const updateCategory = async (req, res) => {
         const { id, slugname, name } = req.body;
         const result = await db.Category.update({ slugname, name }, { where: { id } });
         const category = await db.Category.findOne({ where: { id } })
-        res.send({ category })
+        res.status(200).send({ "category": category })
     }
 
     const addCategoriesToGame = async (req, res) => {
@@ -889,11 +889,11 @@ export const requests = db => {
 
             const updatedCategories = await game.getCategories()
 
-            res.send({ categories: updatedCategories })
+            res.status(200).send({ "categories": updatedCategories })
 
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: error.message })
+            res.status(400).send({ "msg": error.message })
         }
     }
 
@@ -907,51 +907,51 @@ export const requests = db => {
     const showCategoriesOfGame = async (req, res) => {
         const { app_id } = req.params;
         const game = await db.Game.findOne({ where: { app_id }, include: { model: db.Category, as: 'categories' } })
-        res.send({ game })
+        res.status(200).send({ "game": game })
     }
 
     const showDLCsOfGame = async (req, res) => {
         const { app_id } = req.params;
         const game = await db.Game.findOne({ where: { app_id }, include: { model: db.DLC, as: 'dlcs' } })
-        res.send({ game })
+        res.status(200).send({ "game": game })
     }
 
     const showSystemOfGame = async (req, res) => {
         const { app_id } = req.params;
         const game = await db.Game.findOne({ where: { app_id }, include: { model: db.System } })
-        res.send({ game })
+        res.status(200).send({ "game": game })
     }
 
     const showPlayTimesOfGame = async (req, res) => {
         const { app_id } = req.params;
         const game = await db.Game.findOne({ where: { app_id }, include: { model: db.Playing } })
-        res.send({ game })
+        res.status(200).send({ "game": game })
     }
 
     const showGame = async (req, res) => {
         const { app_id } = req.params;
         const game = await db.sequelize.query(`SELECT * FROM "all_games" WHERE app_id = '${app_id}'`, { type: QueryTypes.SELECT });
-        const resp = (game[0]) ? { game: game[0] } : { game: null }
-        res.send(resp)
+        const resp = (game[0]) ? { "game": game[0] } : { "game": null }
+        res.status(200).send(resp)
     }
 
     const showCodesOfGame = async (req, res) => {
         const { app_id } = req.params;
         const game = await db.Game.findOne({ where: { app_id }, include: { model: db.CodeAndTip } })
-        res.send({ game })
+        res.status(200).send({ "game": game })
     }
 
     const saveCode = async (req, res) => {
         const { app_id, content } = req.body;
         const code = await db.CodeAndTip.create({ app_id, content });
-        res.send({ code });
+        res.status(200).send({ "code": code });
     }
 
     const updateCode = async (req, res) => {
         const { id, app_id, content } = req.body;
         const result = await db.CodeAndTip.update({ app_id, content }, { where: { id } });
         const code = await db.CodeAndTip.findOne({ where: { id } })
-        res.send({ code });
+        res.status(200).send({ "code": code });
     }
 
     const deleteTrash = async (req, res) => {
@@ -961,7 +961,7 @@ export const requests = db => {
 
         await db.sequelize.query(q, { type: QueryTypes.DELETE });
 
-        res.send({ ok: true })
+        res.status(200).send({ "success": true })
     }
 
     const restore = async (req, res) => {
@@ -971,12 +971,12 @@ export const requests = db => {
 
         await db.sequelize.query(q, { type: QueryTypes.SELECT });
 
-        res.send({ ok: true })
+        res.status(200).send({ "success": true })
     }
 
     const showTrash = async (req, res) => {
         const trash = await db.Trash.findAll();
-        res.send({ trash });
+        res.status(200).send({ "trash": trash });
     }
 
     const processXLSToJson = async (req, res) => {
@@ -1020,14 +1020,14 @@ export const requests = db => {
 
                 mapGames.forEach(i => games.push(i));
 
-                res.send({ "games": games })
+                res.status(200).send({ "games": games })
             });
     }
 
     const importData = async (req, res) => {
         const games = req.body.games;
         await db.Game.bulkCreate(games, { ignoreDuplicates: true })
-        res.send({ success: true })
+        res.status(200).send({ "success": true })
     }
 
 
