@@ -19,7 +19,7 @@ export const game_schema = Joi.object().keys({
     app_id: Joi.string()
         .alphanum()
         .min(3)
-        .max(30),
+        .max(40),
     system_id: Joi.number()
         .integer()
         .greater(0)
@@ -62,7 +62,7 @@ export const virtualconsole_schema = Joi.object().keys({
     app_id: Joi.string()
         .alphanum()
         .min(3)
-        .max(30),
+        .max(40),
     system_id: Joi.number()
         .greater(0)
         .required(),
@@ -79,7 +79,7 @@ export const dlc_schema = Joi.object().keys({
     app_id: Joi.string()
         .alphanum()
         .min(3)
-        .max(30),
+        .max(40),
     title: Joi.string()
         .min(3)
         .required(),
@@ -95,7 +95,7 @@ export const dlc_schema = Joi.object().keys({
 export const playing_schema = Joi.object().keys({
     app_id: Joi.string()
         .min(3)
-        .max(30),
+        .max(40),
     title: Joi.string()
         .min(3)
         .required(),
