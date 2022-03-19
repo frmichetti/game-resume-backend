@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import * as schemas from './schema/validation_schema'
 
+import { mailer } from './mailer';
+
 const { QueryTypes } = require('sequelize');
 
 
@@ -1030,6 +1032,24 @@ export const requests = db => {
         res.status(200).send({ "success": true })
     }
 
+    const sendMail = async (req, res) => {
+        try {
+            const { subject, text, html } = req.body
+            if (subject == null) {
+                throw new Error('Subject not defined')
+            } else if (text == null) {
+                throw new Error('Text not defined')
+            } else if (html == null) {
+                throw new Error('Html not defined')
+            }
+            const options = { subject: subject, text: text, html: html }
+
+            const info = await mailer(options)
+            res.status(200).send({ "success": true, "msg": `${info.response}` })
+        } catch (error) {
+            res.status(400).send({ "msg": error.message })
+        }
+    }
 
     return {
         showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
@@ -1037,7 +1057,7 @@ export const requests = db => {
         showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, showDLCsByID,
         showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
         finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
-        createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData
+        createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData, sendMail
     }
 }
 

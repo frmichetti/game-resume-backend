@@ -40,6 +40,7 @@
     "multer": "^1.4.4",
     "node-adodb": "^5.0.3",
     "node-windows": "^1.0.0-beta.6",
+    "nodemailer": "^6.7.2",
     "pg": "^8.7.3",
     "puppeteer": "^13.0.0",
     "sequelize": "^6.16.2",
@@ -49,7 +50,7 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.4",
     "@babel/node": "^7.8.4",
-    "@babel/preset-env": "^7.8.4",    
+    "@babel/preset-env": "^7.8.4",
     "nodemon": "^2.0.2",
     "sequelize-cli": "^6.4.1",
     "sinon": "^13.0.1"
