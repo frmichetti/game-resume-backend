@@ -31,6 +31,11 @@ module.exports = {
     "database": "d6a9lt4gimo5ol",
     "host": "ec2-3-224-125-117.compute-1.amazonaws.com",
     "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": { 
+        "require": true,
+        "rejectUnauthorized": false,
+      },
     "migrationStorage": "sequelize",
     "seederStorage": "sequelize",
     "define": {
