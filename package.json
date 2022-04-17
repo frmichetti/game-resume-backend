@@ -8,6 +8,7 @@
     "drop": "npx sequelize db:drop",
     "migrate": "npx sequelize db:migrate",
     "seed": "npx sequelize db:seed:all",
+    "prestart": "npx sequelize db:migrate && npx sequelize db:seed:all",
     "start": "nodemon --exec babel-node src/app.js",
     "build": "babel src --out-dir build",
     "serve": "node build/app.js",
