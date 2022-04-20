@@ -180,8 +180,17 @@ export const requests = db => {
 
     const getSteamGames = async (req, res) => {
         try {
-            const response = await axios.get(`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_KEY}&steamid=${process.env.STEAM_ID}&format=json&include_appinfo=true`);
-            const games = response.data.response.games;
+            const steamIds = process.env.STEAM_ID.split(';')
+            
+            const requests = steamIds.map(id => {
+                return axios.get(`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_KEY}&steamid=${id}&format=json&include_appinfo=true`);
+            })
+            
+            const responses = await Promise.all(requests)
+
+            const datas = responses.map(r => r.data.response.games)            
+
+            const games = lodash.merge(datas[0], datas[1])
 
             res.status(200).send({ "games": games })
         } catch (error) {
