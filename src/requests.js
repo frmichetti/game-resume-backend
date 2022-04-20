@@ -190,7 +190,7 @@ export const requests = db => {
 
             const datas = responses.map(r => r.data.response.games)
 
-            const games = lodash.merge(datas[0], datas[1])
+            const games = datas.reduce((acc, item) => lodash.merge(acc, item))
 
             return games;
 

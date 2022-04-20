@@ -72,6 +72,8 @@ process.on('uncaughtException', function (error) {
   console.log("uncaughtException Node NOT Exiting...");
 });
 
+const enableGraphiQL = !(process.env.NODE_ENV === 'production')
+
 app.use('/graphql',
   (req, res, next) => {
     req["context"] = {}
@@ -82,7 +84,7 @@ app.use('/graphql',
   }
   , graphqlHTTP((req) => ({
     schema,
-    graphiql: true,
+    graphiql: enableGraphiQL,
     context: req['context']
   })));
 
