@@ -178,19 +178,32 @@ export const requests = db => {
         }
     }
 
-    const getSteamGames = async (req, res) => {
+    const requestSteamGames = async () => {
         try {
             const steamIds = process.env.STEAM_ID.split(';')
-            
+
             const requests = steamIds.map(id => {
                 return axios.get(`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_KEY}&steamid=${id}&format=json&include_appinfo=true`);
             })
-            
+
             const responses = await Promise.all(requests)
 
-            const datas = responses.map(r => r.data.response.games)            
+            const datas = responses.map(r => r.data.response.games)
 
             const games = lodash.merge(datas[0], datas[1])
+
+            return games;
+
+        } catch (error) {
+            console.error(error)
+            return []
+        }
+    }
+
+    const getSteamGames = async (req, res) => {
+        try {
+
+            const games = await requestSteamGames()
 
             res.status(200).send({ "games": games })
         } catch (error) {
@@ -1041,6 +1054,31 @@ export const requests = db => {
         res.status(200).send({ "success": true })
     }
 
+    const syncSteam = async (req, res) => {
+        try {
+            const games = req.body.games ? req.body.games : await requestSteamGames()
+
+            const payload = games.map(g => {
+                return {
+                    app_id: g.appid,
+                    system_id: 2,
+                    title: g.name,
+                    finished: false,
+                    finished_at: null,
+                    genuine: true,
+                    collection: false,
+                    fisical_disc: false
+                }
+            })
+
+            await db.Game.bulkCreate(payload, { ignoreDuplicates: true })
+            res.status(200).send({ "success": true })
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message })
+        }
+    }
+
     const sendMail = async (req, res) => {
         try {
             const { subject, text, html } = req.body
@@ -1066,7 +1104,7 @@ export const requests = db => {
         showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, showDLCsByID,
         showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
         finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
-        createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData, sendMail
+        createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData, sendMail, syncSteam
     }
 }
 

@@ -70,7 +70,7 @@ const allDLCs = async (parent, args, ctx, info) => {
 
 const allSteamGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM "Steam" ORDER BY title ASC`
+    const sql = `SELECT ${fields.toString()} FROM "Games" WHERE system_id = 2 ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });
     return games;
 }

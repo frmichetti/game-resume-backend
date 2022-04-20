@@ -177,7 +177,7 @@ const typeDefs = `
   }
   type SteamGame {
     id: ID
-    appid: String
+    app_id: String
     title: String
     finished: Boolean
     collection: Boolean
