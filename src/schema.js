@@ -36,9 +36,8 @@ const inputVirtualConsoleGame = `
   title: String  
   finished: Boolean
   finished_at: Date
-  genuine: Boolean
-  platform: String
-  system: String  
+  genuine: Boolean  
+  system_id: Int
 `;
 
 const inputToBuyGame = `    

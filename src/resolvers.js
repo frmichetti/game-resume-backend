@@ -14,21 +14,21 @@ const allCategories = async (parent, args, ctx, info) => {
 
 const allWiiUGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM "WiiU" ORDER BY title ASC`    
+    const sql = `SELECT ${fields.toString()} FROM "Games" WHERE system_id = 6 ORDER BY title ASC`    
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT });        
     return games;
 }
 
 const allWiiGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM "Wii" ORDER BY title ASC`    
+    const sql = `SELECT ${fields.toString()} FROM "Games" WHERE system_id = 5 ORDER BY title ASC`    
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT }); 
     return games;
 }
 
 const allGameCubeGames = async (parent, args, ctx, info) => {
     const fields = ctx.requestedFields.getFields(info, { keep: ["app_id"], exclude: ["dlcs"] })
-    const sql = `SELECT ${fields.toString()} FROM "GameCube" ORDER BY title ASC`
+    const sql = `SELECT ${fields.toString()} FROM "Games" WHERE system_id = 4 ORDER BY title ASC`
     const games = await ctx.orm.sequelize.query(sql, { type: QueryTypes.SELECT }); 
     return games;
 }
