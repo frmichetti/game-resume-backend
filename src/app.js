@@ -138,6 +138,7 @@ app.post('/restore', requests(db).restore);
 app.post('/mail', requests(db).sendMail);
 app.post('/sync_steam', requests(db).syncSteam)
 app.post('/login', requests(db).doLogin)
+app.post('/logout', requests(db).doLogout)
 app.post('/user', requests(db).createUser)
 
 app.put('/update', requests(db).updateGame);

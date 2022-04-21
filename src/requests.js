@@ -8,6 +8,7 @@ import { mailer } from './mailer';
 
 const { QueryTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 const ExportData = require('./exportTocsv');
@@ -1132,8 +1133,13 @@ export const requests = db => {
 
             const match = await bcrypt.compare(password, user.password);
 
-            if (match) {                
-                res.status(200).send({ token: "TOKEN" })
+            if (match) {
+                const expiresIn = 300 // expires in 5min
+                const token = jwt.sign({ sub: user.id, name: user.name, email: user.email, role: user.role }, process.env.SECRET, {
+                    expiresIn: expiresIn
+                });
+
+                res.status(200).send({ auth: true, token: token })
             } else {
                 res.status(400).send({ "msg": "email or Password is invalid" })
             }
@@ -1143,6 +1149,10 @@ export const requests = db => {
         }
     }
 
+    const doLogout = async (req, res) => {
+        res.status(200).send({ auth: false, token: null });
+    }
+
     return {
         showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
         showSteamGames, getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
@@ -1150,7 +1160,7 @@ export const requests = db => {
         showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
         finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
         createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData,
-        sendMail, syncSteam, createUser, doLogin
+        sendMail, syncSteam, createUser, doLogin, doLogout
     }
 }
 
