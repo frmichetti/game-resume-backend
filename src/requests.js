@@ -1135,7 +1135,7 @@ export const requests = db => {
 
             if (match) {
                 const expiresIn = 300 // expires in 5min
-                const token = jwt.sign({ sub: user.id, name: user.name, email: user.email, role: user.role }, process.env.SECRET, {
+                const token = jwt.sign({ sub: user.id }, process.env.SECRET, {
                     expiresIn: expiresIn
                 });
 

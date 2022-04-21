@@ -94,15 +94,53 @@ app.use('/graphql',
 
 const port = process.env.PORT || 4000;
 
+const extractJWTMiddleware = () => {
+  return  (req, res, next) => {
+    let authorization = req.headers['authorization']
+    let token = authorization ? authorization.split(' ')[1] : undefined
+
+    req['context'] = {}
+    req['context']['authorization'] = authorization;
+
+    if (!token) { return next() }
+
+    jwt.verify(token, process.env.SECRET, async (err, decoded) => {
+      if (err) { return next() }
+
+      const user = await db.User.findByPk(decoded.sub, { attributes: ['id', 'name', 'email', 'role'] })
+
+      if (user) {
+        req['context']['user'] = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
+      }
+      
+      return next();
+    })
+  }
+}
+
 const verifyJWT = (req, res, next) => {
-  const token = req.headers['x-access-token'];
+  let authorization = req.headers['authorization']
+  let token = authorization ? authorization.split(' ')[1] : undefined
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
 
-  jwt.verify(token, process.env.SECRET, function (err, decoded) {
+  jwt.verify(token, process.env.SECRET, async (err, decoded) => {
     if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.' });
+    
+    const user = await db.User.findByPk(decoded.sub, { attributes: ['id', 'name', 'email', 'role'] })
 
-    // se tudo estiver ok, salva no request para uso posterior
-    req.userId = decoded.id;
+      if (user) {
+        req.user = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
+      }
     next();
   });
 }
