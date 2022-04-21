@@ -140,6 +140,10 @@ const typeDefs = `
     id: ID!
     ${inputUbisoftGame}  
   }
+  type Token {
+    token: String!
+    auth: Boolean!
+  }
   type WiiUGame {
     id: ID
     ${inputsWiiU}  
@@ -283,6 +287,7 @@ const typeDefs = `
     getUnfinishedBySystem(system: String!): [Game!]!
   }
   type Mutation {
+    doLogin(email: String!, password: String!) : Token
     createCategory(input: CategoryInput) : Category
     createDLCGame(input: DLCGameInput) : DLC
     createWiiUGame(input: WiiUGameInput): WiiUGame
@@ -359,6 +364,7 @@ const _resolvers = {
     getUnfinishedBySystem: resolvers.getUnfinishedBySystem
   },
   Mutation: {
+    doLogin: resolvers.doLogin,
     createDLCGame: resolvers.createDLCGame,
     createWiiUGame: resolvers.createWiiUGame,
     createWiiGame: resolvers.createWiiGame,

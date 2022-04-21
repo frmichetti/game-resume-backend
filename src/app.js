@@ -52,6 +52,7 @@ const dataLoaderFactory = new DataLoaderFactory(db);
 const requestedFields = new RequestedFiels();
 
 app.use(cors());
+//Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -90,7 +91,6 @@ app.use('/graphql',
   })));
 
 
-//Here we are configuring express to use body-parser as middle-ware.
 
 const port = process.env.PORT || 4000;
 
