@@ -7,6 +7,7 @@ import * as schemas from './schema/validation_schema'
 import { mailer } from './mailer';
 
 const { QueryTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 
 const ExportData = require('./exportTocsv');
@@ -1118,6 +1119,30 @@ export const requests = db => {
         }
     }
 
+    const doLogin = async (req, res) => {
+        try {
+
+            const { email, password } = req.body;
+
+            const user = await db.User.findOne({ where: { email } })
+
+            if (!user) {
+                res.status(400).send({ "msg": "email or Password is invalid" })
+            }
+
+            const match = await bcrypt.compare(password, user.password);
+
+            if (match) {                
+                res.status(200).send({ token: "TOKEN" })
+            } else {
+                res.status(400).send({ "msg": "email or Password is invalid" })
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message })
+        }
+    }
+
     return {
         showWelcome, showTest, showStatistics, showCategories, showOriginGames, showUbisoftGames,
         showSteamGames, getSteamGames, showAllGames, showWiiGames, showGameCubeGames, showVirtualConsoleGames,
@@ -1125,7 +1150,7 @@ export const requests = db => {
         showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
         finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
         createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData,
-        sendMail, syncSteam, createUser
+        sendMail, syncSteam, createUser, doLogin
     }
 }
 
