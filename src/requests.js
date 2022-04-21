@@ -7,6 +7,8 @@ import * as schemas from './schema/validation_schema'
 import { mailer } from './mailer';
 
 const { QueryTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 const ExportData = require('./exportTocsv');
@@ -14,7 +16,7 @@ const ejs = require('ejs')
 const path = require('path')
 const puppeteer = require('puppeteer')
 
-import lodash, { map } from 'lodash';
+import lodash, { map, reduce } from 'lodash';
 
 const Excel = require('exceljs');
 const fs = require('fs');
@@ -1094,8 +1096,61 @@ export const requests = db => {
             const info = await mailer(options)
             res.status(200).send({ "success": true, "msg": `${info.response}` })
         } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message, "success": false })
+        }
+    }
+
+    const createUser = async (req, res) => {
+        try {
+            const dto = {
+                name: req.body.name,
+                email: req.body.email,
+                role: req.body.role,
+                password: req.body.password
+            }
+
+            const user = await db.User.create(dto)
+
+            res.status(200).send({ user })
+
+        } catch (error) {
+            console.error(error)
             res.status(400).send({ "msg": error.message })
         }
+    }
+
+    const doLogin = async (req, res) => {
+        try {
+
+            const { email, password } = req.body;
+
+            const user = await db.User.findOne({ where: { email } })
+
+            if (!user) {
+                res.status(400).send({ "msg": "email or Password is invalid" })
+            }
+
+            const match = await bcrypt.compare(password, user.password);
+
+            if (match) {
+                const expiresIn = 300 // expires in 5min
+                const token = jwt.sign({ sub: user.id }, process.env.SECRET, {
+                    expiresIn: expiresIn
+                });
+
+                res.status(200).send({ auth: true, token: token })
+            } else {
+                res.status(400).send({ "msg": "email or Password is invalid" })
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message })
+        }
+    }
+
+    const doLogout = async (req, res) => {
+        res.status(200).send({ auth: false, token: null });
     }
 
     return {
@@ -1104,7 +1159,8 @@ export const requests = db => {
         showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, showDLCsByID,
         showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
         finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
-        createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData, sendMail, syncSteam
+        createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData,
+        sendMail, syncSteam, createUser, doLogin, doLogout
     }
 }
 
