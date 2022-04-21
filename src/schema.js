@@ -365,6 +365,7 @@ const _resolvers = {
   },
   Mutation: {
     doLogin: resolvers.doLogin,
+    createCategory: resolvers.createCategory,
     createDLCGame: resolvers.createDLCGame,
     createWiiUGame: resolvers.createWiiUGame,
     createWiiGame: resolvers.createWiiGame,
