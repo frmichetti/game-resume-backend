@@ -76,26 +76,11 @@ process.on('uncaughtException', function (error) {
 
 const enableGraphiQL = !(process.env.NODE_ENV === 'production')
 
-app.use('/graphql',
-  (req, res, next) => {
-    req["context"] = {}
-    req["context"].orm = db;
-    req["context"].dataloaders = dataLoaderFactory.getLoaders();
-    req["context"].requestedFields = requestedFields;
-    next();
-  }
-  , graphqlHTTP((req) => ({
-    schema,
-    graphiql: enableGraphiQL,
-    context: req['context']
-  })));
-
-
-
 const port = process.env.PORT || 4000;
 
+// For Use in Graphql
 const extractJWTMiddleware = () => {
-  return  (req, res, next) => {
+  return (req, res, next) => {
     let authorization = req.headers['authorization']
     let token = authorization ? authorization.split(' ')[1] : undefined
 
@@ -117,12 +102,13 @@ const extractJWTMiddleware = () => {
           role: user.role
         }
       }
-      
+
       return next();
     })
   }
 }
 
+// For Use in Rest
 const verifyJWT = (req, res, next) => {
   let authorization = req.headers['authorization']
   let token = authorization ? authorization.split(' ')[1] : undefined
@@ -130,20 +116,34 @@ const verifyJWT = (req, res, next) => {
 
   jwt.verify(token, process.env.SECRET, async (err, decoded) => {
     if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.' });
-    
+
     const user = await db.User.findByPk(decoded.sub, { attributes: ['id', 'name', 'email', 'role'] })
 
-      if (user) {
-        req.user = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role
-        }
+    if (user) {
+      req.user = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
       }
+    }
     next();
   });
 }
+
+app.use('/graphql',
+  extractJWTMiddleware(),
+  (req, res, next) => {
+    req["context"]['orm'] = db;
+    req["context"]['dataloaders'] = dataLoaderFactory.getLoaders();
+    req["context"]['requestedFields'] = requestedFields;
+    next();
+  }
+  , graphqlHTTP((req) => ({
+    schema,
+    graphiql: enableGraphiQL,
+    context: req['context']
+  })));
 
 app.get('/', requests(db).showWelcome);
 app.get('/test', requests(db).showTest);
