@@ -20,6 +20,7 @@ const middleware = require('./middleware/validation_middleware');
 import * as schemas from './schema/validation_schema'
 
 const json2xls = require('json2xls');
+const jwt = require('jsonwebtoken');
 
 const multer = require('multer')
 // Configuração de armazenamento
@@ -93,6 +94,19 @@ app.use('/graphql',
 
 const port = process.env.PORT || 4000;
 
+const verifyJWT = (req, res, next) => {
+  const token = req.headers['x-access-token'];
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+
+  jwt.verify(token, process.env.SECRET, function (err, decoded) {
+    if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.' });
+
+    // se tudo estiver ok, salva no request para uso posterior
+    req.userId = decoded.id;
+    next();
+  });
+}
+
 app.get('/', requests(db).showWelcome);
 app.get('/test', requests(db).showTest);
 app.get('/statistics', requests(db).showStatistics);
@@ -126,30 +140,31 @@ app.get('/search', requests(db).searchGame);
 app.get('/genre_search', requests(db).genreSearchGame);
 app.get('/trash', requests(db).showTrash);
 
-app.post('/load_games', upload.single('sheet'), requests(db).processXLSToJson);
-app.post('/import_data', requests(db).importData);
-app.post('/create', requests(db).createGames);
+app.post('/load_games', verifyJWT, upload.single('sheet'), requests(db).processXLSToJson);
+app.post('/import_data', verifyJWT, requests(db).importData);
+app.post('/create', verifyJWT, requests(db).createGames);
 app.post('/categories', middleware(schemas.category_schema, 'body'), requests(db).createCategory);
-app.post('/game/:app_id/categories', requests(db).addCategoriesToGame);
-app.post('/dlc_finished', requests(db).finishDLC);
-app.post('/finished', requests(db).finishGame);
-app.post('/code', requests(db).saveCode);
-app.post('/restore', requests(db).restore);
-app.post('/mail', requests(db).sendMail);
-app.post('/sync_steam', requests(db).syncSteam)
+app.post('/game/:app_id/categories', verifyJWT, requests(db).addCategoriesToGame);
+app.post('/dlc_finished', verifyJWT, requests(db).finishDLC);
+app.post('/finished', verifyJWT, requests(db).finishGame);
+app.post('/code', verifyJWT, requests(db).saveCode);
+app.post('/restore', verifyJWT, requests(db).restore);
+app.post('/mail', verifyJWT, requests(db).sendMail);
+app.post('/sync_steam', verifyJWT, requests(db).syncSteam)
 app.post('/login', requests(db).doLogin)
 app.post('/logout', requests(db).doLogout)
-app.post('/user', requests(db).createUser)
+app.post('/user', verifyJWT, requests(db).createUser)
 
-app.put('/update', requests(db).updateGame);
+app.put('/update', verifyJWT, requests(db).updateGame);
 app.put('/categories', middleware(schemas.category_schema, 'body'), requests(db).updateCategory);
-app.put('/game/:app_id/categories', requests(db).updateCategoriesToGame);
-app.put('/code', requests(db).updateCode);
+app.put('/game/:app_id/categories', verifyJWT, requests(db).updateCategoriesToGame);
+app.put('/code', verifyJWT, requests(db).updateCode);
 
-app.delete('/remove', requests(db).deleteGame);
-app.delete('/trash', requests(db).deleteTrash);
+app.delete('/remove', verifyJWT, requests(db).deleteGame);
+app.delete('/trash', verifyJWT, requests(db).deleteTrash);
 
 
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);
 });
+
