@@ -189,9 +189,12 @@ app.post('/code', verifyJWT, requests(db).saveCode);
 app.post('/restore', verifyJWT, requests(db).restore);
 app.post('/mail', verifyJWT, requests(db).sendMail);
 app.post('/sync_steam', verifyJWT, requests(db).syncSteam)
+app.post('/user', verifyJWT, requests(db).createUser)
+
+// PUBLIC ROUTES
 app.post('/login', requests(db).doLogin)
 app.post('/logout', requests(db).doLogout)
-app.post('/user', verifyJWT, requests(db).createUser)
+
 
 app.put('/update', verifyJWT, requests(db).updateGame);
 app.put('/categories', [verifyJWT, middleware(schemas.category_schema, 'body')], requests(db).updateCategory);
