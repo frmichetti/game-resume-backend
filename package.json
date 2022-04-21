@@ -47,6 +47,7 @@
     "pg": "^8.7.3",
     "puppeteer": "^13.0.0",
     "sequelize": "^6.16.2",
+    "supertest": "^6.2.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
