@@ -74,7 +74,7 @@ process.on('uncaughtException', function (error) {
   console.log("uncaughtException Node NOT Exiting...");
 });
 
-const enableGraphiQL = !(process.env.NODE_ENV === 'production')
+const enableGraphiQL = true
 
 const port = process.env.PORT || 4000;
 
