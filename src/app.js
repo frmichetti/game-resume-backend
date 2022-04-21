@@ -137,6 +137,7 @@ app.post('/code', requests(db).saveCode);
 app.post('/restore', requests(db).restore);
 app.post('/mail', requests(db).sendMail);
 app.post('/sync_steam', requests(db).syncSteam)
+app.post('/user', requests(db).createUser)
 
 app.put('/update', requests(db).updateGame);
 app.put('/categories', middleware(schemas.category_schema, 'body'), requests(db).updateCategory);

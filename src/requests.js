@@ -14,7 +14,7 @@ const ejs = require('ejs')
 const path = require('path')
 const puppeteer = require('puppeteer')
 
-import lodash, { map } from 'lodash';
+import lodash, { map, reduce } from 'lodash';
 
 const Excel = require('exceljs');
 const fs = require('fs');
@@ -1094,6 +1094,26 @@ export const requests = db => {
             const info = await mailer(options)
             res.status(200).send({ "success": true, "msg": `${info.response}` })
         } catch (error) {
+            console.error(error)
+            res.status(400).send({ "msg": error.message, "success": false })
+        }
+    }
+
+    const createUser = async (req, res) => {
+        try {
+            const dto = {
+                name: req.body.name,
+                email: req.body.email,
+                role: req.body.role,
+                password: req.body.password
+            }
+
+            const user = await db.User.create(dto)
+
+            res.status(200).send({ user })
+
+        } catch (error) {
+            console.error(error)
             res.status(400).send({ "msg": error.message })
         }
     }
@@ -1104,7 +1124,8 @@ export const requests = db => {
         showToBuyGames, showWiiUGames, showPCGames, showConsoleGames, showDLCs, showCharts, showPlayingGames, showDLCsByID,
         showGame, showCodesOfGame, createGames, finishDLC, saveCode, updateCode, restore, showTrash,
         finishGame, searchGame, genreSearchGame, updateGame, deleteGame, deleteTrash, exportToCsv, exportToPDF, showReport, exportToXls,
-        createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData, sendMail, syncSteam
+        createCategory, updateCategory, addCategoriesToGame, updateCategoriesToGame, showCategoriesOfGame, showDLCsOfGame, showSystemOfGame, showPlayTimesOfGame, processXLSToJson, importData,
+        sendMail, syncSteam, createUser
     }
 }
 
