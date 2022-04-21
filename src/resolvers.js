@@ -1,3 +1,9 @@
+import { authResolver } from './composable_resolver/auth-resolver';
+import { compose } from './composable_resolver/composable.resolver';
+import { verifyTokenResolver } from './composable_resolver/verify-token-resolver';
+
+const authGuard = [authResolver, verifyTokenResolver]
+
 const { QueryTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -364,11 +370,11 @@ const doLogin = async (parent, args, ctx, info) => {
     }
 }
 
-const createDLCGame = async (parent, args, ctx, info) => {
+const createDLCGame = compose(...authGuard)((async (parent, args, ctx, info) => {
     const { app_id, title, finished, finished_at, collection } = args.input;
     const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "DLC" (app_id,title,finished,finished_at,collection) VALUES (?,?,?,?,?) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at, collection] })
     return result[0];
-}
+}))
 
 const createWiiUGame = async (parent, args, ctx, info) => {
     const { app_id, title, finished, finished_at, collection, genuine, fisical_disc } = args.input;
