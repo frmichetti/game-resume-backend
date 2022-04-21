@@ -385,19 +385,19 @@ const createDLCGame = compose(...authGuard)(async (parent, args, ctx, info) => {
 
 const createWiiUGame = compose(...authGuard)(async (parent, args, ctx, info) => {
     const { app_id, title, finished, finished_at, collection, genuine, fisical_disc } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "WiiU" (app_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES (?,?,?,?,?,?,?) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc] })
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Games" (app_id,title,finished,finished_at,collection,genuine,fisical_disc,system_id) VALUES (?,?,?,?,?,?,?,6) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc] })
     return result[0];
 })
 
 const createWiiGame = compose(...authGuard)(async (parent, args, ctx, info) => {
     const { app_id, title, finished, finished_at, collection, genuine, fisical_disc } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Wii" (app_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES (?,?,?,?,?,?,?) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc] })
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Games" (app_id,title,finished,finished_at,collection,genuine,fisical_disc,system_id) VALUES (?,?,?,?,?,?,?,5) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc] })
     return result[0];
 })
 
 const createGameCubeGame = compose(...authGuard)(async (parent, args, ctx, info) => {
     const { app_id, title, finished, finished_at, collection, genuine, fisical_disc } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "GameCube" (app_id,title,finished,finished_at,collection,genuine,fisical_disc) VALUES (?,?,?,?,?,?,?) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc] })
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Games" (app_id,title,finished,finished_at,collection,genuine,fisical_disc,system_id) VALUES (?,?,?,?,?,?,?,4) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc] })
     return result[0];
 })
 
@@ -415,13 +415,13 @@ const createToBuyGame = compose(...authGuard)(async (parent, args, ctx, info) =>
 
 const createOriginGame = compose(...authGuard)(async (parent, args, ctx, info) => {
     const { app_id, title, finished, finished_at } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Origin" (app_id,title,finished,finished_at) VALUES (?,?,?,?) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at] })
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Games" (app_id,title,finished,finished_at,system_id) VALUES (?,?,?,?,1) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at] })
     return result[0];
 })
 
 const createUbisoftGame = compose(...authGuard)(async (parent, args, ctx, info) => {
     const { app_id, title, finished, finished_at } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Ubisoft" (app_id,title,finished,finished_at) VALUES (?,?,?,?) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at] })
+    const [result, metadata] = await ctx.orm.sequelize.query(`INSERT INTO "Games" (app_id,title,finished,finished_at,system_id) VALUES (?,?,?,?,3) RETURNING *`, { type: QueryTypes.INSERT, replacements: [app_id, title, finished, finished_at] })
     return result[0];
 })
 
@@ -432,26 +432,26 @@ const updateDLCGame = compose(...authGuard)(async (parent, args, ctx, info) => {
 })
 
 const updateWiiUGame = compose(...authGuard)(async (parent, args, ctx, info) => {
-    const { app_id, title, finished, finished_at, collection, genuine, fisical_disc, id } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "WiiU" SET app_id = ?,title = ?, finished = ?, finished_at = ?, collection = ?, genuine = ?, fisical_disc = ? WHERE id = ? RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc, id] })
+    const { app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "Games" SET app_id = ?, system_id = ?, title = ?, finished = ?, finished_at = ?, collection = ?, genuine = ?, fisical_disc = ? WHERE id = ? AND system_id = 6 RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id] })
     return result[0];
 })
 
 const updateWiiGame = compose(...authGuard)(async (parent, args, ctx, info) => {
-    const { app_id, title, finished, finished_at, collection, genuine, fisical_disc, id } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "Wii" SET app_id = ?,title = ?, finished = ?, finished_at = ?, collection = ?, genuine = ?, fisical_disc = ? WHERE id = ? RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc, id] })
+    const { app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "Games" SET app_id = ?, system_id = ?, title = ?, finished = ?, finished_at = ?, collection = ?, genuine = ?, fisical_disc = ? WHERE id = ? AND system_id = 5 RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id] })
     return result[0];
 })
 
 const updateGameCubeGame = compose(...authGuard)(async (parent, args, ctx, info) => {
-    const { app_id, title, finished, finished_at, collection, genuine, fisical_disc, id } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "GameCube" SET app_id = ?,title = ?, finished = ?, finished_at = ?, collection = ?, genuine = ?, fisical_disc = ? WHERE id = ? RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, collection, genuine, fisical_disc, id] })
+    const { app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "Games" SET app_id = ?, system_id = ?, title = ?, finished = ?, finished_at = ?, collection = ?, genuine = ?, fisical_disc = ? WHERE id = ? AND system_id = 4 RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id] })
     return result[0];
 })
 
 const updateVirtualConsoleGame = compose(...authGuard)(async (parent, args, ctx, info) => {
-    const { app_id, title, finished, finished_at, genuine, platform, system, id } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "VirtualConsole" SET app_id = ?,title = ?, finished = ?, finished_at = ?, genuine = ?, platform = ?, system = ? WHERE id = ? RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, genuine, platform, system, id] })
+    const { app_id, system_id, title, finished, finished_at, genuine, platform, system, id } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "VirtualConsole" SET app_id = ?,title = ?, finished = ?, finished_at = ?, genuine = ?, platform = ?, system = ? WHERE id = ? RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, system_id, title, finished, finished_at, genuine, platform, system, id] })
     return result[0];
 })
 
@@ -462,14 +462,14 @@ const updateToBuyGame = compose(...authGuard)(async (parent, args, ctx, info) =>
 })
 
 const updateOriginGame = compose(...authGuard)(async (parent, args, ctx, info) => {
-    const { app_id, title, finished, finished_at, id } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "Origin" SET app_id = ?,title = ?, finished = ?, finished_at = ? WHERE id = ? RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, id] })
+    const { app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "Games" SET app_id = ?, system_id = ?, title = ?, finished = ?, finished_at = ?, collection = ?, genuine = ?, fisical_disc = ? WHERE id = ? AND system_id = 1 RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id] })
     return result[0];
 })
 
 const updateUbisoftGame = compose(...authGuard)(async (parent, args, ctx, info) => {
-    const { app_id, title, finished, finished_at, id } = args.input;
-    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "Ubisoft" SET app_id = ?,title = ?, finished = ?, finished_at = ? WHERE id = ? RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, title, finished, finished_at, id] })
+    const { app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id } = args.input;
+    const [result, metadata] = await ctx.orm.sequelize.query(`UPDATE "Games" SET app_id = ?, system_id = ?, title = ?, finished = ?, finished_at = ?, collection = ?, genuine = ?, fisical_disc = ? WHERE id = ? AND system_id = 3 RETURNING *`, { type: QueryTypes.UPDATE, replacements: [app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, id] })
     return result[0];
 })
 
@@ -488,7 +488,7 @@ const deleteDLCGame = compose(...authGuard)(async (parent, { id }, ctx, info) =>
 const deleteWiiUGame = compose(...authGuard)(async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.orm.sequelize.query(`DELETE FROM "WiiU" WHERE id = :id`, { type: QueryTypes.DELETE, replacements: { id } })
+        await ctx.orm.sequelize.query(`DELETE FROM "Games" WHERE id = :id AND system_id = 6`, { type: QueryTypes.DELETE, replacements: { id } })
         resp = true;
     } catch (error) {
         console.error(error)
@@ -500,7 +500,7 @@ const deleteWiiUGame = compose(...authGuard)(async (parent, { id }, ctx, info) =
 const deleteWiiGame = compose(...authGuard)(async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.orm.sequelize.query(`DELETE FROM "Wii" WHERE id = :id`, { type: QueryTypes.DELETE, replacements: { id } })
+        await ctx.orm.sequelize.query(`DELETE FROM "Wii" WHERE id = :id AND system_id = 5`, { type: QueryTypes.DELETE, replacements: { id } })
         resp = true;
     } catch (error) {
         console.error(error)
@@ -512,7 +512,7 @@ const deleteWiiGame = compose(...authGuard)(async (parent, { id }, ctx, info) =>
 const deleteGameCubeGame = compose(...authGuard)(async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.orm.sequelize.query(`DELETE FROM "GameCube" WHERE id = :id`, { type: QueryTypes.DELETE, replacements: { id } })
+        await ctx.orm.sequelize.query(`DELETE FROM "GameCube" WHERE id = :id AND system_id = 4`, { type: QueryTypes.DELETE, replacements: { id } })
         resp = true;
     } catch (error) {
         console.error(error)
@@ -560,7 +560,7 @@ const deleteOriginGame = compose(...authGuard)(async (parent, { id }, ctx, info)
 const deleteUbisoftGame = compose(...authGuard)(async (parent, { id }, ctx, info) => {
     let resp;
     try {
-        await ctx.orm.sequelize.query(`DELETE FROM "Ubisoft" WHERE id = :id`, { type: QueryTypes.DELETE, replacements: { id } })
+        await ctx.orm.sequelize.query(`DELETE FROM "Games" WHERE id = :id AND system_id = 3`, { type: QueryTypes.DELETE, replacements: { id } })
         resp = true;
     } catch (error) {
         console.error(error)
