@@ -143,7 +143,7 @@ app.get('/trash', requests(db).showTrash);
 app.post('/load_games', verifyJWT, upload.single('sheet'), requests(db).processXLSToJson);
 app.post('/import_data', verifyJWT, requests(db).importData);
 app.post('/create', verifyJWT, requests(db).createGames);
-app.post('/categories', middleware(schemas.category_schema, 'body'), requests(db).createCategory);
+app.post('/categories', [verifyJWT, middleware(schemas.category_schema, 'body')], requests(db).createCategory);
 app.post('/game/:app_id/categories', verifyJWT, requests(db).addCategoriesToGame);
 app.post('/dlc_finished', verifyJWT, requests(db).finishDLC);
 app.post('/finished', verifyJWT, requests(db).finishGame);
@@ -156,7 +156,7 @@ app.post('/logout', requests(db).doLogout)
 app.post('/user', verifyJWT, requests(db).createUser)
 
 app.put('/update', verifyJWT, requests(db).updateGame);
-app.put('/categories', middleware(schemas.category_schema, 'body'), requests(db).updateCategory);
+app.put('/categories', [verifyJWT, middleware(schemas.category_schema, 'body')], requests(db).updateCategory);
 app.put('/game/:app_id/categories', verifyJWT, requests(db).updateCategoriesToGame);
 app.put('/code', verifyJWT, requests(db).updateCode);
 
