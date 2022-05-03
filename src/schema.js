@@ -36,9 +36,8 @@ const inputVirtualConsoleGame = `
   title: String  
   finished: Boolean
   finished_at: Date
-  genuine: Boolean
-  platform: String
-  system: String  
+  genuine: Boolean  
+  system_id: Int
 `;
 
 const inputToBuyGame = `    
@@ -141,6 +140,10 @@ const typeDefs = `
     id: ID!
     ${inputUbisoftGame}  
   }
+  type Token {
+    token: String!
+    auth: Boolean!
+  }
   type WiiUGame {
     id: ID
     ${inputsWiiU}  
@@ -178,7 +181,7 @@ const typeDefs = `
   }
   type SteamGame {
     id: ID
-    appid: String
+    app_id: String
     title: String
     finished: Boolean
     collection: Boolean
@@ -284,6 +287,7 @@ const typeDefs = `
     getUnfinishedBySystem(system: String!): [Game!]!
   }
   type Mutation {
+    doLogin(email: String!, password: String!) : Token
     createCategory(input: CategoryInput) : Category
     createDLCGame(input: DLCGameInput) : DLC
     createWiiUGame(input: WiiUGameInput): WiiUGame
@@ -360,6 +364,8 @@ const _resolvers = {
     getUnfinishedBySystem: resolvers.getUnfinishedBySystem
   },
   Mutation: {
+    doLogin: resolvers.doLogin,
+    createCategory: resolvers.createCategory,
     createDLCGame: resolvers.createDLCGame,
     createWiiUGame: resolvers.createWiiUGame,
     createWiiGame: resolvers.createWiiGame,
