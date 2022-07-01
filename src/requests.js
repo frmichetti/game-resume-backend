@@ -814,7 +814,7 @@ export const requests = db => {
         const browser = await puppeteer.launch()
         const page = await browser.newPage()
 
-        await page.goto(`http://localhost:4000/report?from=${from}`, {
+        await page.goto(`${process.env.THIS_SERVER}/report?from=${from}`, {
             waitUntil: 'networkidle0'
         })
 
