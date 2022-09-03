@@ -44,9 +44,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage })
 
-process.env.TZ = 'America/Sao_Paulo';
-
-
 const app = express();
 const dataLoaderFactory = new DataLoaderFactory(db);
 const requestedFields = new RequestedFiels();
@@ -110,25 +107,29 @@ const extractJWTMiddleware = () => {
 
 // For Use in Rest
 const verifyJWT = (req, res, next) => {
-  let authorization = req.headers['authorization']
-  let token = authorization ? authorization.split(' ')[1] : undefined
-  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
-
-  jwt.verify(token, process.env.SECRET, async (err, decoded) => {
-    if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.' });
-
-    const user = await db.User.findByPk(decoded.sub, { attributes: ['id', 'name', 'email', 'role'] })
-
-    if (user) {
-      req.user = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role
+  if(process.env.SKIP_REST_JWT== 'true'){
+    next()
+  }else {
+    let authorization = req.headers['authorization']
+    let token = authorization ? authorization.split(' ')[1] : undefined
+    if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+  
+    jwt.verify(token, process.env.SECRET, async (err, decoded) => {
+      if (err) return res.status(401).send({ auth: false, message: 'Failed to authenticate token.' });
+  
+      const user = await db.User.findByPk(decoded.sub, { attributes: ['id', 'name', 'email', 'role'] })
+  
+      if (user) {
+        req.user = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
       }
-    }
-    next();
-  });
+      next();
+    });
+  }  
 }
 
 app.use('/graphql',
@@ -204,5 +205,11 @@ app.delete('/trash', verifyJWT, requests(db).deleteTrash);
 
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);
+  console.log("===============================================")
+  console.log("NODE_ENV=", process.env.NODE_ENV)
+  console.log("TIMEZONE=", process.env.TZ)
+  console.log("DATABASE_URL=", process.env.DATABASE_URL)
+  console.log("SKIP_REST_JWT=", process.env.SKIP_REST_JWT)
+  console.log("===============================================")
 });
 

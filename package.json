@@ -7,7 +7,7 @@
     "create": "npx sequelize db:create --env=production",
     "drop": "npx sequelize db:drop --env=production",
     "migrate": "npx sequelize db:migrate --env=production",
-    "seed": "npx sequelize db:seed:all --env=production",    
+    "seed": "npx sequelize db:seed:all --env=production",
     "prestart": "npx sequelize db:migrate --env=production",
     "start": "node build/app.js",
     "build": "babel src --out-dir build  --copy-files",
@@ -45,7 +45,7 @@
     "nodemailer": "^6.7.2",
     "pg": "^8.7.3",
     "puppeteer": "^13.0.0",
-    "sequelize": "^6.16.2",    
+    "sequelize": "^6.16.2",
     "sequelize-cli": "^6.4.1",
     "uuid": "^8.3.2"
   },
@@ -54,7 +54,7 @@
     "@babel/core": "^7.8.4",
     "@babel/node": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
-    "nodemon": "^2.0.2",        
+    "nodemon": "^2.0.2",
     "sinon": "^13.0.1"
   },
   "engines": {

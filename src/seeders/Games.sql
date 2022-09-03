@@ -1,3 +1,5 @@
+CREATE EXTENSION pgcrypto;
+
 INSERT INTO "Games" (app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, created_at, updated_at) VALUES (gen_random_uuid(), 1, 'Dead Space 2', true, '2021-01-01 00:00:00.000000 +00:00', false, true, false, '2022-03-11 18:52:18.642000 +00:00', '2022-03-11 18:52:18.841455 +00:00');
 INSERT INTO "Games" (app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, created_at, updated_at) VALUES (gen_random_uuid(), 1, 'Kingdoms of Amalur Reckoning', false, null, false, true, false, '2022-03-11 18:52:18.642000 +00:00', '2022-03-11 18:52:18.841455 +00:00');
 INSERT INTO "Games" (app_id, system_id, title, finished, finished_at, collection, genuine, fisical_disc, created_at, updated_at) VALUES (gen_random_uuid(), 1, 'Dead Space 3', true, '2021-01-01 00:00:00.000000 +00:00', false, true, false, '2022-03-11 18:52:18.642000 +00:00', '2022-03-11 18:52:18.841455 +00:00');
