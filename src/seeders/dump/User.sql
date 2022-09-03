@@ -1,0 +1,1 @@
+INSERT INTO public."User" (id, name, email, role, password, created_at, updated_at) VALUES (1, 'Felipe Rodrigues Michetti', 'frmichetti@gmail.com', 'admin', '$2a$10$n2AVapKaUKfhQ/qn46g2Y.s/aHWG2Iv1scfusf71.UtOBdyIdt2Pi', '2022-05-03 01:28:54.881345 +00:00', '2022-05-03 01:28:54.881345 +00:00');

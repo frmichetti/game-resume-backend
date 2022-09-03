@@ -1,0 +1,15 @@
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (1, 'PC', 'Origin', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (2, 'PC', 'Steam', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (3, 'PC', 'Ubisoft', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (4, 'Console', 'GameCube', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (5, 'Console', 'Wii', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (6, 'Console', 'WiiU', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (7, 'VirtualConsole - Wii', 'NES', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (8, 'VirtualConsole - Wii', 'Nintendo 64', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (9, 'VirtualConsole - Wii', 'Mega Drive', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (10, 'VirtualConsole - Wii', 'Super Nintendo', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (11, 'VirtualConsole - WiiU', 'NES', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (12, 'VirtualConsole - WiiU', 'Nintendo 64', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (13, 'VirtualConsole - WiiU', 'Mega Drive', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (14, 'VirtualConsole - WiiU', 'Super Nintendo', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
+INSERT INTO public."System" (id, platform, system, created_at, updated_at) VALUES (15, 'VirtualConsole - WiiU', 'Wii', '2022-05-03 01:17:22.655000 +00:00', '2022-05-03 01:17:22.655000 +00:00');
